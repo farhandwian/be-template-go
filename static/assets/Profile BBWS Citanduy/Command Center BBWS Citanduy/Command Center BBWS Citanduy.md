@@ -1,0 +1,2 @@
+## Command Center BBWS Citanduy
+Ruang Command Center bertempat di Kantor BBWS Citanduy, berfungsi untuk membantu dalam mengelola data dan informasi yang masuk, memantau kinerja, mengkoordinasikan respons, serta mengambil keputusan strategis berdasarkan pemantauan secara real-time.

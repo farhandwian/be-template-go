@@ -1,0 +1,202 @@
+package controllertest
+
+import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"iam/controller"
+	"iam/gateway"
+	"iam/model"
+	"iam/usecase"
+	"net/http"
+	"net/http/httptest"
+	"shared/helper"
+	"shared/middleware"
+	"testing"
+	"time"
+
+	"github.com/joho/godotenv"
+)
+
+func TestEmailActivationRequestIntegration(t *testing.T) {
+
+	accessToken := NewAccessToken(model.NewUserAccessAdmin())
+
+	err := godotenv.Load("../.env")
+	if err != nil {
+		t.Fatalf("Error loading .env file: %v", err)
+	}
+
+	testCases := []struct {
+		name           string
+		userID         model.UserID
+		expectedStatus int
+		mux            *http.ServeMux
+	}{
+		{
+			name:           "Valid Activation Request",
+			userID:         "valid-user-id",
+			expectedStatus: http.StatusOK,
+			mux: EmailActivationRequestDependency(
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return &gateway.UserGetOneByIDRes{
+						User: model.User{
+							ID:    "valid-user-id",
+							Email: "test@example.com",
+						},
+					}, nil
+				}),
+				MockGateway(func(req gateway.GenerateJWTReq) (*gateway.GenerateJWTRes, error) {
+					return &gateway.GenerateJWTRes{
+						JWTToken: "valid-jwt-token",
+					}, nil
+				}),
+				MockGateway(func(req gateway.SendEmailReq) (*gateway.SendEmailRes, error) {
+					return &gateway.SendEmailRes{}, nil
+				}),
+			),
+		},
+		{
+			name:           "User Not Found",
+			userID:         "non-existent-user-id",
+			expectedStatus: http.StatusBadRequest,
+			mux: EmailActivationRequestDependency(
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return nil, errors.New("user not found")
+				}),
+				MockGateway(func(req gateway.GenerateJWTReq) (*gateway.GenerateJWTRes, error) { return nil, nil }),
+				MockGateway(func(req gateway.SendEmailReq) (*gateway.SendEmailRes, error) { return nil, nil }),
+			),
+		},
+		{
+			name:           "Already Verified User",
+			userID:         "already-verified-user-id",
+			expectedStatus: http.StatusOK,
+			mux: EmailActivationRequestDependency(
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return &gateway.UserGetOneByIDRes{
+						User: model.User{
+							ID:              "already-verified-user-id",
+							Email:           "verified@example.com",
+							EmailVerifiedAt: time.Now().Add(-24 * time.Hour),
+						},
+					}, nil
+				}),
+				MockGateway(func(req gateway.GenerateJWTReq) (*gateway.GenerateJWTRes, error) { return nil, nil }),
+				MockGateway(func(req gateway.SendEmailReq) (*gateway.SendEmailRes, error) { return nil, nil }),
+			),
+		},
+		{
+			name:           "Email Sending Failure",
+			userID:         "valid-user-id",
+			expectedStatus: http.StatusBadRequest,
+			mux: EmailActivationRequestDependency(
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return &gateway.UserGetOneByIDRes{
+						User: model.User{
+							ID:    "valid-user-id",
+							Email: "test@example.com",
+						},
+					}, nil
+				}),
+				MockGateway(func(req gateway.GenerateJWTReq) (*gateway.GenerateJWTRes, error) {
+					return &gateway.GenerateJWTRes{
+						JWTToken: "valid-jwt-token",
+					}, nil
+				}),
+				MockGateway(func(req gateway.SendEmailReq) (*gateway.SendEmailRes, error) {
+					return nil, errors.New("failed to send email")
+				}),
+			),
+		},
+
+		{
+			name:           "Invalid Request - Empty UserID",
+			userID:         "",
+			expectedStatus: http.StatusBadRequest,
+			mux: EmailActivationRequestDependency(
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.GenerateJWTReq) (*gateway.GenerateJWTRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.SendEmailReq) (*gateway.SendEmailRes, error) {
+					return nil, nil
+				}),
+			),
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			body := struct {
+				UserID model.UserID `json:"user_id"`
+			}{
+				UserID: tc.userID,
+			}
+
+			bodyBytes, err := json.Marshal(body)
+			if err != nil {
+				t.Fatalf("Failed to marshal request body: %v", err)
+			}
+
+			req := httptest.NewRequest("POST", "/activation/request", bytes.NewBuffer(bodyBytes))
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+accessToken) // Mock JWT token for authentication
+
+			rr := httptest.NewRecorder()
+
+			tc.mux.ServeHTTP(rr, req)
+
+			if rr.Code != tc.expectedStatus {
+				t.Errorf("Expected status %d, got %d", tc.expectedStatus, rr.Code)
+			}
+
+			if rr.Code == http.StatusOK {
+				var response struct{}
+				if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+					t.Errorf("Failed to decode response body: %v", err)
+				}
+			}
+		})
+	}
+}
+
+func EmailActivationRequestDependency(
+	userGetOneByID gateway.UserGetOneByID,
+	generateJWT gateway.GenerateJWT,
+	sendEmail gateway.SendEmail,
+) *http.ServeMux {
+	mux := http.NewServeMux()
+
+	// Apply logging middleware
+	userGetOneByIDWithLogging := middleware.Logging(userGetOneByID, 4)
+	generateJWTWithLogging := middleware.Logging(generateJWT, 4)
+	sendEmailWithLogging := middleware.Logging(sendEmail, 4)
+
+	// Create the use case
+	emailActivationRequestUseCase := usecase.ImplEmailActivationRequest(
+		userGetOneByIDWithLogging,
+		generateJWTWithLogging,
+		sendEmailWithLogging,
+	)
+
+	// Apply logging middleware to the use case
+	emailActivationRequestUseCaseWithLogging := middleware.Logging(emailActivationRequestUseCase, 0)
+
+	// Create a mock JWT token for testing
+	mockJWTToken, _ := helper.NewJWTTokenizer("mock-secret-key")
+
+	c := controller.Controller{
+		Mux: mux,
+		JWT: mockJWTToken,
+	}
+
+	// Set up the controller
+	helper.NewApiPrinter().
+		Add(c.EmailActivationRequestHandler(emailActivationRequestUseCaseWithLogging)).
+		Print()
+
+	return mux
+}

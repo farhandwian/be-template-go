@@ -1,0 +1,11 @@
+go 1.23.1
+
+use (
+	./app
+	./bigboard
+	./dashboard
+	./iam
+	./monitoring
+	./shared
+	./perizinan
+)

@@ -1,0 +1,172 @@
+package controllertest
+
+import (
+	"encoding/json"
+	"iam/controller"
+	"iam/gateway"
+	"iam/model"
+	"iam/usecase"
+	"net/http"
+	"net/http/httptest"
+	"shared/helper"
+	"shared/middleware"
+	"testing"
+
+	"github.com/joho/godotenv"
+)
+
+func TestUserGetAllIntegration(t *testing.T) {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		t.Fatalf("Error loading .env file: %v", err)
+	}
+
+	accessToken := NewAccessToken(model.NewUserAccessAdmin())
+
+	testCases := []struct {
+		name           string
+		queryParams    string
+		expectedStatus int
+		expectedCount  int64
+		mux            *http.ServeMux
+	}{
+		// {
+		// 	name:           "Valid Get All Users",
+		// 	queryParams:    "?page=1&size=10",
+		// 	expectedStatus: http.StatusOK,
+		// 	expectedCount:  2,
+		// 	mux: UserGetAllDependency(
+		// 		MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+		// 			return &gateway.UserGetAllRes{
+		// 				Count: 2,
+		// 				Items: []model.User{
+		// 					{
+		// 						ID:              "user1",
+		// 						Email:           "user1@example.com",
+		// 						PhoneNumber:     "+1234567890",
+		// 						Name:            "User One",
+		// 						EmailVerifiedAt: time.Now().Add(-24 * time.Hour),
+		// 						Enabled:         true,
+		// 					},
+		// 					{
+		// 						ID:              "user2",
+		// 						Email:           "user2@example.com",
+		// 						PhoneNumber:     "+1987654321",
+		// 						Name:            "User Two",
+		// 						EmailVerifiedAt: time.Now().Add(-48 * time.Hour),
+		// 						Enabled:         true,
+		// 					},
+		// 				},
+		// 			}, nil
+		// 		}),
+		// 	),
+		// },
+		// {
+		// 	name:           "Empty Result",
+		// 	queryParams:    "?page=1&size=10",
+		// 	expectedStatus: http.StatusOK,
+		// 	expectedCount:  0,
+		// 	mux: UserGetAllDependency(
+		// 		MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+		// 			return &gateway.UserGetAllRes{
+		// 				Count: 0,
+		// 				Items: []model.User{},
+		// 			}, nil
+		// 		}),
+		// 	),
+		// },
+		// {
+		// 	name:           "Invalid Page Number",
+		// 	queryParams:    "?page=invalid&size=10",
+		// 	expectedStatus: http.StatusBadRequest,
+		// 	expectedCount:  0,
+		// 	mux: UserGetAllDependency(
+		// 		MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+		// 			return nil, nil
+		// 		}),
+		// 	),
+		// },
+		// {
+		// 	name:           "Invalid Size",
+		// 	queryParams:    "?page=1&size=invalid",
+		// 	expectedStatus: http.StatusBadRequest,
+		// 	expectedCount:  0,
+		// 	mux: UserGetAllDependency(
+		// 		MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+		// 			return nil, nil
+		// 		}),
+		// 	),
+		// },
+		// {
+		// 	name:           "Database Error",
+		// 	queryParams:    "?page=1&size=10",
+		// 	expectedStatus: http.StatusInternalServerError,
+		// 	expectedCount:  0,
+		// 	mux: UserGetAllDependency(
+		// 		MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+		// 			return nil, errors.New("database error")
+		// 		}),
+		// 	),
+		// },
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			req := httptest.NewRequest("GET", "/user"+tc.queryParams, nil)
+			req.Header.Set("Authorization", "Bearer "+accessToken)
+
+			rr := httptest.NewRecorder()
+
+			tc.mux.ServeHTTP(rr, req)
+
+			if rr.Code != tc.expectedStatus {
+				t.Errorf("Expected status %d, got %d", tc.expectedStatus, rr.Code)
+			}
+
+			if tc.expectedStatus == http.StatusOK {
+				var response struct {
+					Count int64        `json:"Count"`
+					Items []model.User `json:"Items"`
+				}
+				if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+					t.Errorf("Failed to decode response body: %v", err)
+				}
+
+				if response.Count != tc.expectedCount {
+					t.Errorf("Expected count %d, got %d", tc.expectedCount, response.Count)
+				}
+
+				if len(response.Items) != int(tc.expectedCount) {
+					t.Errorf("Expected %d items, got %d", tc.expectedCount, len(response.Items))
+				}
+			}
+		})
+	}
+}
+
+func UserGetAllDependency(
+	userGetAll gateway.UserGetAll,
+) *http.ServeMux {
+	mux := http.NewServeMux()
+
+	userGetAllWithLogging := middleware.Logging(userGetAll, 4)
+
+	userGetAllUseCase := usecase.ImplUserGetAll(
+		userGetAllWithLogging,
+	)
+
+	userGetAllUseCaseWithLogging := middleware.Logging(userGetAllUseCase, 0)
+
+	mockJWTToken, _ := helper.NewJWTTokenizer("mock-secret-key")
+
+	c := controller.Controller{
+		Mux: mux,
+		JWT: mockJWTToken,
+	}
+
+	helper.NewApiPrinter().
+		Add(c.UserGetAllHandler(userGetAllUseCaseWithLogging)).
+		Print()
+
+	return mux
+}

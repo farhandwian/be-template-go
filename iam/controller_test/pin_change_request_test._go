@@ -1,0 +1,217 @@
+package controllertest
+
+import (
+	"encoding/json"
+	"errors"
+	"iam/controller"
+	"iam/gateway"
+	"iam/model"
+	"iam/usecase"
+	"net/http"
+	"net/http/httptest"
+	"shared/helper"
+	"shared/middleware"
+	"testing"
+
+	"github.com/joho/godotenv"
+)
+
+func TestPinChangeRequestIntegration(t *testing.T) {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		t.Fatalf("Error loading .env file: %v", err)
+	}
+
+	accessToken := NewAccessToken(model.NewUserAccessAdmin())
+
+	testCases := []struct {
+		name           string
+		userID         string
+		expectedStatus int
+		mux            *http.ServeMux
+	}{
+		{
+			name:           "Valid PIN Change Request",
+			userID:         "valid-user-id",
+			expectedStatus: http.StatusOK,
+			mux: PinChangeRequestDependency(
+				MockGateway(func(req gateway.SendOTPReq) (*gateway.SendOTPRes, error) {
+					return &gateway.SendOTPRes{}, nil
+				}),
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return &gateway.UserGetOneByIDRes{
+						User: model.User{
+							ID:          "valid-user-id",
+							PhoneNumber: "+1234567890",
+						},
+					}, nil
+				}),
+				MockGateway(func(req gateway.GenerateRandomReq) (*gateway.GenerateRandomRes, error) {
+					return &gateway.GenerateRandomRes{Random: "123456"}, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return &gateway.UserSaveRes{}, nil
+				}),
+				MockGateway(func(req gateway.PasswordEncryptReq) (*gateway.PasswordEncryptRes, error) {
+					return nil, nil
+				}),
+			),
+		},
+		{
+			name:           "User Not Found",
+			userID:         "non-existent-user-id",
+			expectedStatus: http.StatusBadRequest,
+			mux: PinChangeRequestDependency(
+				MockGateway(func(req gateway.SendOTPReq) (*gateway.SendOTPRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return nil, errors.New("user not found")
+				}),
+				MockGateway(func(req gateway.GenerateRandomReq) (*gateway.GenerateRandomRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.PasswordEncryptReq) (*gateway.PasswordEncryptRes, error) {
+					return nil, nil
+				}),
+			),
+		},
+		// {
+		// 	name:           "OTP Generation Failure",
+		// 	userID:         "valid-user-id",
+		// 	expectedStatus: http.StatusInternalServerError,
+		// 	mux: PinChangeRequestDependency(
+		// 		MockGateway(func(req gateway.SendOTPReq) (*gateway.SendOTPRes, error) {
+		// 			return nil, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+		// 			return &gateway.UserGetOneByIDRes{
+		// 				User: model.User{
+		// 					ID:          "valid-user-id",
+		// 					PhoneNumber: "+1234567890",
+		// 				},
+		// 			}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.GenerateRandomReq) (*gateway.GenerateRandomRes, error) {
+		// 			return nil, errors.New("failed to generate OTP")
+		// 		}),
+		// 		MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+		// 			return nil, nil
+		// 		}),
+		// 	),
+		// },
+		// {
+		// 	name:           "User Save Failure",
+		// 	userID:         "valid-user-id",
+		// 	expectedStatus: http.StatusInternalServerError,
+		// 	mux: PinChangeRequestDependency(
+		// 		MockGateway(func(req gateway.SendOTPReq) (*gateway.SendOTPRes, error) {
+		// 			return nil, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+		// 			return &gateway.UserGetOneByIDRes{
+		// 				User: model.User{
+		// 					ID:          "valid-user-id",
+		// 					PhoneNumber: "+1234567890",
+		// 				},
+		// 			}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.GenerateRandomReq) (*gateway.GenerateRandomRes, error) {
+		// 			return &gateway.GenerateRandomRes{Random: "123456"}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+		// 			return nil, errors.New("failed to save user")
+		// 		}),
+		// 	),
+		// },
+		// {
+		// 	name:           "OTP Send Failure",
+		// 	userID:         "valid-user-id",
+		// 	expectedStatus: http.StatusInternalServerError,
+		// 	mux: PinChangeRequestDependency(
+		// 		MockGateway(func(req gateway.SendOTPReq) (*gateway.SendOTPRes, error) {
+		// 			return nil, errors.New("failed to send OTP")
+		// 		}),
+		// 		MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+		// 			return &gateway.UserGetOneByIDRes{
+		// 				User: model.User{
+		// 					ID:          "valid-user-id",
+		// 					PhoneNumber: "+1234567890",
+		// 				},
+		// 			}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.GenerateRandomReq) (*gateway.GenerateRandomRes, error) {
+		// 			return &gateway.GenerateRandomRes{Random: "123456"}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+		// 			return &gateway.UserSaveRes{}, nil
+		// 		}),
+		// 	),
+		// },
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			req := httptest.NewRequest("POST", "/user/"+tc.userID+"/pin/change/request", nil)
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+accessToken)
+
+			rr := httptest.NewRecorder()
+
+			tc.mux.ServeHTTP(rr, req)
+
+			if rr.Code != tc.expectedStatus {
+				t.Errorf("Expected status %d, got %d", tc.expectedStatus, rr.Code)
+			}
+
+			if tc.expectedStatus == http.StatusOK {
+				var response struct{}
+				if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+					t.Errorf("Failed to decode response body: %v", err)
+				}
+			}
+		})
+	}
+}
+
+func PinChangeRequestDependency(
+	sendOTP gateway.SendOTP,
+	userGetOneByID gateway.UserGetOneByID,
+	generateRandom gateway.GenerateRandom,
+	userSave gateway.UserSave,
+	passwordEncrypt gateway.PasswordEncrypt,
+) *http.ServeMux {
+	mux := http.NewServeMux()
+
+	sendOTPWithLogging := middleware.Logging(sendOTP, 4)
+	userGetOneByIDWithLogging := middleware.Logging(userGetOneByID, 4)
+	generateRandomWithLogging := middleware.Logging(generateRandom, 4)
+	userSaveWithLogging := middleware.Logging(userSave, 4)
+	passwordEncryptWithLogging := middleware.Logging(passwordEncrypt, 4)
+
+	pinChangeRequestUseCase := usecase.ImplPinChangeRequest(
+		sendOTPWithLogging,
+		userGetOneByIDWithLogging,
+		generateRandomWithLogging,
+		userSaveWithLogging,
+		passwordEncryptWithLogging,
+	)
+
+	pinChangeRequestUseCaseWithLogging := middleware.Logging(pinChangeRequestUseCase, 0)
+
+	mockJWTToken, _ := helper.NewJWTTokenizer("mock-secret-key")
+
+	c := controller.Controller{
+		Mux: mux,
+		JWT: mockJWTToken,
+	}
+
+	helper.NewApiPrinter().
+		Add(c.PinChangeRequestHandler(pinChangeRequestUseCaseWithLogging)).
+		Print()
+
+	return mux
+}

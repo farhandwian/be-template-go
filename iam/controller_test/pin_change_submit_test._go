@@ -1,0 +1,274 @@
+package controllertest
+
+import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"iam/controller"
+	"iam/gateway"
+	"iam/model"
+	"iam/usecase"
+	"net/http"
+	"net/http/httptest"
+	"shared/helper"
+	"shared/middleware"
+	"testing"
+	"time"
+
+	"github.com/joho/godotenv"
+)
+
+func TestPinChangeSubmitIntegration(t *testing.T) {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		t.Fatalf("Error loading .env file: %v", err)
+	}
+
+	accessToken := NewAccessToken(model.NewUserAccessAdmin())
+
+	testCases := []struct {
+		name           string
+		userID         string
+		requestBody    map[string]string
+		expectedStatus int
+		mux            *http.ServeMux
+	}{
+		{
+			name:   "Valid PIN Change Submit",
+			userID: "valid-user-id",
+			requestBody: map[string]string{
+				"otp":     "123456",
+				"new_pin": "7890",
+			},
+			expectedStatus: http.StatusOK,
+			mux: PinChangeSubmitDependency(
+				MockGateway(func(req gateway.PasswordValidateReq) (*gateway.PasswordValidateRes, error) {
+					return &gateway.PasswordValidateRes{}, nil
+				}),
+				MockGateway(func(req gateway.PasswordEncryptReq) (*gateway.PasswordEncryptRes, error) {
+					return &gateway.PasswordEncryptRes{PasswordEncrypted: "encrypted_new_pin"}, nil
+				}),
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return &gateway.UserGetOneByIDRes{
+						User: model.User{
+							ID:            "valid-user-id",
+							OTPValue:      "123456",
+							OTPExpirateAt: time.Now().Add(5 * time.Minute),
+							OTPPurpose:    model.PIN_CHANGE,
+						},
+					}, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return &gateway.UserSaveRes{}, nil
+				}),
+			),
+		},
+		{
+			name:   "Invalid OTP",
+			userID: "valid-user-id",
+			requestBody: map[string]string{
+				"otp":     "654321",
+				"new_pin": "7890",
+			},
+			expectedStatus: http.StatusBadRequest,
+			mux: PinChangeSubmitDependency(
+				MockGateway(func(req gateway.PasswordValidateReq) (*gateway.PasswordValidateRes, error) {
+					return nil, errors.New("invalid OTP")
+				}),
+				MockGateway(func(req gateway.PasswordEncryptReq) (*gateway.PasswordEncryptRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return &gateway.UserGetOneByIDRes{
+						User: model.User{
+							ID:            "valid-user-id",
+							OTPValue:      "123456",
+							OTPExpirateAt: time.Now().Add(5 * time.Minute),
+							OTPPurpose:    model.PIN_CHANGE,
+						},
+					}, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return nil, nil
+				}),
+			),
+		},
+		{
+			name:   "Expired OTP",
+			userID: "valid-user-id",
+			requestBody: map[string]string{
+				"otp":     "123456",
+				"new_pin": "7890",
+			},
+			expectedStatus: http.StatusBadRequest,
+			mux: PinChangeSubmitDependency(
+				MockGateway(func(req gateway.PasswordValidateReq) (*gateway.PasswordValidateRes, error) {
+					return &gateway.PasswordValidateRes{}, nil
+				}),
+				MockGateway(func(req gateway.PasswordEncryptReq) (*gateway.PasswordEncryptRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return &gateway.UserGetOneByIDRes{
+						User: model.User{
+							ID:            "valid-user-id",
+							OTPValue:      "123456",
+							OTPExpirateAt: time.Now().Add(-5 * time.Minute),
+							OTPPurpose:    model.PIN_CHANGE,
+						},
+					}, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return nil, nil
+				}),
+			),
+		},
+		{
+			name:   "User Not Found",
+			userID: "non-existent-user-id",
+			requestBody: map[string]string{
+				"otp":     "123456",
+				"new_pin": "7890",
+			},
+			expectedStatus: http.StatusBadRequest,
+			mux: PinChangeSubmitDependency(
+				MockGateway(func(req gateway.PasswordValidateReq) (*gateway.PasswordValidateRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.PasswordEncryptReq) (*gateway.PasswordEncryptRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+					return nil, errors.New("user not found")
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return nil, nil
+				}),
+			),
+		},
+		// {
+		// 	name:   "PIN Encryption Failure",
+		// 	userID: "valid-user-id",
+		// 	requestBody: map[string]string{
+		// 		"otp":     "123456",
+		// 		"new_pin": "7890",
+		// 	},
+		// 	expectedStatus: http.StatusInternalServerError,
+		// 	mux: PinChangeSubmitDependency(
+		// 		MockGateway(func(req gateway.PasswordValidateReq) (*gateway.PasswordValidateRes, error) {
+		// 			return &gateway.PasswordValidateRes{}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.PasswordEncryptReq) (*gateway.PasswordEncryptRes, error) {
+		// 			return nil, errors.New("encryption failed")
+		// 		}),
+		// 		MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+		// 			return &gateway.UserGetOneByIDRes{
+		// 				User: model.User{
+		// 					ID:            "valid-user-id",
+		// 					OTPValue:      "123456",
+		// 					OTPExpirateAt: time.Now().Add(5 * time.Minute),
+		// 					OTPPurpose:    model.PIN_CHANGE,
+		// 				},
+		// 			}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+		// 			return nil, nil
+		// 		}),
+		// 	),
+		// },
+		// {
+		// 	name:   "User Save Failure",
+		// 	userID: "valid-user-id",
+		// 	requestBody: map[string]string{
+		// 		"otp":     "123456",
+		// 		"new_pin": "7890",
+		// 	},
+		// 	expectedStatus: http.StatusInternalServerError,
+		// 	mux: PinChangeSubmitDependency(
+		// 		MockGateway(func(req gateway.PasswordValidateReq) (*gateway.PasswordValidateRes, error) {
+		// 			return &gateway.PasswordValidateRes{}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.PasswordEncryptReq) (*gateway.PasswordEncryptRes, error) {
+		// 			return &gateway.PasswordEncryptRes{PasswordEncrypted: "encrypted_new_pin"}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.UserGetOneByIDReq) (*gateway.UserGetOneByIDRes, error) {
+		// 			return &gateway.UserGetOneByIDRes{
+		// 				User: model.User{
+		// 					ID:            "valid-user-id",
+		// 					OTPValue:      "123456",
+		// 					OTPExpirateAt: time.Now().Add(5 * time.Minute),
+		// 					OTPPurpose:    model.PIN_CHANGE,
+		// 				},
+		// 			}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+		// 			return nil, errors.New("failed to save user")
+		// 		}),
+		// 	),
+		// },
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			bodyBytes, err := json.Marshal(tc.requestBody)
+			if err != nil {
+				t.Fatalf("Failed to marshal request body: %v", err)
+			}
+
+			req := httptest.NewRequest("POST", "/user/"+tc.userID+"/pin/change/submit", bytes.NewBuffer(bodyBytes))
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+accessToken)
+
+			rr := httptest.NewRecorder()
+
+			tc.mux.ServeHTTP(rr, req)
+
+			if rr.Code != tc.expectedStatus {
+				t.Errorf("Expected status %d, got %d", tc.expectedStatus, rr.Code)
+			}
+
+			if tc.expectedStatus == http.StatusOK {
+				var response struct{}
+				if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+					t.Errorf("Failed to decode response body: %v", err)
+				}
+			}
+		})
+	}
+}
+
+func PinChangeSubmitDependency(
+	passwordValidate gateway.PasswordValidate,
+	passwordEncrypt gateway.PasswordEncrypt,
+	userGetOneByID gateway.UserGetOneByID,
+	userSave gateway.UserSave,
+) *http.ServeMux {
+	mux := http.NewServeMux()
+
+	passwordValidateWithLogging := middleware.Logging(passwordValidate, 4)
+	passwordEncryptWithLogging := middleware.Logging(passwordEncrypt, 4)
+	userGetOneByIDWithLogging := middleware.Logging(userGetOneByID, 4)
+	userSaveWithLogging := middleware.Logging(userSave, 4)
+
+	pinChangeSubmitUseCase := usecase.ImplPinChangeSubmit(
+		passwordValidateWithLogging,
+		passwordEncryptWithLogging,
+		userGetOneByIDWithLogging,
+		userSaveWithLogging,
+	)
+
+	pinChangeSubmitUseCaseWithLogging := middleware.Logging(pinChangeSubmitUseCase, 0)
+
+	mockJWTToken, _ := helper.NewJWTTokenizer("mock-secret-key")
+
+	c := controller.Controller{
+		Mux: mux,
+		JWT: mockJWTToken,
+	}
+
+	helper.NewApiPrinter().
+		Add(c.PinChangeSubmitHandler(pinChangeSubmitUseCaseWithLogging)).
+		Print()
+
+	return mux
+}

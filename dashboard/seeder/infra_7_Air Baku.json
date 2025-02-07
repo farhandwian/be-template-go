@@ -1,0 +1,1397 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          101.469778,
+          -0.95425
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "82101e04-e88c-4173-bc10-a94a2bb0ebf4",
+        "das_name": "DAS BATANGHARI",
+        "id": "693c9527-cc88-48a4-a579-f9cb4a41553e",
+        "is_pupr": true,
+        "kabupaten": "DHARMASRAYA",
+        "kecamatan": "PULAU PUNJUNG",
+        "kelurahan": "SUNGAI KAMBUT",
+        "kewenangan": "PUSAT",
+        "name": "SUNGAI KAMBUT",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "fe77071f-506e-4740-9499-15f725b3209b",
+        "ws_name": "BATANGHARI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.469917,
+          -0.941611
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "3e18c5a7-e289-4c61-90af-696dbbe4e0ad",
+        "das_name": "DAS ARAU",
+        "id": "1dff2d1b-bf0f-4fde-8278-5dbfb4c74044",
+        "is_pupr": true,
+        "kabupaten": "KOTA PADANG",
+        "kecamatan": "LUBUK KILANGAN",
+        "kelurahan": "KELURAHAN INDARUNG",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU ULU GADUT",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "bef0ddfe-f05b-4a17-a600-4b97dbaad5be",
+        "ws_name": "INDRAGIRI-AKUAMAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          101.656694,
+          -1.036028
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "82101e04-e88c-4173-bc10-a94a2bb0ebf4",
+        "das_name": "DAS BATANGHARI",
+        "id": "08237708-da53-4127-a574-66347e0cb0ae",
+        "is_pupr": true,
+        "kabupaten": "DHARMASRAYA",
+        "kecamatan": "SITIUNG",
+        "kelurahan": "SUNGAI DUO",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU TIMPEH",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "fe77071f-506e-4740-9499-15f725b3209b",
+        "ws_name": "BATANGHARI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.414361,
+          -0.799833
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "f8a045aa-c4f0-4ebb-8def-a2bf69a9a63d",
+        "das_name": "DAS AIR DINGIN",
+        "id": "52828e68-ab97-481b-8930-a70787735bc9",
+        "is_pupr": true,
+        "kabupaten": "KOTA PADANG",
+        "kecamatan": "KOTO TANGAH",
+        "kelurahan": "KELURAHAN BALAI GADANG",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU TANAH TABAN 1",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "bef0ddfe-f05b-4a17-a600-4b97dbaad5be",
+        "ws_name": "INDRAGIRI-AKUAMAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          101.275444,
+          -0.862417
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "82101e04-e88c-4173-bc10-a94a2bb0ebf4",
+        "das_name": "DAS BATANGHARI",
+        "id": "0ae2b40e-675f-4e42-8612-4180824e5518",
+        "is_pupr": true,
+        "kabupaten": "SIJUNJUNG",
+        "kecamatan": "KAMANG BARU",
+        "kelurahan": "SIAUR",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU SUNGAI LANSEK",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "fe77071f-506e-4740-9499-15f725b3209b",
+        "ws_name": "BATANGHARI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          101.673556,
+          -1.034167
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "82101e04-e88c-4173-bc10-a94a2bb0ebf4",
+        "das_name": "DAS BATANGHARI",
+        "id": "bbc2511a-6f49-4cb8-aa11-d7b9407d662c",
+        "is_pupr": true,
+        "kabupaten": "DHARMASRAYA",
+        "kecamatan": "SITIUNG",
+        "kelurahan": "SUNGAI DUO",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU SUNGAI DUO",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "fe77071f-506e-4740-9499-15f725b3209b",
+        "ws_name": "BATANGHARI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          101.523361,
+          -1.036028
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "82101e04-e88c-4173-bc10-a94a2bb0ebf4",
+        "das_name": "DAS BATANGHARI",
+        "id": "2abd893e-59ed-48e9-abdf-0d83a7414584",
+        "is_pupr": true,
+        "kabupaten": "DHARMASRAYA",
+        "kecamatan": "PULAU PUNJUNG",
+        "kelurahan": "SIKABAU",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU SITIUNG V",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "fe77071f-506e-4740-9499-15f725b3209b",
+        "ws_name": "BATANGHARI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          101.726556,
+          -1.182833
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "82101e04-e88c-4173-bc10-a94a2bb0ebf4",
+        "das_name": "DAS BATANGHARI",
+        "id": "38804184-3c44-4971-b595-bae75cf09041",
+        "is_pupr": true,
+        "kabupaten": "DHARMASRAYA",
+        "kecamatan": "KOTO BARU",
+        "kelurahan": "KOTO BARU",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU SEI RUMBAI",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "fe77071f-506e-4740-9499-15f725b3209b",
+        "ws_name": "BATANGHARI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          101.235389,
+          -2.109194
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "fb86a32e-c028-440f-a80a-ffc7276f2ce9",
+        "das_name": "DAS NILAU",
+        "id": "02b767eb-cf54-40f5-a32b-0b4f6d854be2",
+        "is_pupr": true,
+        "kabupaten": "PESISIR SELATAN",
+        "kecamatan": "RANAH AMPEK HULU TAPAN",
+        "kelurahan": "SUNGAI GAMBIR SAKO TAPAN",
+        "kewenangan": "PROVINSI",
+        "name": "AIR BAKU SALIDO KETEK",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "3deaf589-04a8-4fbf-bc8c-9aeff79db58e",
+        "ws_name": "SILAUT-TARUSAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.418611,
+          -0.7965
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "f8a045aa-c4f0-4ebb-8def-a2bf69a9a63d",
+        "das_name": "DAS AIR DINGIN",
+        "id": "9dbbb859-41ad-4b41-98ee-449650f09e5d",
+        "is_pupr": true,
+        "kabupaten": "KOTA PADANG",
+        "kecamatan": "KOTO TANGAH",
+        "kelurahan": "KELURAHAN BALAI GADANG",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU PANUKAHAN GADANG",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "bef0ddfe-f05b-4a17-a600-4b97dbaad5be",
+        "ws_name": "INDRAGIRI-AKUAMAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.411528,
+          -0.800083
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "f8a045aa-c4f0-4ebb-8def-a2bf69a9a63d",
+        "das_name": "DAS AIR DINGIN",
+        "id": "175fbb6a-5172-4b01-b682-9703a81ee225",
+        "is_pupr": true,
+        "kabupaten": "KOTA PADANG",
+        "kecamatan": "KOTO TANGAH",
+        "kelurahan": "KELURAHAN BALAI GADANG",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU PANUKAHAN GADANG",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "bef0ddfe-f05b-4a17-a600-4b97dbaad5be",
+        "ws_name": "INDRAGIRI-AKUAMAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.855889,
+          -1.272306
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "82101e04-e88c-4173-bc10-a94a2bb0ebf4",
+        "das_name": "DAS BATANGHARI",
+        "id": "bc627e60-1866-4c4f-a795-48695421cf60",
+        "is_pupr": true,
+        "kabupaten": "SOLOK",
+        "kecamatan": "PANTAI CERMIN",
+        "kelurahan": "SURIAN",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU PANTAI CERMIN",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "fe77071f-506e-4740-9499-15f725b3209b",
+        "ws_name": "BATANGHARI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.464278,
+          -0.958028
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "3e18c5a7-e289-4c61-90af-696dbbe4e0ad",
+        "das_name": "DAS ARAU",
+        "id": "0ebb8d93-cb2b-413c-8d62-867065655b8b",
+        "is_pupr": true,
+        "kabupaten": "KOTA PADANG",
+        "kecamatan": "LUBUK KILANGAN",
+        "kelurahan": "KELURAHAN INDARUNG",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU LUBUK PARAKU",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "bef0ddfe-f05b-4a17-a600-4b97dbaad5be",
+        "ws_name": "INDRAGIRI-AKUAMAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.481694,
+          -0.901694
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "0ac9d95c-ef74-4cf7-97ea-821d023d94eb",
+        "das_name": "DAS KURANJI",
+        "id": "8df0737e-cac6-4207-a1e3-a119b7e5081e",
+        "is_pupr": true,
+        "kabupaten": "KOTA PADANG",
+        "kecamatan": "PAUH",
+        "kelurahan": "KELURAHAN LIMAU MANIS",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU LEMBAH GUMANTI",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "bef0ddfe-f05b-4a17-a600-4b97dbaad5be",
+        "ws_name": "INDRAGIRI-AKUAMAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.612417,
+          -1.344472
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "4a381d4c-fd7e-443d-879d-5ca543ae976b",
+        "das_name": "DAS BUNGO PASANG",
+        "id": "9121e136-7e9c-45d7-bff7-08d428074ace",
+        "is_pupr": true,
+        "kabupaten": "PESISIR SELATAN",
+        "kecamatan": "IV JURAI",
+        "kelurahan": "PAINAN SELATAN PAINAN",
+        "kewenangan": "PROVINSI",
+        "name": "AIR BAKU BATANG TIMBULUN",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "3deaf589-04a8-4fbf-bc8c-9aeff79db58e",
+        "ws_name": "SILAUT-TARUSAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.654278,
+          -1.285528
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "97a89662-afae-4df6-9a72-70cf66ae6f3e",
+        "das_name": "DAS SIRANTIH",
+        "id": "c38e993a-c525-4d4d-b6e2-666addce25bf",
+        "is_pupr": true,
+        "kabupaten": "PESISIR SELATAN",
+        "kecamatan": "IV JURAI",
+        "kelurahan": "SALIDO SARI BULAN",
+        "kewenangan": "PROVINSI",
+        "name": "AIR BAKU BATANG SAKO",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "3deaf589-04a8-4fbf-bc8c-9aeff79db58e",
+        "ws_name": "SILAUT-TARUSAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.243222,
+          -0.03675
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "16a0bc97-70ef-4bfe-9fc4-8fadbde272dd",
+        "das_name": "DAS PALEMBAYAN",
+        "id": "e7d437f5-a203-4093-868a-256dbe624169",
+        "is_pupr": true,
+        "kabupaten": "PASAMAN",
+        "kecamatan": "BONJOL",
+        "kelurahan": "GANGGO HILIA",
+        "kewenangan": "PROVINSI",
+        "name": "AIR BAKU BATANG MUSUS",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "6b41c46e-48e1-498f-aceb-c9cd75a13d14",
+        "ws_name": "MASANG-PASAMAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.974194,
+          -0.845278
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "cf62c306-5222-44a7-bf25-c4105427122c",
+        "das_name": "DAS INDRAGIRI",
+        "id": "fd2292de-3380-4f1f-aa99-024c37b1956f",
+        "is_pupr": true,
+        "kabupaten": "SOLOK",
+        "kecamatan": "TIGO LURAH",
+        "kelurahan": "TANJUNG BALIK SUMISO",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU BATANG KARIMO",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "bef0ddfe-f05b-4a17-a600-4b97dbaad5be",
+        "ws_name": "INDRAGIRI-AKUAMAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.503944,
+          -1.07675
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "7fc9be1e-5695-4fa0-be36-8b64774a6e71",
+        "das_name": "DAS TARUSAN",
+        "id": "3934a1fa-a5ff-46d9-845c-6d3d2fc7b591",
+        "is_pupr": true,
+        "kabupaten": "PESISIR SELATAN",
+        "kecamatan": "KOTO XI TARUSAN",
+        "kelurahan": "TARATAK SUNGAI LUNDANG",
+        "kewenangan": "PROVINSI",
+        "name": "AIR BAKU BATANG AIR SONSANG",
+        "pengelola_id": 5,
+        "pengelola_name": "BWS SUMATERA V",
+        "provinsi": "SUMATERA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "3deaf589-04a8-4fbf-bc8c-9aeff79db58e",
+        "ws_name": "SILAUT-TARUSAN"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.667917,
+          -7.445461
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "bd85379c-4f6f-49d6-b41e-37acd67820a7",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "PURWADADI",
+        "kelurahan": "KARANGPANINGAL",
+        "kewenangan": "PUSAT",
+        "name": "INTAKE WANAREJA",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.717797,
+          -7.447022
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "b18bf12a-7704-4e53-adea-b836bbff9d98",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "PURWADADI",
+        "kelurahan": "SIDARAHAYU",
+        "kewenangan": "PUSAT",
+        "name": "INTAKE LAKBOK SELATAN",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.225917,
+          -7.299142
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "732eb9c1-6e7d-4f77-82aa-9121a7b38315",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "SINDANGKASIH",
+        "kelurahan": "GUNUNGCUPU",
+        "kewenangan": "PUSAT",
+        "name": "INTAKE GUNUNG CUPU",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.720778,
+          -7.445725
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "ba87dbbe-0cd2-46d1-a8bd-4bc03fa7c475",
+        "is_pupr": true,
+        "kabupaten": "CILACAP",
+        "kecamatan": "KEDUNGREJA",
+        "kelurahan": "BOJONGSARI",
+        "kewenangan": "PUSAT",
+        "name": "INTAKE GANDRUNGMANGU",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA TENGAH",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.485203,
+          -7.356558
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "25651492-978a-49da-bd13-c1ce6597383c",
+        "is_pupr": true,
+        "kabupaten": "KOTA BANJAR",
+        "kecamatan": "BANJAR",
+        "kelurahan": "JAJAWAR",
+        "kewenangan": "PUSAT",
+        "name": "INTAKE BALOKANG PATROL",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.44775,
+          -7.577528
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "5a809389-2db5-4fc7-89cf-ee1a54d94566",
+        "das_name": "DAS CIJULANG",
+        "id": "4ee8b4cc-87fb-4afe-9014-10494942e32c",
+        "is_pupr": true,
+        "kabupaten": "PANGANDARAN",
+        "kecamatan": "LANGKAPLANCAR",
+        "kelurahan": "SUKAMULYA",
+        "kewenangan": "PROVINSI",
+        "name": "AIR BAKU SUKAMULYA",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "7876969b-15ef-418c-938d-8997a13ca343",
+        "ws_name": "CIWULAN-CILAKI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.444806,
+          -7.490639
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "22ef9656-d31d-4525-bee0-f6baeb35b1c4",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "PAMARICAN",
+        "kelurahan": "MEKARMULYA",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU SIDAMULIH",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.720836,
+          -7.445461
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "05546bd5-2a6e-4342-b908-6b1debef199e",
+        "is_pupr": true,
+        "kabupaten": "CILACAP",
+        "kecamatan": "KEDUNGREJA",
+        "kelurahan": "BOJONGSARI",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU PATIMUAN",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA TENGAH",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.420291,
+          -7.305038
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "cfe29f6b-6c06-4f20-bb84-2e8c57e3534a",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "CIJEUNGJING",
+        "kelurahan": "KARANGANYAR",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU KARANGANYAR",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.195187,
+          -7.089529
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "8b2a48f1-9637-4cdb-8118-91dd8b84ce4e",
+        "is_pupr": true,
+        "kabupaten": "TASIKMALAYA",
+        "kecamatan": "PAGERAGEUNG",
+        "kelurahan": "GURANTENG",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU GURANTENG",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.730397,
+          -7.382664
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "17119b8c-7e50-40af-85a0-d65e49f438b6",
+        "is_pupr": true,
+        "kabupaten": "CILACAP",
+        "kecamatan": "CIPARI",
+        "kelurahan": "CISURU",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CURUG GENDONG",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA TENGAH",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.634639,
+          -7.252306
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "48c012c7-23d1-4d54-ad6b-a56b0602b50e",
+        "is_pupr": true,
+        "kabupaten": "CILACAP",
+        "kecamatan": "DAYEUHLUHUR",
+        "kelurahan": "HANUM",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CITANGGAH",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA TENGAH",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.492958,
+          -7.623408
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "5a809389-2db5-4fc7-89cf-ee1a54d94566",
+        "das_name": "DAS CIJULANG",
+        "id": "85ecea6a-1c02-4e9a-a318-f0859daeac62",
+        "is_pupr": true,
+        "kabupaten": "PANGANDARAN",
+        "kecamatan": "LANGKAPLANCAR",
+        "kelurahan": "JADIMULYA",
+        "kewenangan": "PROVINSI",
+        "name": "AIR BAKU CISITU",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "7876969b-15ef-418c-938d-8997a13ca343",
+        "ws_name": "CIWULAN-CILAKI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.591947,
+          -7.229669
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "94a1ac57-41da-4279-bac2-92f5d7799fb0",
+        "is_pupr": true,
+        "kabupaten": "CILACAP",
+        "kecamatan": "DAYEUHLUHUR",
+        "kelurahan": "BINGKENG",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIPICUNG",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA TENGAH",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.399827,
+          -7.331429
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "a19c2b18-6eaa-48f5-ab6b-a29f61dca603",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "CIJEUNGJING",
+        "kelurahan": "PAMALAYAN",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIMAMUT",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.71669,
+          -7.206331
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "52888e8b-d7b0-4907-955d-13f9169f1595",
+        "is_pupr": true,
+        "kabupaten": "CILACAP",
+        "kecamatan": "MAJENANG",
+        "kelurahan": "SADAHAYU",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CILEUKSA",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA TENGAH",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.244167,
+          -7.14
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "8867ce1d-f0b4-47a3-a9ae-0cd4bc19225b",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "PANUMBANGAN",
+        "kelurahan": "BANJARANGSANA",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIKURULUK",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.315273,
+          -7.184743
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "8e75959b-5e96-422d-a10e-550659ab7040",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "LUMBUNG",
+        "kelurahan": "CIKUPA",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIKUPA",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.303722,
+          -7.220235
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "ae3ecae8-a496-4acf-805d-eb8548855848",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "SADANANYA",
+        "kelurahan": "TANJUNGSARI",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIKAWUNG 2",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.500858,
+          -7.595884
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "5a809389-2db5-4fc7-89cf-ee1a54d94566",
+        "das_name": "DAS CIJULANG",
+        "id": "e7037fea-5565-4aea-87dc-ebc00b1d0e0f",
+        "is_pupr": true,
+        "kabupaten": "PANGANDARAN",
+        "kecamatan": "LANGKAPLANCAR",
+        "kelurahan": "BANGUNKARYA",
+        "kewenangan": "PROVINSI",
+        "name": "AIR BAKU CIKAWUNG",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "7876969b-15ef-418c-938d-8997a13ca343",
+        "ws_name": "CIWULAN-CILAKI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.541444,
+          -7.287556
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "5625c9a1-1b48-434c-bbe9-d2500d34ff55",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "CISAGA",
+        "kelurahan": "BANGUNHARJA",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIHONJE",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.429611,
+          -7.602139
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "1fac8d53-19e3-4c42-92bc-755381f7bad1",
+        "das_name": "DAS CIMEDANG",
+        "id": "407ec10f-8244-4692-97ab-f836f153481e",
+        "is_pupr": true,
+        "kabupaten": "PANGANDARAN",
+        "kecamatan": "CIGUGUR",
+        "kelurahan": "CAMPAKA",
+        "kewenangan": "PROVINSI",
+        "name": "AIR BAKU CIGUGUR",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "7876969b-15ef-418c-938d-8997a13ca343",
+        "ws_name": "CIWULAN-CILAKI"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.650072,
+          -7.193361
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "489334e0-980c-4deb-a0bf-357124b7d6ca",
+        "is_pupr": true,
+        "kabupaten": "CILACAP",
+        "kecamatan": "DAYEUHLUHUR",
+        "kelurahan": "SUMPINGHAYU",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIGEBEG",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA TENGAH",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.702833,
+          -7.584083
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "43d1873a-651b-40d1-8b78-e14a96c02178",
+        "is_pupr": true,
+        "kabupaten": "PANGANDARAN",
+        "kecamatan": "PADAHERANG",
+        "kelurahan": "BOJONGSARI",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIGANJENG",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.585007,
+          -7.199637
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "9af8d55c-7e3f-4bdc-8c2d-b6a40f386cc2",
+        "is_pupr": true,
+        "kabupaten": "CILACAP",
+        "kecamatan": "DAYEUHLUHUR",
+        "kelurahan": "BOLANG",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIENGGANG",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA TENGAH",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.121806,
+          -7.245383
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "f6eb00bd-fae2-4e9d-9e18-880c318f4a45",
+        "is_pupr": true,
+        "kabupaten": "TASIKMALAYA",
+        "kecamatan": "CISAYONG",
+        "kelurahan": "SANTANAMEKAR",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIBODAS",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.227034,
+          -7.240048
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "5fd2dcec-365c-497c-9585-28ee410b03cb",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "CIHAURBEUTI",
+        "kelurahan": "SUKAHURIP",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU CIBARUYAN",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.302769,
+          -7.27464
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "6001d173-731d-4528-9ead-b008530d65c4",
+        "das_name": "DAS CITANDUY",
+        "id": "8a1b932e-2f3d-45eb-9a10-207828e124a6",
+        "is_pupr": true,
+        "kabupaten": "CIAMIS",
+        "kecamatan": "SADANANYA",
+        "kelurahan": "BENDASARI",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU BUBULAK",
+        "pengelola_id": 14,
+        "pengelola_name": "BBWS CITANDUY",
+        "provinsi": "JAWA BARAT",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "d899f0a5-8c0b-4c24-9edd-76937483f287",
+        "ws_name": "CITANDUY"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          108.985892,
+          -7.479817
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "das_id": "2ab62216-aec0-4292-b1d5-2b2af0c350a5",
+        "das_name": "DAS SERAYU",
+        "id": "9d4bdf9e-f5a9-4a8a-8b4e-281085ab9cae",
+        "is_pupr": true,
+        "kabupaten": "BANYUMAS",
+        "kecamatan": "LUMBIR",
+        "kelurahan": "KARANGGAYAM",
+        "kewenangan": "PUSAT",
+        "name": "AIR BAKU BULU MALANG",
+        "pengelola_id": 17,
+        "pengelola_name": "BBWS SERAYU OPAK",
+        "provinsi": "JAWA TENGAH",
+        "ref_id": null,
+        "type_id": 7,
+        "type_name": "Air Baku",
+        "ws_id": "c785691b-3dbe-4a4b-9f03-a23cf0fd2abd",
+        "ws_name": "SERAYU-BOGOWONTO"
+      },
+      "type": "Feature"
+    }
+  ],
+  "type": "FeatureCollection"
+}

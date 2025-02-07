@@ -1,0 +1,30 @@
+services:
+  backend:
+    image: registry.keenos.id/bbws-cc/cc-be:${IMAGE_TAG}
+    build: .
+    env_file: .env
+    ports:
+      - "8081:8081"
+      - "8083:8081"
+    networks:
+      - cc-be
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    depends_on:
+      - mariadb
+    restart: always
+    pull_policy: always
+  mariadb:
+    image: mariadb
+    env_file: mariadb.env
+    networks:
+      - cc-be
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    restart: always
+
+networks:
+  cc-be:
+
+volumes:
+  mariadb-data:

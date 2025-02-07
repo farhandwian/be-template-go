@@ -1,0 +1,256 @@
+package controllertest
+
+import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"iam/controller"
+	"iam/gateway"
+	"iam/model"
+	"iam/usecase"
+	"net/http"
+	"net/http/httptest"
+	"shared/helper"
+	"shared/middleware"
+	"testing"
+	"time"
+
+	"github.com/joho/godotenv"
+)
+
+func TestLoginOTPSubmitIntegration(t *testing.T) {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		t.Fatalf("Error loading .env file: %v", err)
+	}
+
+	testCases := []struct {
+		name           string
+		email          string
+		otpValue       string
+		expectedStatus int
+		expectedTokens bool
+		mux            *http.ServeMux
+	}{
+		{
+			name:           "Valid OTP Submit",
+			email:          "test@example.com",
+			otpValue:       "123456",
+			expectedStatus: http.StatusOK,
+			expectedTokens: true,
+			mux: LoginOTPSubmitDependency(
+				MockGateway(func(req gateway.PasswordValidateReq) (*gateway.PasswordValidateRes, error) {
+					return &gateway.PasswordValidateRes{}, nil
+				}),
+				MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+					return &gateway.UserGetAllRes{
+						Count: 1,
+						Items: []model.User{
+							{
+								ID:              "test-user-id",
+								Email:           "test@example.com",
+								EmailVerifiedAt: time.Now().Add(-24 * time.Hour),
+								Enabled:         true,
+								OTPExpirateAt:   time.Now().Add(5 * time.Minute),
+								OTPPurpose:      model.LOGIN,
+							},
+						},
+					}, nil
+				}),
+				MockGateway(func(req gateway.GenerateJWTReq) (*gateway.GenerateJWTRes, error) {
+					return &gateway.GenerateJWTRes{JWTToken: "mock-jwt-token"}, nil
+				}),
+				MockGateway(func(req gateway.GenerateIdReq) (*gateway.GenerateIdRes, error) {
+					return &gateway.GenerateIdRes{RandomId: "mock-refresh-token-id"}, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return &gateway.UserSaveRes{}, nil
+				}),
+			),
+		},
+		{
+			name:           "Expired OTP",
+			email:          "test@example.com",
+			otpValue:       "123456",
+			expectedStatus: http.StatusBadRequest,
+			expectedTokens: false,
+			mux: LoginOTPSubmitDependency(
+				MockGateway(func(req gateway.PasswordValidateReq) (*gateway.PasswordValidateRes, error) {
+					return &gateway.PasswordValidateRes{}, nil
+				}),
+				MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+					return &gateway.UserGetAllRes{
+						Count: 1,
+						Items: []model.User{
+							{
+								ID:              "test-user-id",
+								Email:           "test@example.com",
+								EmailVerifiedAt: time.Now().Add(-24 * time.Hour),
+								Enabled:         true,
+								OTPExpirateAt:   time.Now().Add(-5 * time.Minute), // Expired OTP
+								OTPPurpose:      model.LOGIN,
+							},
+						},
+					}, nil
+				}),
+				MockGateway(func(req gateway.GenerateJWTReq) (*gateway.GenerateJWTRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.GenerateIdReq) (*gateway.GenerateIdRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return &gateway.UserSaveRes{}, nil
+				}),
+			),
+		},
+		{
+			name:           "Invalid OTP",
+			email:          "test@example.com",
+			otpValue:       "000000",
+			expectedStatus: http.StatusBadRequest,
+			expectedTokens: false,
+			mux: LoginOTPSubmitDependency(
+				MockGateway(func(req gateway.PasswordValidateReq) (*gateway.PasswordValidateRes, error) {
+					return nil, errors.New("invalid OTP")
+				}),
+				MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+					return &gateway.UserGetAllRes{
+						Count: 1,
+						Items: []model.User{
+							{
+								ID:              "test-user-id",
+								Email:           "test@example.com",
+								EmailVerifiedAt: time.Now().Add(-24 * time.Hour),
+								Enabled:         true,
+								OTPExpirateAt:   time.Now().Add(5 * time.Minute),
+								OTPPurpose:      model.LOGIN,
+							},
+						},
+					}, nil
+				}),
+				MockGateway(func(req gateway.GenerateJWTReq) (*gateway.GenerateJWTRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.GenerateIdReq) (*gateway.GenerateIdRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return nil, nil
+				}),
+			),
+		},
+		{
+			name:           "User Not Found",
+			email:          "nonexistent@example.com",
+			otpValue:       "123456",
+			expectedStatus: http.StatusBadRequest,
+			expectedTokens: false,
+			mux: LoginOTPSubmitDependency(
+				MockGateway(func(req gateway.PasswordValidateReq) (*gateway.PasswordValidateRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+					return &gateway.UserGetAllRes{
+						Count: 0,
+						Items: []model.User{},
+					}, nil
+				}),
+				MockGateway(func(req gateway.GenerateJWTReq) (*gateway.GenerateJWTRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.GenerateIdReq) (*gateway.GenerateIdRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return nil, nil
+				}),
+			),
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			body := struct {
+				Email string `json:"email"`
+				OTP   string `json:"otp"`
+			}{
+				Email: tc.email,
+				OTP:   tc.otpValue,
+			}
+
+			bodyBytes, err := json.Marshal(body)
+			if err != nil {
+				t.Fatalf("Failed to marshal request body: %v", err)
+			}
+
+			req := httptest.NewRequest("POST", "/login/otp", bytes.NewBuffer(bodyBytes))
+			req.Header.Set("Content-Type", "application/json")
+
+			rr := httptest.NewRecorder()
+
+			tc.mux.ServeHTTP(rr, req)
+
+			if rr.Code != tc.expectedStatus {
+				t.Errorf("Expected status %d, got %d", tc.expectedStatus, rr.Code)
+			}
+
+			if tc.expectedStatus == http.StatusOK {
+				var response struct {
+					RefreshToken string `json:"RefreshToken"`
+					AccessToken  string `json:"AccessToken"`
+				}
+
+				if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+					t.Errorf("Failed to decode response body: %v", err)
+				}
+
+				if tc.expectedTokens {
+					if response.RefreshToken != "mock-jwt-token" || response.AccessToken != "mock-jwt-token" {
+						t.Errorf("Expected mock-jwt-token for both RefreshToken and AccessToken, got RefreshToken: %s, AccessToken: %s", response.RefreshToken, response.AccessToken)
+					}
+				} else {
+					if response.RefreshToken != "" || response.AccessToken != "" {
+						t.Errorf("Expected empty tokens, got RefreshToken: %s, AccessToken: %s", response.RefreshToken, response.AccessToken)
+					}
+				}
+			}
+		})
+	}
+}
+
+func LoginOTPSubmitDependency(
+	passwordValidate gateway.PasswordValidate,
+	userGetAll gateway.UserGetAll,
+	generateJWT gateway.GenerateJWT,
+	generateId gateway.GenerateId,
+	userSave gateway.UserSave,
+) *http.ServeMux {
+	mux := http.NewServeMux()
+
+	passwordValidateWithLogging := middleware.Logging(passwordValidate, 4)
+	userGetAllWithLogging := middleware.Logging(userGetAll, 4)
+	generateJWTWithLogging := middleware.Logging(generateJWT, 4)
+	generateIdWithLogging := middleware.Logging(generateId, 4)
+	userSaveWithLogging := middleware.Logging(userSave, 4)
+
+	loginOTPSubmitUseCase := usecase.ImplLoginOTPSubmit(
+		passwordValidateWithLogging,
+		userGetAllWithLogging,
+		generateJWTWithLogging,
+		generateIdWithLogging,
+		userSaveWithLogging,
+	)
+
+	loginOTPSubmitUseCaseWithLogging := middleware.Logging(loginOTPSubmitUseCase, 0)
+
+	c := controller.Controller{
+		Mux: mux,
+	}
+
+	helper.NewApiPrinter().
+		Add(c.LoginOTPSubmitHandler(loginOTPSubmitUseCaseWithLogging)).
+		Print()
+
+	return mux
+}

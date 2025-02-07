@@ -1,0 +1,210 @@
+package controllertest
+
+import (
+	"bytes"
+	"encoding/json"
+	"iam/controller"
+	"iam/gateway"
+	"iam/model"
+	"iam/usecase"
+	"net/http"
+	"net/http/httptest"
+	"shared/helper"
+	"shared/middleware"
+	"testing"
+
+	"github.com/joho/godotenv"
+)
+
+func TestRegisterUserIntegration(t *testing.T) {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		t.Fatalf("Error loading .env file: %v", err)
+	}
+
+	testCases := []struct {
+		name           string
+		email          string
+		phoneNumber    string
+		username       string
+		expectedStatus int
+		mux            *http.ServeMux
+	}{
+		{
+			name:           "Valid Registration",
+			email:          "newuser@example.com",
+			phoneNumber:    "+1234567890",
+			username:       "newuser",
+			expectedStatus: http.StatusOK,
+			mux: RegisterUserDependency(
+				MockGateway(func(req gateway.GenerateIdReq) (*gateway.GenerateIdRes, error) {
+					return &gateway.GenerateIdRes{RandomId: "new-user-id"}, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return &gateway.UserSaveRes{}, nil
+				}),
+				MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+					return &gateway.UserGetAllRes{
+						Count: 0,
+						Items: []model.User{},
+					}, nil
+				}),
+			),
+		},
+		{
+			name:           "Invalid Email",
+			email:          "invalidemail",
+			phoneNumber:    "+1234567890",
+			username:       "newuser",
+			expectedStatus: http.StatusBadRequest,
+			mux: RegisterUserDependency(
+				MockGateway(func(req gateway.GenerateIdReq) (*gateway.GenerateIdRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+					return &gateway.UserGetAllRes{
+						Count: 0,
+						Items: []model.User{},
+					}, nil
+				}),
+			),
+		},
+		// {
+		// 	name:           "Invalid Phone Number",
+		// 	email:          "newuser@example.com",
+		// 	phoneNumber:    "invalid",
+		// 	username:       "newuser",
+		// 	expectedStatus: http.StatusBadRequest,
+		// 	mux: RegisterUserDependency(
+		// 		MockGateway(func(req gateway.GenerateIdReq) (*gateway.GenerateIdRes, error) {
+		// 			return &gateway.GenerateIdRes{RandomId: "new-user-id"}, nil
+		// 		}),
+		// 		MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+		// 			return nil, nil
+		// 		}),
+		// 	),
+		// },
+		{
+			name:           "Empty Username",
+			email:          "newuser@example.com",
+			phoneNumber:    "+1234567890",
+			username:       "",
+			expectedStatus: http.StatusBadRequest,
+			mux: RegisterUserDependency(
+				MockGateway(func(req gateway.GenerateIdReq) (*gateway.GenerateIdRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+					return &gateway.UserGetAllRes{
+						Count: 0,
+						Items: []model.User{},
+					}, nil
+				}),
+			),
+		},
+		{
+			name:           "User Already Exists",
+			email:          "existing@example.com",
+			phoneNumber:    "+1234567890",
+			username:       "existinguser",
+			expectedStatus: http.StatusBadRequest,
+			mux: RegisterUserDependency(
+				MockGateway(func(req gateway.GenerateIdReq) (*gateway.GenerateIdRes, error) {
+					return &gateway.GenerateIdRes{RandomId: "existing-user-id"}, nil
+				}),
+				MockGateway(func(req gateway.UserSaveReq) (*gateway.UserSaveRes, error) {
+					return nil, nil
+				}),
+				MockGateway(func(req gateway.UserGetAllReq) (*gateway.UserGetAllRes, error) {
+					return &gateway.UserGetAllRes{
+						Count: 1,
+						Items: []model.User{
+							{},
+						},
+					}, nil
+				}),
+			),
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			body := struct {
+				Email       model.Email       `json:"email"`
+				PhoneNumber model.PhoneNumber `json:"phone_number"`
+				Name        string            `json:"name"`
+			}{
+				Email:       model.Email(tc.email),
+				PhoneNumber: model.PhoneNumber(tc.phoneNumber),
+				Name:        tc.username,
+			}
+
+			bodyBytes, err := json.Marshal(body)
+			if err != nil {
+				t.Fatalf("Failed to marshal request body: %v", err)
+			}
+
+			req := httptest.NewRequest("POST", "/register", bytes.NewBuffer(bodyBytes))
+			req.Header.Set("Content-Type", "application/json")
+
+			rr := httptest.NewRecorder()
+
+			tc.mux.ServeHTTP(rr, req)
+
+			if rr.Code != tc.expectedStatus {
+				t.Errorf("Expected status %d, got %d", tc.expectedStatus, rr.Code)
+			}
+
+			if rr.Code == http.StatusOK {
+				var registerResp struct {
+					UserID model.UserID `json:"user_id"`
+				}
+				if err := json.NewDecoder(rr.Body).Decode(&registerResp); err != nil {
+					t.Errorf("Failed to decode response body: %v", err)
+				}
+
+				if registerResp.UserID == "" {
+					t.Errorf("Expected non-empty UserID in response")
+				}
+			}
+		})
+	}
+}
+
+func RegisterUserDependency(
+	generateId gateway.GenerateId,
+	userSave gateway.UserSave,
+	userGetAll gateway.UserGetAll,
+) *http.ServeMux {
+	mux := http.NewServeMux()
+
+	generateIdWithLogging := middleware.Logging(generateId, 4)
+	userSaveWithLogging := middleware.Logging(userSave, 4)
+
+	registerUserUseCase := usecase.ImplRegisterUser(
+		generateIdWithLogging,
+		userSaveWithLogging,
+		userGetAll,
+	)
+
+	registerUserUseCaseWithLogging := middleware.Logging(registerUserUseCase, 0)
+
+	mockJWTToken, _ := helper.NewJWTTokenizer("mock-secret-key")
+
+	c := controller.Controller{
+		Mux: mux,
+		JWT: mockJWTToken,
+	}
+
+	helper.NewApiPrinter().
+		Add(c.RegisterUserHandler(registerUserUseCaseWithLogging)).
+		Print()
+
+	return mux
+}
