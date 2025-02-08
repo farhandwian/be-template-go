@@ -1,6 +1,7 @@
 package config
 
 import (
+	"example/model"
 	"fmt"
 	"log"
 	"os"
@@ -13,11 +14,11 @@ import (
 func InitMariaDatabase() *gorm.DB {
 
 	// Retrieve database connection details from environment variables
-	dbUser := os.Getenv("DB_MANGANTI_USER")
-	dbPassword := os.Getenv("DB_MANGANTI_PASSWORD")
-	dbHost := os.Getenv("DB_MANGANTI_HOST")
-	dbPort := os.Getenv("DB_MANGANTI_PORT")
-	dbName := os.Getenv("DB_MANGANTI_NAME")
+	dbUser := os.Getenv("DB_EXAMPLE_USER")
+	dbPassword := os.Getenv("DB_EXAMPLE_PASSWORD")
+	dbHost := os.Getenv("DB_EXAMPLE_HOST")
+	dbPort := os.Getenv("DB_EXAMPLE_PORT")
+	dbName := os.Getenv("DB_EXAMPLE_NAME")
 
 	// Construct the DSN string using environment variables
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
@@ -42,7 +43,9 @@ func InitMariaDatabase() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	// db.AutoMigrate(
+	db.AutoMigrate(
+		&model.Example{},
+	)
 	// &model.SKPerizinan{},
 	// &model.LaporanPerizinan{},
 	// 	&model.Employee{},
@@ -85,10 +88,10 @@ func InitMariaDatabase() *gorm.DB {
 		panic("failed to ping database")
 	}
 
-	err = createMariaDBIndex(db)
-	if err != nil {
-		log.Printf("failed to create indexes: %v", err)
-	}
+	// err = createMariaDBIndex(db)
+	// if err != nil {
+	// 	log.Printf("failed to create indexes: %v", err)
+	// }
 
 	return db
 }

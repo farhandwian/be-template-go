@@ -1,2 +1,0 @@
-## Proyek Tahun 2024 di WS Citanduy
-Proyek BBWS Citanduy pada Satuan Kerja Balai Besar WS Citanduy Tahun 2023-2024 yaitu adanya Peningkatan Gedung Kantor Balai Besar Wilayah Sunfai Citanduy yang terdiri dari Gedung 4 lantai yang dilengkapi dengan lift dan pembangunan Command Center. Peningkatan Gedung Kantor BBWS Citanduy dimulai pada Bulan Juli Tahun 2023 dan selesai pada Bulan Agustus 2024.

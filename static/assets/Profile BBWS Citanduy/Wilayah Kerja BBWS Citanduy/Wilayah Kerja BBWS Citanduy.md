@@ -1,3 +1,0 @@
-# Wilayah Kerja BBWS Citanduy
-Berdasarkan Peraturan Menteri PUPR Nomor 4/PRT/M/2015 tentang Kriteria dan Penetapan Wilayah Sungai. Luas Wilayah Sungai Citanduy seluas 4.512,25 Km2. yang terdiri dari 24 (dua puluh empat) DAS dengan DAS terbesar yaitu DAS Citanduy yang seluas 3.656,673 Km2. 24 (dua puluh empat) DAS tersebut antara lain:
-DAS Citanduy, DAS Cibeureum, DAS Citotok,DAS Cimeneng, DAS Cikonde, DAS Sapuregel, DAS Gatel, DAS Branalang, DAS Kipah, DAS Panembung, DAS Karanganyar, DAS Tambakreja, DAS Nirbaya, DAS Solokjari, DAS Permisan, DAS Lembongpucung, DAS Solok Permisan, DAS Solokpring, DAS Pandan, DAS Solokdewata, DAS Ciparayangan, DAS Cijolong, DAS Cipambokongan, DAS Cipanerekean.

@@ -1,16 +1,13 @@
 package main
 
 import (
-	bigboard "bigboard/wiring"
 	"context"
-	dashboard "dashboard/wiring"
 	"encoding/json"
+	example "example/wiring"
 	iam "iam/wiring"
-	monitoring "monitoring/wiring"
 
 	"net/http"
 	"os"
-	perizinan "perizinan/wiring"
 	"shared/config"
 	"shared/helper"
 	"shared/helper/cronjob"
@@ -35,14 +32,14 @@ func main() {
 
 	// dashboard.InitSeeder(mangantiDB)
 
-	tsdb := config.InitTimeSeriesDatabase()
+	// tsdb := config.InitTimeSeriesDatabase()
 
 	iam.CreateAdminIfNotExists(mangantiDB)
 
 	mux := http.NewServeMux()
 
-	sseBigboard := helper.NewSSEFDefault()
-	mux.HandleFunc("GET /bigboard/sse", sseBigboard.HandleSSE)
+	// sseBigboard := helper.NewSSEFDefault()
+	// mux.HandleFunc("GET /bigboard/sse", sseBigboard.HandleSSE)
 
 	sseDashboard := helper.NewSSEFDefault()
 	mux.HandleFunc("GET /dashboard/sse", sseDashboard.HandleSSE)
@@ -57,11 +54,7 @@ func main() {
 	cj := cronjob.NewCronJob(nil, cronjobDB)
 
 	iam.SetupDependencyWithDatabaseAndEmail(apiPrinter, mux, jwtToken, mangantiDB, ec)
-	bigboard.SetupDependency(mangantiDB, tsdb, mux, jwtToken, apiPrinter, sseBigboard)
-	dashboard.SetupDependency(mangantiDB, tsdb, mux, jwtToken, apiPrinter, cj, sseBigboard, sseDashboard)
-	monitoring.SetupDependency(mangantiDB, mux, apiPrinter)
-	perizinan.SetupDependency(mangantiDB, mux, apiPrinter, jwtToken)
-
+	example.SetupDependency(mangantiDB, mux, jwtToken, apiPrinter, cj, sseDashboard)
 	mux.HandleFunc("GET /ping", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
