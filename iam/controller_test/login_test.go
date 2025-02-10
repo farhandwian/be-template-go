@@ -329,7 +329,7 @@ func LoginDependency(
 		Mux: mux,
 	}
 
-	helper.NewApiPrinter().
+	helper.NewApiPrinter("", "").
 		Add(c.LoginHandler(loginUseCaseWithLogging)).
 		Print()
 

@@ -48,7 +48,9 @@ func (a APIData) GetMethodUrl() string {
 }
 
 type ApiPrinter struct {
-	urls []APIData
+	urls        []APIData
+	title       string
+	description string
 }
 
 func (r *ApiPrinter) Add(apiData APIData) *ApiPrinter {
@@ -139,13 +141,13 @@ func (r ApiPrinter) generateOpenAPISchema(baseURL string) OpenAPISchema {
 	schema := OpenAPISchema{
 		OpenAPI: "3.0.0",
 		Info: map[string]interface{}{
-			"title":   "IAM API",
+			"title":   r.title,
 			"version": "1.0.0",
 		},
 		Servers: []map[string]interface{}{
 			{
 				"url":         baseURL,
-				"description": "API server",
+				"description": r.description,
 			},
 		},
 		Paths:      make(map[string]interface{}),
@@ -393,8 +395,10 @@ func (r ApiPrinter) PublishAPI(mux *http.ServeMux, baseURL, apiURL string) ApiPr
 	return r
 }
 
-func NewApiPrinter() *ApiPrinter {
+func NewApiPrinter(title string, description string) *ApiPrinter {
 	return &ApiPrinter{
-		urls: []APIData{},
+		urls:        []APIData{},
+		title:       title,
+		description: description,
 	}
 }

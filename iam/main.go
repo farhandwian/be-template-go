@@ -8,8 +8,16 @@ import (
 	"shared/config"
 	"shared/helper"
 
+	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 )
+
+func init() {
+	if err := godotenv.Load(); err != nil {
+		panic(".env file not found")
+	}
+
+}
 
 func main() {
 
@@ -24,7 +32,7 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	apiPrinter := helper.NewApiPrinter()
+	apiPrinter := helper.NewApiPrinter("I AM", "I AM api documentation")
 
 	wiring.SetupDependencyWithDatabase(apiPrinter, mux, jwtToken, db)
 

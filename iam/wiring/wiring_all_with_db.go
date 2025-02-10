@@ -22,7 +22,7 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 	passwordEncrypt := gateway.ImplPasswordEncrypt()                       //
 	passwordValidate := gateway.ImplPasswordValidate()                     //
 	sendEmail := gateway.ImplSendEmail()                                   //
-	sendOTP := gateway.ImplSendOTP()                                       //
+	sendOTP := gateway.ImplSendOTPToWA()                                   //
 	userGetAll := gateway.ImplUserGetAllWithDatabase(db)                   // USE DATABASE IMPLEMENTATION
 	userGetOneByID := gateway.ImplUserGetOneByIDWithDatabase(db)           // USE DATABASE IMPLEMENTATION
 	userSave := gateway.ImplUserSaveWithDatabse(db)

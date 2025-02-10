@@ -13,10 +13,14 @@ import (
 	"shared/helper"
 
 	"testing"
+
+	"github.com/joho/godotenv"
 )
 
 func Test01(t *testing.T) {
-
+	if err := godotenv.Load(); err != nil {
+		panic(".env file not found")
+	}
 	jwtToken, _ := helper.NewJWTTokenizer(os.Getenv("TOKEN"))
 
 	db := config.InitMariaDatabase()
@@ -27,7 +31,7 @@ func Test01(t *testing.T) {
 
 	mux := http.NewServeMux()
 
-	apiPrinter := helper.NewApiPrinter()
+	apiPrinter := helper.NewApiPrinter("", "")
 
 	wiring.SetupDependencyWithDatabase(apiPrinter, mux, jwtToken, db)
 
