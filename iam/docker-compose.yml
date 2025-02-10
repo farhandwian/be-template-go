@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  keto:
+    image: oryd/keto
+    restart: unless-stopped
+    ports:
+      - "4466:4466"  # Read API
+      - "4467:4467"  # Write API
+    environment:
+      - DSN=memory
+    command: serve --config /home/ory/keto.yml
+    volumes:
+      - ./keto/keto.yml:/home/ory/keto.yml  # Mount the correct file
+      - ./keto/keto_namespaces:/home/ory/keto_namespaces  # Mount keto_namespaces file
