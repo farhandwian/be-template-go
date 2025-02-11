@@ -7,12 +7,13 @@ import (
 	"net/http"
 	sharedGateway "shared/gateway"
 	"shared/helper"
+	ketoHelper "shared/helper/ory/keto"
 	"shared/middleware"
 
 	"gorm.io/gorm"
 )
 
-func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeMux, jwtToken helper.JWTTokenizer, db *gorm.DB) {
+func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeMux, keto *ketoHelper.KetoGRPCClient, jwtToken helper.JWTTokenizer, db *gorm.DB) {
 
 	// gateways
 	generateId := gateway.ImplGenerateId()                                 //
@@ -45,6 +46,7 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 	// usecases
 	accessReset := usecase.ImplAccessReset(userGetOneByIDToUseCase, userSaveToUseCase)
 	userGetAccess := usecase.ImplUserGetAccess(userGetOneByIDToUseCase)
+	checkAccessKeto := usecase.ImplCheckAccessKeto(keto)
 	emailActivationRequest := usecase.ImplEmailActivationRequest(userGetOneByIDToUseCase, generateJWTToUseCase, sendEmailToUseCase)
 	emailActivationSubmit := usecase.ImplEmailActivationSubmit(validateJWTToUseCase, userGetOneByIDToUseCase, userSaveToUseCase, passwordEncryptToUseCase)
 	loginOTPSubmit := usecase.ImplLoginOTPSubmit(passwordValidateToUseCase, userGetAllToUseCase, generateJWTToUseCase, generateIdToUseCase, userSaveToUseCase, createActivityMonitoringGateway)
@@ -88,6 +90,7 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 	// controllers
 	apiPrinter.
 		Add(c.UserGetAllHandler(userGetAllToHandler)).
+		Add(c.CheckAccessKetoHandler(checkAccessKeto)).
 		Add(c.UserGetMeHandler(userGetOneToHandler)).
 		Add(c.UserGetOneHandler(userGetOneToHandler)).
 		Add(c.UserGetAccessHandler(userGetAccessToHandler)).

@@ -2,12 +2,10 @@ package usecase
 
 import (
 	"context"
-	"log"
+	"iam/model"
 	"shared/core"
 
 	ketoHelper "shared/helper/ory/keto"
-
-	relationTuples "github.com/ory/keto/proto/ory/keto/relation_tuples/v1alpha2"
 )
 
 type CheckAccessKetoReq struct {
@@ -23,30 +21,11 @@ type CheckAccessKetoRes struct {
 
 type CheckAccessKetoUseCase = core.ActionHandler[CheckAccessKetoReq, CheckAccessKetoRes]
 
-func ImplCheckAccessKeto() CheckAccessKetoUseCase {
+func ImplCheckAccessKeto(ketoClient *ketoHelper.KetoGRPCClient) CheckAccessKetoUseCase {
 	return func(ctx context.Context, request CheckAccessKetoReq) (*CheckAccessKetoRes, error) {
-		ketoClient := ketoHelper.SetupKetoGRPCClient().ReadClient
+		userAccess := model.NewUserAccessKeto(request.SubjectID, ketoClient)
 
-		ketoRequest := &relationTuples.ListRelationTuplesRequest{
-			RelationQuery: &relationTuples.RelationQuery{
-
-				Namespace: &request.Namespace,
-				Object:    &request.Object,
-				Relation:  &request.Relation,
-				Subject: &relationTuples.Subject{
-					Ref: &relationTuples.Subject_Id{
-						Id: request.SubjectID,
-					},
-				},
-			},
-		}
-		response, err := ketoClient.ListRelationTuples(ctx, ketoRequest)
-		if err != nil {
-			log.Printf("Error checking permission in Keto: %v", err)
-			return nil, err
-		}
-
-		canAccess := len(response.RelationTuples) > 0
+		canAccess := userAccess.HasAccess(ctx, request.Namespace, request.Relation, request.Object)
 
 		return &CheckAccessKetoRes{
 			CanAccess: canAccess,
