@@ -16,5 +16,7 @@ require (
 require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/ory/client-go v1.16.6 // indirect
+	golang.org/x/oauth2 v0.26.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 )
