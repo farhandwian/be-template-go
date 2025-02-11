@@ -35,7 +35,7 @@ func main() {
 
 	ketoClient := ketoHelper.SetupKetoGRPCClient()
 
-	apiPrinter := helper.NewApiPrinter()
+	apiPrinter := helper.NewApiPrinter("I AM", "I AM api documentation")
 
 	wiring.SetupDependencyWithDatabase(apiPrinter, mux, ketoClient, jwtToken, db)
 

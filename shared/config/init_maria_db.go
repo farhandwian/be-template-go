@@ -3,6 +3,7 @@ package config
 import (
 	"example/model"
 	"fmt"
+	iamModel "iam/model"
 	"log"
 	"os"
 
@@ -45,6 +46,7 @@ func InitMariaDatabase() *gorm.DB {
 
 	db.AutoMigrate(
 		&model.Example{},
+		&iamModel.User{},
 	)
 	// &model.SKPerizinan{},
 	// &model.LaporanPerizinan{},

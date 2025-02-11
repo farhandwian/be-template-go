@@ -30,7 +30,7 @@ func main() {
 	// timescaleDB := config.InitTimeSeriesDatabase()
 
 	mux := http.NewServeMux()
-	apiPrinter := helper.NewApiPrinter()
+	apiPrinter := helper.NewApiPrinter("example Swagger Doc API", "example swagger open API documentation genarated automaticaly by system")
 
 	ssed := helper.NewSSEFDefault()
 	mux.HandleFunc("GET /example/sse", ssed.HandleSSE)

@@ -13,9 +13,9 @@ func (c Controller) ExampleGetAllHandler(u usecase.ExampleGetAllUseCase) helper.
 	apiData := helper.APIData{
 		Access:  iammodel.DEFAULT_OPERATION,
 		Method:  http.MethodGet,
-		Url:     "/dashboard/water-channel-doors/",
-		Summary: "Get list water channel door",
-		Tag:     "Dashboard",
+		Url:     "/dashboard/example/",
+		Summary: "Get list example",
+		Tag:     "Example Tag",
 		QueryParams: []helper.QueryParam{
 			{Name: "test_string", Type: "string", Description: "Test parameter string", Required: false},
 			{Name: "test_number", Type: "number", Description: "Test parameter number", Required: false},

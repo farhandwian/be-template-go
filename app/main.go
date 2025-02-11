@@ -44,7 +44,7 @@ func main() {
 	sseDashboard := helper.NewSSEFDefault()
 	mux.HandleFunc("GET /dashboard/sse", sseDashboard.HandleSSE)
 
-	apiPrinter := helper.NewApiPrinter()
+	apiPrinter := helper.NewApiPrinter("", "")
 
 	cronjobDB, err := cronjob.NewMariaDBStorage(mangantiDB)
 	if err != nil {

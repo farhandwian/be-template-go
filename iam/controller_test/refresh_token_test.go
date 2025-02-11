@@ -226,7 +226,7 @@ func RefreshTokenDependency(
 		JWT: mockJWTToken,
 	}
 
-	helper.NewApiPrinter().
+	helper.NewApiPrinter("", "").
 		Add(c.RefreshTokenHandler(refreshTokenUseCaseWithLogging)).
 		Print()
 

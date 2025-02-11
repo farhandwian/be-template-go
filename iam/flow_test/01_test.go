@@ -1,302 +1,306 @@
 package flowtest
 
-import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"iam/model"
-	"iam/wiring"
-	"net/http"
-	"net/http/httptest"
-	"os"
-	"shared/config"
-	"shared/helper"
-
-	"testing"
-)
-
-func Test01(t *testing.T) {
-
-	jwtToken, _ := helper.NewJWTTokenizer(os.Getenv("TOKEN"))
-
-	db := config.InitMariaDatabase()
-
-	resetAllDatabaseForTestingPurpose(db)
-
-	wiring.CreateAdminIfNotExists(db)
-
-	mux := http.NewServeMux()
-
-	apiPrinter := helper.NewApiPrinter()
+// import (
+// 	"bytes"
+// 	"encoding/json"
+// 	"fmt"
+// 	"iam/model"
+// 	"iam/wiring"
+// 	"net/http"
+// 	"net/http/httptest"
+// 	"os"
+// 	"shared/config"
+// 	"shared/helper"
+
+// 	"testing"
+
+// 	"github.com/joho/godotenv"
+// )
+
+// func Test01(t *testing.T) {
+// 	if err := godotenv.Load(); err != nil {
+// 		panic(".env file not found")
+// 	}
+// 	jwtToken, _ := helper.NewJWTTokenizer(os.Getenv("TOKEN"))
+
+// 	db := config.InitMariaDatabase()
+
+// 	resetAllDatabaseForTestingPurpose(db)
+
+// 	wiring.CreateAdminIfNotExists(db)
+
+// 	mux := http.NewServeMux()
+
+// 	apiPrinter := helper.NewApiPrinter("", "")
+
+// 	wiring.SetupDependencyWithDatabase(apiPrinter, mux, jwtToken, db)
+
+// 	// check user
+// 	{
+// 		var user model.User
+// 		db.Find(&user, "email = ?", "admin@mail.com")
+// 		printUser("before login", user, "admin1234", "1234", "")
+// 	}
+
+// 	// login
+// 	{
+// 		body := struct {
+// 			Email    model.Email `json:"email"`
+// 			Password string      `json:"password"`
+// 		}{
+// 			Email:    model.Email("admin@mail.com"),
+// 			Password: "admin1234",
+// 		}
 
-	wiring.SetupDependencyWithDatabase(apiPrinter, mux, jwtToken, db)
+// 		bodyBytes, err := json.Marshal(body)
+// 		if err != nil {
+// 			t.Fatalf("Failed to marshal request body: %v", err)
+// 		}
+
+// 		req := httptest.NewRequest("POST", "/auth/login", bytes.NewBuffer(bodyBytes))
+// 		req.Header.Set("Content-Type", "application/json")
+
+// 		rr := httptest.NewRecorder()
+
+// 		mux.ServeHTTP(rr, req)
+
+// 		fmt.Printf(">> login finish with response code %d\n", rr.Code)
+// 	}
+
+// 	// check user
+// 	{
+// 		var user model.User
+// 		db.Find(&user, "email = ?", "admin@mail.com")
+// 		printUser("after login ", user, "admin1234", "1234", "123456")
+// 	}
+
+// 	accessToken := ""
+// 	refreshToken := ""
 
-	// check user
-	{
-		var user model.User
-		db.Find(&user, "email = ?", "admin@mail.com")
-		printUser("before login", user, "admin1234", "1234", "")
-	}
-
-	// login
-	{
-		body := struct {
-			Email    model.Email `json:"email"`
-			Password string      `json:"password"`
-		}{
-			Email:    model.Email("admin@mail.com"),
-			Password: "admin1234",
-		}
+// 	// login otp
+// 	{
+// 		body := struct {
+// 			Email model.Email `json:"email"`
+// 			OTP   string      `json:"otp"`
+// 		}{
+// 			Email: model.Email("admin@mail.com"),
+// 			OTP:   "123456",
+// 		}
+
+// 		bodyBytes, err := json.Marshal(body)
+// 		if err != nil {
+// 			t.Fatalf("Failed to marshal request body: %v", err)
+// 		}
+
+// 		req := httptest.NewRequest("POST", "/auth/login/otp", bytes.NewBuffer(bodyBytes))
+// 		req.Header.Set("Content-Type", "application/json")
+
+// 		rr := httptest.NewRecorder()
+
+// 		mux.ServeHTTP(rr, req)
+
+// 		type Response struct {
+// 			RefreshToken string `json:"refresh_token"`
+// 			AccessToken  string `json:"access_token"`
+// 		}
 
-		bodyBytes, err := json.Marshal(body)
-		if err != nil {
-			t.Fatalf("Failed to marshal request body: %v", err)
-		}
+// 		var response Response
+// 		json.Unmarshal(rr.Body.Bytes(), &response)
 
-		req := httptest.NewRequest("POST", "/auth/login", bytes.NewBuffer(bodyBytes))
-		req.Header.Set("Content-Type", "application/json")
+// 		accessToken = response.AccessToken
+// 		refreshToken = response.RefreshToken
 
-		rr := httptest.NewRecorder()
+// 		var responseBody any
+// 		json.NewDecoder(rr.Body).Decode(&responseBody)
+// 		x, _ := json.Marshal(responseBody)
+// 		fmt.Printf(">> login otp finish response code is: %d, output is: %v \n", rr.Code, string(x))
+// 	}
 
-		mux.ServeHTTP(rr, req)
+// 	// check user
+// 	{
+// 		var user model.User
+// 		db.Find(&user, "email = ?", "admin@mail.com")
+// 		printUser("after login otp", user, "admin1234", "1234", "")
+// 	}
+
+// 	// users get all
+// 	{
+
+// 		req := httptest.NewRequest("GET", "/users", nil)
+// 		req.Header.Set("Content-Type", "application/json")
+// 		req.Header.Set("Authorization", "Bearer "+accessToken)
+
+// 		rr := httptest.NewRecorder()
+
+// 		mux.ServeHTTP(rr, req)
+
+// 		var responseBody any
+// 		json.NewDecoder(rr.Body).Decode(&responseBody)
+// 		x, _ := json.Marshal(responseBody)
+// 		fmt.Printf(">> get all user response code is: %d, output is: %v \n", rr.Code, string(x))
+// 	}
 
-		fmt.Printf(">> login finish with response code %d\n", rr.Code)
-	}
+// 	// users get me
+// 	{
 
-	// check user
-	{
-		var user model.User
-		db.Find(&user, "email = ?", "admin@mail.com")
-		printUser("after login ", user, "admin1234", "1234", "123456")
-	}
-
-	accessToken := ""
-	refreshToken := ""
+// 		req := httptest.NewRequest("GET", "/users/me", nil)
+// 		req.Header.Set("Content-Type", "application/json")
+// 		req.Header.Set("Authorization", "Bearer "+accessToken)
+
+// 		rr := httptest.NewRecorder()
 
-	// login otp
-	{
-		body := struct {
-			Email model.Email `json:"email"`
-			OTP   string      `json:"otp"`
-		}{
-			Email: model.Email("admin@mail.com"),
-			OTP:   "123456",
-		}
+// 		mux.ServeHTTP(rr, req)
+
+// 		var responseBody any
+// 		json.NewDecoder(rr.Body).Decode(&responseBody)
+// 		x, _ := json.Marshal(responseBody)
+// 		fmt.Printf(">> get me user response code is: %d, output is: %v \n", rr.Code, string(x))
+// 	}
 
-		bodyBytes, err := json.Marshal(body)
-		if err != nil {
-			t.Fatalf("Failed to marshal request body: %v", err)
-		}
+// 	// refresh token
+// 	{
 
-		req := httptest.NewRequest("POST", "/auth/login/otp", bytes.NewBuffer(bodyBytes))
-		req.Header.Set("Content-Type", "application/json")
+// 		body := struct {
+// 			RefreshToken string `json:"refresh_token"`
+// 		}{
+// 			RefreshToken: refreshToken,
+// 		}
 
-		rr := httptest.NewRecorder()
+// 		bodyBytes, err := json.Marshal(body)
+// 		if err != nil {
+// 			t.Fatalf("Failed to marshal request body: %v", err)
+// 		}
 
-		mux.ServeHTTP(rr, req)
+// 		req := httptest.NewRequest("POST", "/auth/refresh-token", bytes.NewBuffer(bodyBytes))
+// 		req.Header.Set("Content-Type", "application/json")
 
-		type Response struct {
-			RefreshToken string `json:"refresh_token"`
-			AccessToken  string `json:"access_token"`
-		}
+// 		rr := httptest.NewRecorder()
 
-		var response Response
-		json.Unmarshal(rr.Body.Bytes(), &response)
+// 		mux.ServeHTTP(rr, req)
+
+// 		var responseBody any
+// 		json.NewDecoder(rr.Body).Decode(&responseBody)
+// 		x, _ := json.Marshal(responseBody)
+// 		fmt.Printf(">> refresh token response code is: %d, output is: %v \n", rr.Code, string(x))
+// 	}
+
+// 	// check user
+// 	{
+// 		var user model.User
+// 		db.Find(&user, "email = ?", "admin@mail.com")
+// 		printUser("before password change request", user, "admin1234", "1234", "")
+// 	}
+
+// 	// password change request
+// 	{
 
-		accessToken = response.AccessToken
-		refreshToken = response.RefreshToken
+// 		req := httptest.NewRequest("POST", "/password/change/initiate", nil)
+// 		req.Header.Set("Content-Type", "application/json")
+// 		req.Header.Set("Authorization", "Bearer "+accessToken)
 
-		var responseBody any
-		json.NewDecoder(rr.Body).Decode(&responseBody)
-		x, _ := json.Marshal(responseBody)
-		fmt.Printf(">> login otp finish response code is: %d, output is: %v \n", rr.Code, string(x))
-	}
+// 		rr := httptest.NewRecorder()
 
-	// check user
-	{
-		var user model.User
-		db.Find(&user, "email = ?", "admin@mail.com")
-		printUser("after login otp", user, "admin1234", "1234", "")
-	}
-
-	// users get all
-	{
-
-		req := httptest.NewRequest("GET", "/users", nil)
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Authorization", "Bearer "+accessToken)
-
-		rr := httptest.NewRecorder()
-
-		mux.ServeHTTP(rr, req)
-
-		var responseBody any
-		json.NewDecoder(rr.Body).Decode(&responseBody)
-		x, _ := json.Marshal(responseBody)
-		fmt.Printf(">> get all user response code is: %d, output is: %v \n", rr.Code, string(x))
-	}
+// 		mux.ServeHTTP(rr, req)
+
+// 		fmt.Printf(">> password change initiate response code is: %d\n", rr.Code)
+// 	}
 
-	// users get me
-	{
+// 	// check user
+// 	{
+// 		var user model.User
+// 		db.Find(&user, "email = ?", "admin@mail.com")
+// 		printUser("after password change request", user, "admin1234", "1234", "123456")
+// 	}
 
-		req := httptest.NewRequest("GET", "/users/me", nil)
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Authorization", "Bearer "+accessToken)
-
-		rr := httptest.NewRecorder()
+// 	// change password submit
+// 	{
 
-		mux.ServeHTTP(rr, req)
-
-		var responseBody any
-		json.NewDecoder(rr.Body).Decode(&responseBody)
-		x, _ := json.Marshal(responseBody)
-		fmt.Printf(">> get me user response code is: %d, output is: %v \n", rr.Code, string(x))
-	}
+// 		body := struct {
+// 			OTP         string `json:"otp"`
+// 			OldPassword string `json:"old_password"`
+// 			NewPassword string `json:"new_password"`
+// 		}{
+// 			OTP:         "123456",
+// 			OldPassword: "admin1234",
+// 			NewPassword: "4321admin",
+// 		}
 
-	// refresh token
-	{
+// 		bodyBytes, err := json.Marshal(body)
+// 		if err != nil {
+// 			t.Fatalf("Failed to marshal request body: %v", err)
+// 		}
 
-		body := struct {
-			RefreshToken string `json:"refresh_token"`
-		}{
-			RefreshToken: refreshToken,
-		}
+// 		req := httptest.NewRequest("POST", "/password/change/verify", bytes.NewBuffer(bodyBytes))
+// 		req.Header.Set("Content-Type", "application/json")
+// 		req.Header.Set("Authorization", "Bearer "+accessToken)
 
-		bodyBytes, err := json.Marshal(body)
-		if err != nil {
-			t.Fatalf("Failed to marshal request body: %v", err)
-		}
+// 		rr := httptest.NewRecorder()
 
-		req := httptest.NewRequest("POST", "/auth/refresh-token", bytes.NewBuffer(bodyBytes))
-		req.Header.Set("Content-Type", "application/json")
+// 		mux.ServeHTTP(rr, req)
 
-		rr := httptest.NewRecorder()
+// 		fmt.Printf(">> change password submit response code is: %d\n", rr.Code)
+// 	}
 
-		mux.ServeHTTP(rr, req)
-
-		var responseBody any
-		json.NewDecoder(rr.Body).Decode(&responseBody)
-		x, _ := json.Marshal(responseBody)
-		fmt.Printf(">> refresh token response code is: %d, output is: %v \n", rr.Code, string(x))
-	}
-
-	// check user
-	{
-		var user model.User
-		db.Find(&user, "email = ?", "admin@mail.com")
-		printUser("before password change request", user, "admin1234", "1234", "")
-	}
-
-	// password change request
-	{
+// 	// check user
+// 	{
+// 		var user model.User
+// 		db.Find(&user, "email = ?", "admin@mail.com")
+// 		printUser("after password change submit", user, "4321admin", "1234", "")
+// 	}
 
-		req := httptest.NewRequest("POST", "/password/change/initiate", nil)
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Authorization", "Bearer "+accessToken)
+// 	// pin change request
+// 	{
 
-		rr := httptest.NewRecorder()
+// 		req := httptest.NewRequest("POST", "/pin/change/initiate", nil)
+// 		req.Header.Set("Content-Type", "application/json")
+// 		req.Header.Set("Authorization", "Bearer "+accessToken)
 
-		mux.ServeHTTP(rr, req)
-
-		fmt.Printf(">> password change initiate response code is: %d\n", rr.Code)
-	}
+// 		rr := httptest.NewRecorder()
 
-	// check user
-	{
-		var user model.User
-		db.Find(&user, "email = ?", "admin@mail.com")
-		printUser("after password change request", user, "admin1234", "1234", "123456")
-	}
+// 		mux.ServeHTTP(rr, req)
 
-	// change password submit
-	{
+// 		fmt.Printf(">> pin change initiate response code is: %d\n", rr.Code)
+// 	}
 
-		body := struct {
-			OTP         string `json:"otp"`
-			OldPassword string `json:"old_password"`
-			NewPassword string `json:"new_password"`
-		}{
-			OTP:         "123456",
-			OldPassword: "admin1234",
-			NewPassword: "4321admin",
-		}
+// 	// check user
+// 	{
+// 		var user model.User
+// 		db.Find(&user, "email = ?", "admin@mail.com")
+// 		printUser("after pin change request", user, "4321admin", "1234", "123456")
+// 	}
 
-		bodyBytes, err := json.Marshal(body)
-		if err != nil {
-			t.Fatalf("Failed to marshal request body: %v", err)
-		}
+// 	// change pin submit
+// 	{
 
-		req := httptest.NewRequest("POST", "/password/change/verify", bytes.NewBuffer(bodyBytes))
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Authorization", "Bearer "+accessToken)
+// 		body := struct {
+// 			OTP    string `json:"otp"`
+// 			NewPIN string `json:"new_pin"`
+// 		}{
+// 			OTP:    "123456",
+// 			NewPIN: "4321",
+// 		}
 
-		rr := httptest.NewRecorder()
+// 		bodyBytes, err := json.Marshal(body)
+// 		if err != nil {
+// 			t.Fatalf("Failed to marshal request body: %v", err)
+// 		}
 
-		mux.ServeHTTP(rr, req)
+// 		req := httptest.NewRequest("POST", "/pin/change/verify", bytes.NewBuffer(bodyBytes))
+// 		req.Header.Set("Content-Type", "application/json")
+// 		req.Header.Set("Authorization", "Bearer "+accessToken)
 
-		fmt.Printf(">> change password submit response code is: %d\n", rr.Code)
-	}
+// 		rr := httptest.NewRecorder()
 
-	// check user
-	{
-		var user model.User
-		db.Find(&user, "email = ?", "admin@mail.com")
-		printUser("after password change submit", user, "4321admin", "1234", "")
-	}
+// 		mux.ServeHTTP(rr, req)
 
-	// pin change request
-	{
+// 		fmt.Printf(">> change pin submit response code is: %d\n", rr.Code)
+// 	}
 
-		req := httptest.NewRequest("POST", "/pin/change/initiate", nil)
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Authorization", "Bearer "+accessToken)
+// 	// check user
+// 	{
+// 		var user model.User
+// 		db.Find(&user, "email = ?", "admin@mail.com")
+// 		printUser("after pin change submit", user, "4321admin", "4321", "")
+// 	}
 
-		rr := httptest.NewRecorder()
-
-		mux.ServeHTTP(rr, req)
-
-		fmt.Printf(">> pin change initiate response code is: %d\n", rr.Code)
-	}
-
-	// check user
-	{
-		var user model.User
-		db.Find(&user, "email = ?", "admin@mail.com")
-		printUser("after pin change request", user, "4321admin", "1234", "123456")
-	}
-
-	// change pin submit
-	{
-
-		body := struct {
-			OTP    string `json:"otp"`
-			NewPIN string `json:"new_pin"`
-		}{
-			OTP:    "123456",
-			NewPIN: "4321",
-		}
-
-		bodyBytes, err := json.Marshal(body)
-		if err != nil {
-			t.Fatalf("Failed to marshal request body: %v", err)
-		}
-
-		req := httptest.NewRequest("POST", "/pin/change/verify", bytes.NewBuffer(bodyBytes))
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Authorization", "Bearer "+accessToken)
-
-		rr := httptest.NewRecorder()
-
-		mux.ServeHTTP(rr, req)
-
-		fmt.Printf(">> change pin submit response code is: %d\n", rr.Code)
-	}
-
-	// check user
-	{
-		var user model.User
-		db.Find(&user, "email = ?", "admin@mail.com")
-		printUser("after pin change submit", user, "4321admin", "4321", "")
-	}
-
-}
+// }

@@ -16,14 +16,14 @@ type SendOTPRes struct{}
 
 type SendOTP = core.ActionHandler[SendOTPReq, SendOTPRes]
 
-func ImplSendOTP() SendOTP {
-	return func(ctx context.Context, request SendOTPReq) (*SendOTPRes, error) {
+// func ImplSendOTP() SendOTP {
+// 	return func(ctx context.Context, request SendOTPReq) (*SendOTPRes, error) {
 
-		// send using wa, telegram or anything
-
-		return &SendOTPRes{}, nil
-	}
-}
+// 		// send using wa, telegram or anything
+// 		fmt.Println("ImplSendOTP")
+// 		return &SendOTPRes{}, nil
+// 	}
+// }
 
 func ImplSendOTPToWA() SendOTP {
 	return func(ctx context.Context, request SendOTPReq) (*SendOTPRes, error) {

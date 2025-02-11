@@ -2,7 +2,7 @@ go 1.23.1
 
 use (
 	./app
+	./example
 	./iam
 	./shared
-	./example
 )

@@ -18,9 +18,11 @@ require (
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
+	github.com/ory/client-go v1.16.6
 	github.com/ory/keto/proto v0.13.0-alpha.0
 	github.com/prometheus/client_golang v1.20.5
 	github.com/prometheus/common v0.61.0
+	golang.org/x/oauth2 v0.26.0
 	google.golang.org/grpc v1.59.0
 )
 
