@@ -1,14 +1,34 @@
-version: "3.8"
+version: "3.9"
 
 services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: kratos
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: kratos
+    restart: always
+
+  keto-migrate:
+    image: oryd/keto
+    environment:
+      - DSN=postgres://kratos:secret@postgres:5432/kratos?sslmode=disable
+    depends_on:
+      - postgres
+    command: migrate up -y
+    volumes:
+      - ./keto/keto.yml:/home/ory/keto.yml
+    
   keto:
     image: oryd/keto
     restart: unless-stopped
+    depends_on:
+      - keto-migrate
     ports:
       - "4466:4466"  # Read API
       - "4467:4467"  # Write API
     environment:
-      - DSN=memory
+      - DSN=postgres://kratos:secret@postgres:5432/kratos?sslmode=disable
     command: serve --config /home/ory/keto.yml
     volumes:
       - ./keto/keto.yml:/home/ory/keto.yml  # Mount the correct file
