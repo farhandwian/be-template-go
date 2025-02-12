@@ -13,18 +13,18 @@ type UserAccessKeto struct {
 	Client *ketoHelper.KetoGRPCClient
 }
 
+type SubjectSet struct {
+	Namespace string `json:"namespace"`
+	Object    string `json:"object"`
+	Relation  string `json:"relation"`
+}
+
 func NewUserAccessKeto(userID string, client *ketoHelper.KetoGRPCClient) *UserAccessKeto {
 	return &UserAccessKeto{
 		UserID: userID,
 		Client: client,
 	}
 }
-
-// func NewUserAccessAdmin() UserAccess {
-// 	userAccess := NewUserAccess()
-// 	userAccess.AssignAccess(ADMIN_OPERATION)
-// 	return userAccess
-// }
 
 func (ua *UserAccessKeto) HasAccess(ctx context.Context, namespace string, relation string, object string) bool {
 	ketoRequest := &rts.ListRelationTuplesRequest{
@@ -48,26 +48,54 @@ func (ua *UserAccessKeto) HasAccess(ctx context.Context, namespace string, relat
 	return len(response.RelationTuples) > 0
 }
 
-func (ua *UserAccessKeto) AssignAccess(ctx context.Context, namespace string, relation string, object string) error {
-	relationTuple := &rts.RelationTuple{
-		Namespace: namespace,
-		Object:    object,
-		Relation:  relation,
-		Subject: &rts.Subject{
-			Ref: &rts.Subject_Id{
-				Id: ua.UserID,
+func (ua *UserAccessKeto) AssignAccess(ctx context.Context, namespace string, relation string, object string, isRole bool, subjectSet *SubjectSet) error {
+	var ketoRequest *rts.TransactRelationTuplesRequest
+
+	if isRole {
+		// Assign role (e.g., `admin`, `member`)
+		ketoRequest = &rts.TransactRelationTuplesRequest{
+			RelationTupleDeltas: []*rts.RelationTupleDelta{
+				{
+					Action: rts.RelationTupleDelta_ACTION_INSERT,
+					RelationTuple: &rts.RelationTuple{
+						Namespace: namespace,
+						Object:    object,
+						Relation:  relation,
+						Subject: &rts.Subject{
+							Ref: &rts.Subject_Id{
+								Id: ua.UserID,
+							},
+						},
+					},
+				},
 			},
-		},
+		}
+	} else {
+		// assign direct permission to the role (e.g., "admin -> read/write/delete to related object")
+		ketoRequest = &rts.TransactRelationTuplesRequest{
+			RelationTupleDeltas: []*rts.RelationTupleDelta{
+				{
+					Action: rts.RelationTupleDelta_ACTION_INSERT,
+					RelationTuple: &rts.RelationTuple{
+						Namespace: namespace,
+						Object:    object,
+						Relation:  relation,
+						Subject: &rts.Subject{
+							Ref: &rts.Subject_Set{
+								Set: &rts.SubjectSet{
+									Namespace: subjectSet.Namespace,
+									Object:    subjectSet.Object,
+									Relation:  subjectSet.Relation,
+								},
+							},
+						},
+					},
+				},
+			},
+		}
 	}
 
-	_, err := ua.Client.WriteClient.TransactRelationTuples(ctx, &rts.TransactRelationTuplesRequest{
-		RelationTupleDeltas: []*rts.RelationTupleDelta{
-			{
-				Action:        rts.RelationTupleDelta_ACTION_INSERT,
-				RelationTuple: relationTuple,
-			},
-		},
-	})
+	_, err := ua.Client.WriteClient.TransactRelationTuples(ctx, ketoRequest)
 	if err != nil {
 		return err
 	}

@@ -1,5 +1,5 @@
 version: "3.9"
-
+ 
 services:
   postgres:
     image: postgres:13
@@ -7,8 +7,12 @@ services:
       POSTGRES_USER: kratos
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: kratos
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgres/data
     restart: always
-
+ 
   keto-migrate:
     image: oryd/keto
     environment:
@@ -18,7 +22,7 @@ services:
     command: migrate up -y
     volumes:
       - ./keto/keto.yml:/home/ory/keto.yml
-    
+   
   keto:
     image: oryd/keto
     restart: unless-stopped
@@ -33,3 +37,7 @@ services:
     volumes:
       - ./keto/keto.yml:/home/ory/keto.yml  # Mount the correct file
       - ./keto/keto_namespaces:/home/ory/keto_namespaces  # Mount keto_namespaces file
+ 
+volumes:
+  pgdata: {}
+

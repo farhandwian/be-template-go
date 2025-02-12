@@ -9,13 +9,6 @@ import (
 
 func (c Controller) AssignAccessKetoHandler(u usecase.AssignAccessKetoUseCase) helper.APIData {
 
-	type Body struct {
-		Namespace string `json:"namespace"`
-		SubjectID string `json:"subject_id"`
-		Object    string `json:"object"`
-		Relation  string `json:"relation"`
-	}
-
 	apiData := helper.APIData{
 		Access:   model.ANONYMOUS,
 		Method:   http.MethodPost,
@@ -27,16 +20,17 @@ func (c Controller) AssignAccessKetoHandler(u usecase.AssignAccessKetoUseCase) h
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
-		body, ok := ParseJSON[Body](w, r)
+		body, ok := ParseJSON[usecase.AssignAccessKetoReq](w, r)
 		if !ok {
 			return
 		}
 
 		req := usecase.AssignAccessKetoReq{
-			Namespace: body.Namespace,
-			SubjectID: body.SubjectID,
-			Object:    body.Object,
-			Relation:  body.Relation,
+			Namespace:  body.Namespace,
+			SubjectID:  body.SubjectID,
+			Object:     body.Object,
+			Relation:   body.Relation,
+			SubjectSet: body.SubjectSet,
 		}
 
 		HandleUsecase(r.Context(), w, u, req)
