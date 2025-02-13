@@ -11,9 +11,10 @@ import (
 
 // KetoGRPCClient struct holds the gRPC client connection
 type KetoGRPCClient struct {
-	ReadClient  relationTuples.ReadServiceClient
-	WriteClient relationTuples.WriteServiceClient
-	CheckClient relationTuples.CheckServiceClient
+	ReadClient   relationTuples.ReadServiceClient
+	WriteClient  relationTuples.WriteServiceClient
+	CheckClient  relationTuples.CheckServiceClient
+	ExpandClient relationTuples.ExpandServiceClient
 }
 
 // SetupKetoGRPCClient initializes and returns a Keto gRPC client
@@ -35,10 +36,12 @@ func SetupKetoGRPCClient() *KetoGRPCClient {
 	readClient := relationTuples.NewReadServiceClient(readConn)
 	writeClient := relationTuples.NewWriteServiceClient(writeConn)
 	checkClient := relationTuples.NewCheckServiceClient(readConn)
+	expandClient := relationTuples.NewExpandServiceClient(readConn)
 
 	return &KetoGRPCClient{
-		ReadClient:  readClient,
-		WriteClient: writeClient,
-		CheckClient: checkClient,
+		ReadClient:   readClient,
+		WriteClient:  writeClient,
+		CheckClient:  checkClient,
+		ExpandClient: expandClient,
 	}
 }
