@@ -20,15 +20,15 @@ func (c Controller) CheckAccessKetoHandler(u usecase.CheckAccessKetoUseCase) hel
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
-		// namespace := r.URL.Query().Get("namespace")
-		// subjectID := r.URL.Query().Get("subject_id")
-		// object := r.URL.Query().Get("object")
-		// relation := r.URL.Query().Get("relation")
+		namespace := r.URL.Query().Get("namespace")
+		subjectID := r.URL.Query().Get("subject_id")
+		object := r.URL.Query().Get("object")
+		relation := r.URL.Query().Get("relation")
 
-		namespace := "app"
-		object := "testing"
-		relation := "owner"
-		subjectID := "user:123"
+		// namespace := "app"
+		// object := "testing"
+		// relation := "owner"
+		// subjectID := "user:123"
 		req := usecase.CheckAccessKetoReq{
 			Namespace: namespace,
 			SubjectID: subjectID,

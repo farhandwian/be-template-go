@@ -27,11 +27,11 @@ func NewUserAccessKeto(userID string, client *ketoHelper.KetoGRPCClient) *UserAc
 }
 
 func (ua *UserAccessKeto) HasAccess(ctx context.Context, namespace string, relation string, object string) bool {
-	ketoRequest := &rts.ListRelationTuplesRequest{
-		RelationQuery: &rts.RelationQuery{
-			Namespace: &namespace,
-			Object:    &object,
-			Relation:  &relation,
+	checkRequest := &rts.CheckRequest{
+		Tuple: &rts.RelationTuple{
+			Namespace: namespace,
+			Object:    object,
+			Relation:  relation,
 			Subject: &rts.Subject{
 				Ref: &rts.Subject_Id{
 					Id: ua.UserID,
@@ -40,12 +40,12 @@ func (ua *UserAccessKeto) HasAccess(ctx context.Context, namespace string, relat
 		},
 	}
 
-	response, err := ua.Client.ReadClient.ListRelationTuples(ctx, ketoRequest)
+	response, err := ua.Client.CheckClient.Check(ctx, checkRequest)
 	if err != nil {
 		return false
 	}
 
-	return len(response.RelationTuples) > 0
+	return response.GetAllowed()
 }
 
 func (ua *UserAccessKeto) AssignAccess(ctx context.Context, namespace string, relation string, object string, isRole bool, subjectSet *SubjectSet) error {
