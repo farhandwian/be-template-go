@@ -86,8 +86,9 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 	logoutToHandler := middleware.Logging(logoutUsecase, 0)
 
 	c := controller.Controller{
-		Mux: mux,
-		JWT: jwtToken,
+		Mux:  mux,
+		JWT:  jwtToken,
+		Keto: keto,
 	}
 
 	// controllers

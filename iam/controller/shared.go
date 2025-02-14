@@ -10,14 +10,16 @@ import (
 	"reflect"
 	"shared/core"
 	"shared/helper"
+	ketoHelper "shared/helper/ory/keto"
 	"strconv"
 	"strings"
 	"time"
 )
 
 type Controller struct {
-	Mux *http.ServeMux
-	JWT helper.JWTTokenizer
+	Mux  *http.ServeMux
+	JWT  helper.JWTTokenizer
+	Keto *ketoHelper.KetoGRPCClient
 	// Cfg helper.AppConfig
 }
 

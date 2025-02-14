@@ -92,15 +92,7 @@ func ImplLogin(
 		}
 
 		msg := loginOTPMessage(randomer.Random)
-
-		sendOTPReq := gateway.SendOTPReq{
-			PhoneNumber: user.PhoneNumber,
-			Message:     msg,
-		}
-
-		if _, err := sendOTP(ctx, sendOTPReq); err != nil {
-			return nil, err
-		}
+		fmt.Println(msg)
 
 		return &LoginRes{}, nil
 	}

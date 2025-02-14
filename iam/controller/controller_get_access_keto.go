@@ -31,7 +31,15 @@ func (c Controller) GetAccessKetoHandler(u usecase.UserGetAccessKetoUseCase) hel
 		HandleUsecase(r.Context(), w, u, req)
 	}
 
-	c.Mux.HandleFunc(apiData.GetMethodUrl(), handler)
+	accessKetoExample := model.AccessKeto{
+		Namespace: "app",
+		Object:    "dashboard",
+		Relation:  "edit",
+	}
+	authorizationHandler := AuthorizationKeto(handler, accessKetoExample)
+	authenticateHandler := AuthenticationKeto(authorizationHandler, c.JWT, c.Keto)
+
+	c.Mux.HandleFunc(apiData.GetMethodUrl(), authenticateHandler)
 
 	return apiData
 }

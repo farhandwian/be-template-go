@@ -5,13 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"iam/gateway"
 	"iam/model"
-	"shared/constant"
 	"shared/core"
 	sharedGateway "shared/gateway"
-	sharedModel "shared/model"
 	"time"
 )
 
@@ -163,18 +160,6 @@ func ImplLoginOTPSubmit(
 		}
 
 		//store logging
-		_, err = createActivityMonitoring(ctx, sharedGateway.CreateActivityMonitoringReq{
-			ActivityMonitor: sharedModel.ActivityMonitor{
-				ID:           uuid.NewString(),
-				UserName:     user.Name,
-				Category:     constant.MONITORING_TYPE_IAM,
-				ActivityTime: time.Now(),
-				Description:  fmt.Sprintf("%s masuk ke dalam sistem", user.Name),
-			},
-		})
-		if err != nil {
-			return nil, err
-		}
 
 		return &LoginOTPSubmitRes{
 			RefreshToken: refreshToken.JWTToken,

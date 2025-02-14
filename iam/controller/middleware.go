@@ -3,11 +3,14 @@ package controller
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"iam/model"
 	"net/http"
 	"shared/core"
 	"shared/helper"
 	"strings"
+
+	ketoHelper "shared/helper/ory/keto"
 
 	"github.com/google/uuid"
 )
@@ -77,6 +80,74 @@ func Authentication(next http.HandlerFunc, jwt helper.JWTTokenizer) http.Handler
 
 }
 
+func AuthenticationKeto(next http.HandlerFunc, jwt helper.JWTTokenizer, keto *ketoHelper.KetoGRPCClient) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		bearerToken, errMessage, ok := GetBearerToken(w, r)
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, Response{Status: "failed", Error: &errMessage})
+			return
+		}
+
+		content, err := jwt.VerifyToken(bearerToken)
+		if err != nil {
+			msg := "unverified token"
+			writeJSON(w, http.StatusUnauthorized, Response{Status: "failed", Error: &msg})
+			return
+		}
+
+		var userTokenPayload model.UserTokenPayload
+		if err := json.Unmarshal(content, &userTokenPayload); err != nil {
+			msg := "incorrect token payload"
+			writeJSON(w, http.StatusUnauthorized, Response{Status: "failed", Error: &msg})
+			return
+		}
+
+		ua := model.NewUserAccessKeto(string(userTokenPayload.UserID), keto)
+
+		ctx := core.AttachDataToContext(r.Context(), UserAccessContext, ua)
+		ctx = core.AttachDataToContext(ctx, UserIDContext, userTokenPayload.UserID)
+
+		r = r.WithContext(ctx)
+
+		next.ServeHTTP(w, r)
+
+	}
+
+}
+
+func AuthorizationKeto(next http.HandlerFunc, access model.AccessKeto) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		// by pass
+		if access.Object == "none" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		userAccess := core.GetDataFromContext(r.Context(), UserAccessContext, model.UserAccess(""))
+		fmt.Println(userAccess)
+		ua := core.GetDataFromContext[*model.UserAccessKeto](r.Context(), UserAccessContext, nil)
+		fmt.Println(ua)
+		if ua == nil || ua.UserID == "" {
+			msg := "user not authenticated"
+			writeJSON(w, http.StatusUnauthorized, Response{Status: "failed", Error: &msg})
+			return
+		}
+
+		if !ua.HasAccess(r.Context(), access.Namespace, access.Relation, access.Object) {
+			msg := "unauthorized operation"
+			writeJSON(w, http.StatusForbidden, Response{Status: "failed", Error: &msg})
+			return
+		}
+
+		next.ServeHTTP(w, r)
+
+	}
+}
+
 func Authorization(next http.HandlerFunc, access model.Access) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -88,7 +159,7 @@ func Authorization(next http.HandlerFunc, access model.Access) http.HandlerFunc 
 		}
 
 		userAccess := core.GetDataFromContext(r.Context(), UserAccessContext, model.UserAccess(""))
-
+		fmt.Println(userAccess)
 		if !userAccess.HasAccess(access) {
 			msg := "unauthorized operation"
 			writeJSON(w, http.StatusForbidden, Response{Status: "failed", Error: &msg})
