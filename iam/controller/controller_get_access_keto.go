@@ -10,7 +10,11 @@ import (
 func (c Controller) GetAccessKetoHandler(u usecase.UserGetAccessKetoUseCase) helper.APIData {
 
 	apiData := helper.APIData{
-		Access:   model.ANONYMOUS,
+		AccessTest: model.AccessKeto{
+			Namespace: "app",
+			Object:    "dashboard",
+			Relation:  "testing",
+		},
 		Method:   http.MethodGet,
 		Url:      "/auth/{id}/access-keto",
 		Body:     usecase.UserGetAccessKetoReq{},
@@ -31,12 +35,7 @@ func (c Controller) GetAccessKetoHandler(u usecase.UserGetAccessKetoUseCase) hel
 		HandleUsecase(r.Context(), w, u, req)
 	}
 
-	accessKetoExample := model.AccessKeto{
-		Namespace: "app",
-		Object:    "dashboard",
-		Relation:  "edit",
-	}
-	authorizationHandler := AuthorizationKeto(handler, accessKetoExample)
+	authorizationHandler := AuthorizationKeto(handler, apiData.AccessTest)
 	authenticateHandler := AuthenticationKeto(authorizationHandler, c.JWT, c.Keto)
 
 	c.Mux.HandleFunc(apiData.GetMethodUrl(), authenticateHandler)
