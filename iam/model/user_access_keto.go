@@ -3,7 +3,6 @@ package model
 import (
 	"context"
 	"errors"
-	"fmt"
 	ketoHelper "shared/helper/ory/keto"
 
 	rts "github.com/ory/keto/proto/ory/keto/relation_tuples/v1alpha2"
@@ -144,58 +143,68 @@ func (ua *UserAccessKeto) AssignAccess(ctx context.Context, namespace string, re
 // 	return userAccess, nil
 // }
 
-func (ua *UserAccessKeto) ListAccessByUser(ctx context.Context, namespace string) ([]*rts.RelationTuple, error) {
-	var userAccess []*rts.RelationTuple
+// func (ua *UserAccessKeto) ListAccessByUser(ctx context.Context, namespace string) ([]*rts.RelationTuple, error) {
+// 	var userAccess []*rts.RelationTuple
 
-	// Step 1: Fetch roles assigned directly to the user
-	roleReq := &rts.ListRelationTuplesRequest{
-		RelationQuery: &rts.RelationQuery{
-			Namespace: &namespace,
-			Subject: &rts.Subject{
-				Ref: &rts.Subject_Id{Id: ua.UserID},
-			},
-		},
+// 	// Step 1: Fetch roles assigned directly to the user
+// 	roleReq := &rts.ListRelationTuplesRequest{
+// 		RelationQuery: &rts.RelationQuery{
+// 			Namespace: &namespace,
+// 			Subject: &rts.Subject{
+// 				Ref: &rts.Subject_Id{Id: ua.UserID},
+// 			},
+// 		},
+// 	}
+
+// 	roleRes, err := ua.Client.ReadClient.ListRelationTuples(ctx, roleReq)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	// Store user roles to fetch permissions later
+// 	roleSet := make(map[string]struct{})
+// 	for _, tuple := range roleRes.RelationTuples {
+// 		roleSet[tuple.Object] = struct{}{}
+// 		userAccess = append(userAccess, tuple) // Add direct roles
+// 	}
+
+// 	// Step 2: Fetch permissions for user's roles
+// 	for role := range roleSet {
+// 		permReq := &rts.ListRelationTuplesRequest{
+// 			RelationQuery: &rts.RelationQuery{
+// 				Namespace: &namespace,
+// 				Subject: &rts.Subject{
+// 					Ref: &rts.Subject_Set{
+// 						Set: &rts.SubjectSet{
+// 							Namespace: namespace,
+// 							Object:    role,
+// 							Relation:  "member",
+// 						},
+// 					},
+// 				},
+// 			},
+// 		}
+
+// 		permRes, err := ua.Client.ReadClient.ListRelationTuples(ctx, permReq)
+// 		if err != nil {
+// 			return nil, err
+// 		}
+
+// 		fmt.Println(permRes)
+// 		userAccess = append(userAccess, permRes.RelationTuples...)
+// 	}
+
+// 	return userAccess, nil
+// }
+
+func (ua *UserAccessKeto) ListAccessByUser(ctx context.Context, namespace string) ([]MapAccessKeto, error) {
+	mapAccess := GetMapAccessKeto()
+
+	for i, acc := range mapAccess {
+		mapAccess[i].Enabled = ua.HasAccess(ctx, acc.Namespace, acc.Relation, acc.Object)
 	}
 
-	roleRes, err := ua.Client.ReadClient.ListRelationTuples(ctx, roleReq)
-	if err != nil {
-		return nil, err
-	}
-
-	// Store user roles to fetch permissions later
-	roleSet := make(map[string]struct{})
-	for _, tuple := range roleRes.RelationTuples {
-		roleSet[tuple.Object] = struct{}{}
-		userAccess = append(userAccess, tuple) // Add direct roles
-	}
-
-	// Step 2: Fetch permissions for user's roles
-	for role := range roleSet {
-		permReq := &rts.ListRelationTuplesRequest{
-			RelationQuery: &rts.RelationQuery{
-				Namespace: &namespace,
-				Subject: &rts.Subject{
-					Ref: &rts.Subject_Set{
-						Set: &rts.SubjectSet{
-							Namespace: namespace,
-							Object:    role,
-							Relation:  "member",
-						},
-					},
-				},
-			},
-		}
-
-		permRes, err := ua.Client.ReadClient.ListRelationTuples(ctx, permReq)
-		if err != nil {
-			return nil, err
-		}
-
-		fmt.Println(permRes)
-		userAccess = append(userAccess, permRes.RelationTuples...)
-	}
-
-	return userAccess, nil
+	return mapAccess, nil
 }
 
 func (ua *UserAccessKeto) RevokeAccess(ctx context.Context, namespace string, relation string, object string) error {

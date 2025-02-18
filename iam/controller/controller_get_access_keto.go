@@ -13,7 +13,7 @@ func (c Controller) GetAccessKetoHandler(u usecase.UserGetAccessKetoUseCase) hel
 		AccessTest: model.AccessKeto{
 			Namespace: "app",
 			Object:    "dashboard",
-			Relation:  "testing",
+			Relation:  "read",
 		},
 		Method:   http.MethodGet,
 		Url:      "/auth/{id}/access-keto",

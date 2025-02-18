@@ -6,8 +6,6 @@ import (
 	"shared/core"
 
 	ketoHelper "shared/helper/ory/keto"
-
-	rts "github.com/ory/keto/proto/ory/keto/relation_tuples/v1alpha2"
 )
 
 type UserGetAccessKetoReq struct {
@@ -16,7 +14,7 @@ type UserGetAccessKetoReq struct {
 }
 
 type UserGetAccessKetoRes struct {
-	ListAccess []*rts.RelationTuple `json:"list_access"`
+	ListAccess []model.MapAccessKeto
 }
 
 type UserGetAccessKetoUseCase = core.ActionHandler[UserGetAccessKetoReq, UserGetAccessKetoRes]
