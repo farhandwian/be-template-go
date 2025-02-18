@@ -7,13 +7,14 @@ import (
 	"net/http"
 	sharedGateway "shared/gateway"
 	"shared/helper"
+	ory "shared/helper/ory"
 	ketoHelper "shared/helper/ory/keto"
 	"shared/middleware"
 
 	"gorm.io/gorm"
 )
 
-func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeMux, keto *ketoHelper.KetoGRPCClient, jwtToken helper.JWTTokenizer, db *gorm.DB) {
+func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeMux, keto *ketoHelper.KetoGRPCClient, jwtToken helper.JWTTokenizer, db *gorm.DB, ory ory.ORYServer) {
 
 	// gateways
 	generateId := gateway.ImplGenerateId()                                 //
@@ -50,7 +51,7 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 	emailActivationRequest := usecase.ImplEmailActivationRequest(userGetOneByIDToUseCase, generateJWTToUseCase, sendEmailToUseCase)
 	emailActivationSubmit := usecase.ImplEmailActivationSubmit(validateJWTToUseCase, userGetOneByIDToUseCase, userSaveToUseCase, passwordEncryptToUseCase)
 	loginOTPSubmit := usecase.ImplLoginOTPSubmit(passwordValidateToUseCase, userGetAllToUseCase, generateJWTToUseCase, generateIdToUseCase, userSaveToUseCase, createActivityMonitoringGateway)
-	loginUseCase := usecase.ImplLogin(userGetAllToUseCase, sendOTPToUseCase, generateRandomToUseCase, passwordValidateToUseCase, passwordEncryptToUseCase, userSaveToUseCase)
+	// loginUseCase := usecase.ImplLogin(userGetAllToUseCase, sendOTPToUseCase, generateRandomToUseCase, passwordValidateToUseCase, passwordEncryptToUseCase, userSaveToUseCase)
 	passwordChangeRequest := usecase.ImplPasswordChangeRequest(sendOTPToUseCase, userGetOneByIDToUseCase, generateRandomToUseCase, userSaveToUseCase, passwordEncryptToUseCase)
 	passwordChangeSubmit := usecase.ImplPasswordChangeSubmit(passwordValidateToUseCase, passwordEncryptToUseCase, userGetOneByIDToUseCase, userSaveToUseCase)
 	passwordResetRequest := usecase.ImplPasswordResetRequest(generateJWTToUseCase, sendEmailToUseCase, userGetOneByIDToUseCase)
@@ -58,18 +59,18 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 	pinChangeRequest := usecase.ImplPinChangeRequest(sendOTPToUseCase, userGetOneByIDToUseCase, generateRandomToUseCase, userSaveToUseCase, passwordEncryptToUseCase)
 	pinChangeSubmit := usecase.ImplPinChangeSubmit(passwordValidateToUseCase, passwordEncryptToUseCase, userGetOneByIDToUseCase, userSaveToUseCase)
 	refreshToken := usecase.ImplRefreshToken(userGetOneByIDToUseCase, generateJWTToUseCase, validateJWTToUseCase)
-	registerUser := usecase.ImplRegisterUser(generateIdToUseCase, userSaveToUseCase, userGetAllToUseCase, createActivityMonitoringGateway)
+	// registerUser := usecase.ImplRegisterUser(generateIdToUseCase, userSaveToUseCase, userGetAllToUseCase, createActivityMonitoringGateway)
 	userGetAllUsecase := usecase.ImplUserGetAll(userGetAllToUseCase)
 	userGetOneUsecase := usecase.ImplUserGetOne(userGetOneByIDToUseCase)
 	logoutUsecase := usecase.ImplLogout(userGetOneByIDToUseCase, userSaveToUseCase)
 
 	// usecase middlewares
-	accessResetToHandler := middleware.Logging(accessReset, 0)                                                           //
-	userGetAccessToHandler := middleware.Logging(userGetAccess, 0)                                                       //
-	emailActivationRequestToHandler := middleware.Logging(emailActivationRequest, 0)                                     //
-	emailActivationSubmitToHandler := middleware.Logging(emailActivationSubmit, 0)                                       //
-	loginOTPSubmitToHandler := middleware.Logging(loginOTPSubmit, 0)                                                     //
-	loginToHandler := middleware.Logging(middleware.TransactionMiddleware(loginUseCase, db), 0)                          // USE TRANSACTION
+	accessResetToHandler := middleware.Logging(accessReset, 0)                       //
+	userGetAccessToHandler := middleware.Logging(userGetAccess, 0)                   //
+	emailActivationRequestToHandler := middleware.Logging(emailActivationRequest, 0) //
+	emailActivationSubmitToHandler := middleware.Logging(emailActivationSubmit, 0)   //
+	loginOTPSubmitToHandler := middleware.Logging(loginOTPSubmit, 0)                 //
+	// loginToHandler := middleware.Logging(middleware.TransactionMiddleware(loginUseCase, db), 0)                          // USE TRANSACTION
 	passwordChangeRequestToHandler := middleware.Logging(middleware.TransactionMiddleware(passwordChangeRequest, db), 0) // USE TRANSACTION
 	passwordChangeSubmitToHandler := middleware.Logging(passwordChangeSubmit, 0)                                         //
 	passwordResetRequestToHandler := middleware.Logging(passwordResetRequest, 0)                                         //
@@ -77,9 +78,9 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 	pinChangeRequestToHandler := middleware.Logging(middleware.TransactionMiddleware(pinChangeRequest, db), 0)           // USE TRANSACTION
 	pinChangeSubmitToHandler := middleware.Logging(pinChangeSubmit, 0)                                                   //
 	refreshTokenToHandler := middleware.Logging(refreshToken, 0)                                                         //
-	registerUserToHandler := middleware.Logging(registerUser, 0)                                                         //
-	userGetAllToHandler := middleware.Logging(userGetAllUsecase, 0)                                                      //
-	userGetOneToHandler := middleware.Logging(userGetOneUsecase, 0)                                                      //
+	// registerUserToHandler := middleware.Logging(registerUser, 0)                                                         //
+	userGetAllToHandler := middleware.Logging(userGetAllUsecase, 0) //
+	userGetOneToHandler := middleware.Logging(userGetOneUsecase, 0) //
 	logoutToHandler := middleware.Logging(logoutUsecase, 0)
 
 	c := controller.Controller{
@@ -95,10 +96,10 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 		Add(c.UserGetOneHandler(userGetOneToHandler)).
 		Add(c.UserGetAccessHandler(userGetAccessToHandler)).
 		Add(c.AccessResetHandler(accessResetToHandler)).
-		Add(c.RegisterUserHandler(registerUserToHandler)).
+		Add(c.RegisterUserHandler(ory)).
 		Add(c.EmailActivationRequestHandler(emailActivationRequestToHandler)).
 		Add(c.EmailActivationSubmitHandler(emailActivationSubmitToHandler)).
-		Add(c.LoginHandler(loginToHandler)).
+		Add(c.LoginHandler(ory)).
 		Add(c.LoginOTPSubmitHandler(loginOTPSubmitToHandler)).
 		Add(c.RefreshTokenHandler(refreshTokenToHandler)).
 		Add(c.LogoutHandler(logoutToHandler)).

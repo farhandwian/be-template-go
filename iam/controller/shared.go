@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -18,8 +19,28 @@ import (
 type Controller struct {
 	Mux *http.ServeMux
 	JWT helper.JWTTokenizer
+	// TemplateData templateData
 	// Cfg helper.AppConfig
 }
+
+// //go:embed templates
+// var templates embed.FS
+
+// // tmp --> templateData contains data for template
+// type templateData struct {
+// 	Title   string
+// 	UI      *ory.UiContainer
+// 	Details string
+// }
+
+// // Render renders template with provided data
+// func (td *templateData) Render(w http.ResponseWriter) {
+// 	// render template index.html
+// 	tmpl := template.Must(template.ParseFS(templates, "templates/index.html"))
+// 	if err := tmpl.Execute(w, td); err != nil {
+// 		writeError(w, http.StatusInternalServerError, err)
+// 	}
+// }
 
 type Response struct {
 	Status   string  `json:"status"`

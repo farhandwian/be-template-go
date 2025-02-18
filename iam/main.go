@@ -7,6 +7,7 @@ import (
 	"os"
 	"shared/config"
 	"shared/helper"
+	ory "shared/helper/ory"
 	ketoHelper "shared/helper/ory/keto"
 
 	"github.com/joho/godotenv"
@@ -33,11 +34,13 @@ func main() {
 
 	mux := http.NewServeMux()
 
+	ory, _ := ory.NewServer(4446, 4444, 4445)
+
 	ketoClient := ketoHelper.SetupKetoGRPCClient()
 
 	apiPrinter := helper.NewApiPrinter("I AM", "I AM api documentation")
 
-	wiring.SetupDependencyWithDatabase(apiPrinter, mux, ketoClient, jwtToken, db)
+	wiring.SetupDependencyWithDatabase(apiPrinter, mux, ketoClient, jwtToken, db, *ory)
 
 	apiPrinter.PrintAPIDataTable().PublishAPI(mux, os.Getenv("SERVER_URL"), "/openapi")
 

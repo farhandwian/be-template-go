@@ -1,19 +1,25 @@
 package controller
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"iam/model"
-	"iam/usecase"
+	"io/ioutil"
 	"net/http"
 	"shared/helper"
-	"time"
+	oryConfig "shared/helper/ory"
+
+	ory "github.com/ory/client-go"
 )
 
-func (c Controller) RegisterUserHandler(u usecase.RegisterUser) helper.APIData {
+func (c Controller) RegisterUserHandler(s oryConfig.ORYServer) helper.APIData {
 
 	type Body struct {
-		Name        string            `json:"name"`
-		Email       model.Email       `json:"email"`
-		PhoneNumber model.PhoneNumber `json:"phone_number"`
+		Email     string `json:"email"`
+		Password  string `json:"password"`
+		FirstName string `json:"first_name"`
+		LastName  string `json:"last_name"`
 	}
 
 	apiData := helper.APIData{
@@ -32,19 +38,48 @@ func (c Controller) RegisterUserHandler(u usecase.RegisterUser) helper.APIData {
 			return
 		}
 
-		req := usecase.RegisterUserReq{
-			Now:         time.Now(),
-			Name:        body.Name,
-			Email:       body.Email,
-			PhoneNumber: body.PhoneNumber,
+		// Start Kratos Registration Flow
+		flowURL := fmt.Sprintf("%s/self-service/registration/flows", s.KratosPublicEndpoint)
+		resp, err := http.Get(flowURL)
+		if err != nil || resp.StatusCode != http.StatusOK {
+			http.Error(w, "Failed to initiate registration flow", http.StatusInternalServerError)
+			return
 		}
+		defer resp.Body.Close()
 
-		HandleUsecase(r.Context(), w, u, req)
+		var flow ory.RegistrationFlow
+		json.NewDecoder(resp.Body).Decode(&flow)
+
+		// Prepare registration payload
+		registerData := map[string]string{
+			"traits.email": body.Email,
+			"password":     body.Password,
+			"method":       "password",
+			"csrf_token":   flow.Ui.Nodes[0].Attributes.UiNodeInputAttributes.Value.(string), // CSRF Token
+		}
+		payload, _ := json.Marshal(registerData)
+
+		// Submit registration request
+		registerURL := fmt.Sprintf("%s/self-service/registration?flow=%s", s.KratosPublicEndpoint, flow.Id)
+		reqRegister, _ := http.NewRequest(http.MethodPost, registerURL, ioutil.NopCloser(bytes.NewReader(payload)))
+		reqRegister.Header.Set("Content-Type", "application/json")
+
+		client := &http.Client{}
+		respRegister, err := client.Do(reqRegister)
+		if err != nil || respRegister.StatusCode != http.StatusOK {
+			http.Error(w, "Registration failed", http.StatusBadRequest)
+			return
+		}
+		defer respRegister.Body.Close()
+
+		// Parse response & return success
+		var registerResponse ory.SuccessfulNativeRegistration
+		json.NewDecoder(respRegister.Body).Decode(&registerResponse)
+
+		Success(w, registerResponse)
 	}
 
-	authorizationHandler := Authorization(handler, apiData.Access)
-	authenticatedHandler := Authentication(authorizationHandler, c.JWT)
-	c.Mux.HandleFunc(apiData.GetMethodUrl(), authenticatedHandler)
+	c.Mux.HandleFunc(apiData.GetMethodUrl(), handler)
 
 	return apiData
 }

@@ -2,15 +2,12 @@ package controller
 
 import (
 	"iam/model"
-	"iam/usecase"
 	"net/http"
-	"os"
 	"shared/helper"
-	"strconv"
-	"time"
+	ory "shared/helper/ory"
 )
 
-func (c Controller) LoginHandler(u usecase.Login) helper.APIData {
+func (c Controller) LoginHandler(s ory.ORYServer) helper.APIData {
 
 	type Body struct {
 		Email    model.Email `json:"email"`
@@ -27,26 +24,7 @@ func (c Controller) LoginHandler(u usecase.Login) helper.APIData {
 		Examples: []helper.ExampleResponse{},
 	}
 
-	otpExpirationInSecond, err := strconv.Atoi(os.Getenv("OTP_EXPIRATION_IN_SECOND"))
-	if err != nil {
-		panic(err)
-	}
-
 	handler := func(w http.ResponseWriter, r *http.Request) {
-
-		body, ok := ParseJSON[Body](w, r)
-		if !ok {
-			return
-		}
-
-		req := usecase.LoginReq{
-			Email:       body.Email,
-			Password:    body.Password,
-			OTPDuration: time.Duration(otpExpirationInSecond) * time.Second,
-			Now:         time.Now(),
-		}
-
-		HandleUsecase(r.Context(), w, u, req)
 	}
 
 	c.Mux.HandleFunc(apiData.GetMethodUrl(), handler)

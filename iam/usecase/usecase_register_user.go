@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"iam/gateway"
 	"iam/model"
 	"shared/constant"
@@ -13,6 +12,8 @@ import (
 	sharedModel "shared/model"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type RegisterUserReq struct {
