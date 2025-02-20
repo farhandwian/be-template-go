@@ -14,7 +14,7 @@ type UserGetAccessKetoReq struct {
 }
 
 type UserGetAccessKetoRes struct {
-	ListAccess []model.MapAccessKeto
+	Accesses []model.MapAccessKeto `json:"accesses"`
 }
 
 type UserGetAccessKetoUseCase = core.ActionHandler[UserGetAccessKetoReq, UserGetAccessKetoRes]
@@ -28,7 +28,7 @@ func ImplUserGetAccessKeto(ketoClient *ketoHelper.KetoGRPCClient) UserGetAccessK
 		}
 
 		return &UserGetAccessKetoRes{
-			ListAccess: listAccess,
+			Accesses: listAccess,
 		}, nil
 	}
 }
