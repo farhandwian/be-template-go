@@ -23,7 +23,7 @@ func ImplSpipDelete(db *gorm.DB) SpipDelete {
 	return func(ctx context.Context, req SpipDeleteReq) (*SpipDeleteRes, error) {
 		query := middleware.GetDBFromContext(ctx, db)
 
-		if err := query.Delete(&model.SPIP{}, "id = ?", req.ID).Error; err != nil {
+		if err := query.Delete(&model.Spip{}, "id = ?", req.ID).Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
 

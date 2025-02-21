@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"gorm.io/datatypes"
 )
@@ -13,11 +14,14 @@ import (
 type RekapitulasiHasilKuesioner struct {
 	ID                *string           `json:"id"`
 	NamaPemda         *string           `json:"nama_pemda"`
-	SPIP              *string           `json:"spip"`
+	Pertanyaan        *string           `json:"pertanyaan"`
+	SpipID            *string           `json:"-"`
+	NamaSpip          *string           `json:"nama_spip"`
 	JawabanResponden  *datatypes.JSON   `json:"jawaban_responden"`
 	Modus             *int              `json:"modus"`
 	SimpulanKuesioner SimpulanKuesioner `json:"simpulan_kuesioner"`
-	SimpulanSPIP      SimpulanKuesioner `json:"simpulan_spip"`
+	CreatedAt         time.Time         `json:"created_at"`
+	UpdatedAt         time.Time         `json:"updated_at"`
 }
 
 type SimpulanKuesioner string
@@ -49,21 +53,5 @@ func (rk *RekapitulasiHasilKuesioner) SetSimpulanKuesioner() {
 		rk.SimpulanKuesioner = SimpulanKuesionerMemadai
 	} else {
 		rk.SimpulanKuesioner = SimpulanKuesionerTidakMemadai
-	}
-}
-
-func (rk *RekapitulasiHasilKuesioner) SetSimpulanSPIP(allRecords []*RekapitulasiHasilKuesioner) {
-	allMemadai := true
-	for _, record := range allRecords {
-		if record.SimpulanKuesioner != SimpulanKuesionerMemadai {
-			allMemadai = false
-			break
-		}
-	}
-
-	if allMemadai {
-		rk.SimpulanSPIP = SimpulanKuesionerMemadai
-	} else {
-		rk.SimpulanSPIP = SimpulanKuesionerTidakMemadai
 	}
 }

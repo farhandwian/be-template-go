@@ -10,7 +10,7 @@ import (
 )
 
 type SpipSaveReq struct {
-	Spip model.SPIP
+	Spip model.Spip
 }
 
 type SpipSaveRes struct {

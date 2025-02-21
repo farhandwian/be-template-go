@@ -28,7 +28,7 @@ func ImplSpipCreateUseCase(
 			return nil, err
 		}
 
-		obj := model.SPIP{
+		obj := model.Spip{
 			ID:   &genObj.RandomId,
 			Nama: &req.Nama,
 		}

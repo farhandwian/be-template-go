@@ -15,7 +15,7 @@ type SpipGetAllUseCaseReq struct {
 }
 
 type SpipGetAllUseCaseRes struct {
-	Spip     []model.SPIP      `json:"spips"`
+	Spip     []model.Spip      `json:"spips"`
 	Metadata *usecase.Metadata `json:"metadata"`
 }
 

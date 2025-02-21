@@ -28,6 +28,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	kategoriRisikoDeleteGateway := gateway.ImplKategoriRisikoDelete(mariaDB)
 	kategoriRisikoCreateGateway := gateway.ImplKategoriRisikoSave(mariaDB)
 
+	// Gateway Rekapitulasi Hasil Kuesioner
+	rekapitulasiHasilKuesionerCreateGateway := gateway.ImplRekapitulasiHasilKuesionerSave(mariaDB)
+	rekapitulasiHasilKuesionerGetAllGateway := gateway.ImplRekapitulasiHasilkuesionerGetAll(mariaDB)
+
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
 
@@ -44,6 +48,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	kategoriRisikoDeleteUseCase := usecase.ImplKategoriRisikoDeleteUseCase(kategoriRisikoDeleteGateway)
 	kategoriRisikoCreateUseCase := usecase.ImplKategoriRisikoCreateUseCase(generateIdGateway, kategoriRisikoCreateGateway)
 	kategoriRisikoUpdateUseCase := usecase.ImplKategoriRisikoUpdateUseCase(kategoriRisikoGetOneGateway, kategoriRisikoCreateGateway)
+
+	// Usecase Rekapitulasi Hasil Kuesioner
+	rekapitulasiHasilKuesionerCreateUseCase := usecase.ImplRekapitulasiHasilKuesionerCreateUseCase(generateIdGateway, rekapitulasiHasilKuesionerCreateGateway, spipGetOneGateway)
+	rekapitulasiHasilKuesionerGetAllUseCase := usecase.ImplRekapitulasiHasilKuesionerGetAllUseCase(rekapitulasiHasilKuesionerGetAllGateway)
 
 	c := controller.Controller{
 		Mux: mux,
@@ -62,5 +70,7 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.KategoriRisikoGetByIDHandler(kategoriRisikoGetOneUseCase)).
 		Add(c.KategoriRisikoCreateHandler(kategoriRisikoCreateUseCase)).
 		Add(c.KategoriRisikoDeleteHandler(kategoriRisikoDeleteUseCase)).
-		Add(c.KategoriRisikoUpdateHandler(kategoriRisikoUpdateUseCase))
+		Add(c.KategoriRisikoUpdateHandler(kategoriRisikoUpdateUseCase)).
+		Add(c.RekapitulasiHasilKuesionerCreateHandler(rekapitulasiHasilKuesionerCreateUseCase)).
+		Add(c.RekapitulasiHasilKuesionerGetAllHandler(rekapitulasiHasilKuesionerGetAllUseCase))
 }

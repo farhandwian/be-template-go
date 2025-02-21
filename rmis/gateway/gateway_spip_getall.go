@@ -17,7 +17,7 @@ type SpipGetAllReq struct {
 }
 
 type SpipGetAllRes struct {
-	SPIP  []model.SPIP `json:"spips"`
+	SPIP  []model.Spip `json:"spips"`
 	Count int64        `json:"count"`
 }
 
@@ -37,7 +37,7 @@ func ImplSpipGetAll(db *gorm.DB) SpipGetAll {
 		var count int64
 
 		if err := query.
-			Model(&model.SPIP{}).
+			Model(&model.Spip{}).
 			Count(&count).
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
@@ -45,7 +45,7 @@ func ImplSpipGetAll(db *gorm.DB) SpipGetAll {
 
 		page, size := ValidatePageSize(req.Page, req.Size)
 
-		var objs []model.SPIP
+		var objs []model.Spip
 
 		if err := query.
 			Offset((page - 1) * size).

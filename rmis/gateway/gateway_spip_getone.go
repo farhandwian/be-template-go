@@ -15,7 +15,7 @@ type SpipGetByIDReq struct {
 }
 
 type SpipGetByIDRes struct {
-	SPIP model.SPIP
+	SPIP model.Spip
 }
 
 type SpipGetByID = core.ActionHandler[SpipGetByIDReq, SpipGetByIDRes]
@@ -24,7 +24,7 @@ func ImplSpipGetByID(db *gorm.DB) SpipGetByID {
 	return func(ctx context.Context, req SpipGetByIDReq) (*SpipGetByIDRes, error) {
 		query := middleware.GetDBFromContext(ctx, db)
 
-		var spip model.SPIP
+		var spip model.Spip
 		if err := query.First(&spip, "id = ?", req.ID).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				return nil, fmt.Errorf("spip id %v is not found", req.ID)

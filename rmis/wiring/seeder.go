@@ -37,7 +37,7 @@ func SeedSpip(db *gorm.DB) error {
 	}
 
 	for _, name := range spipNames {
-		spip := model.SPIP{
+		spip := model.Spip{
 			ID:   stringPtr(uuid.New().String()),
 			Nama: stringPtr(name),
 		}

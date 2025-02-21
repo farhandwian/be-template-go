@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	iamModel "iam/model"
 	"log"
 	"os"
 	"rmis/model"
@@ -45,13 +44,14 @@ func InitMariaDatabase() *gorm.DB {
 	}
 
 	db.AutoMigrate(
-		&model.OPD{},
-		&model.SPIP{},
-		&model.KategoriRisiko{},
-		&model.PenyebabRisiko{},
-		&model.KriterieaKemungkinan{},
-		&model.KriteriaDampak{},
-		&iamModel.User{},
+		&model.RekapitulasiHasilKuesioner{},
+		// &model.OPD{},
+		// &model.Spip{},
+		// &model.KategoriRisiko{},
+		// &model.PenyebabRisiko{},
+		// &model.KriterieaKemungkinan{},
+		// &model.KriteriaDampak{},
+		// &iamModel.User{},
 	)
 	// &model.SKPerizinan{},
 	// &model.LaporanPerizinan{},

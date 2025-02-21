@@ -12,7 +12,7 @@ type SpipGetByIDUseCaseReq struct {
 }
 
 type SpipGetByIDUseCaseRes struct {
-	Spip model.SPIP `json:"spip"`
+	Spip model.Spip `json:"spip"`
 }
 
 type SpipGetByIDUseCase = core.ActionHandler[SpipGetByIDUseCaseReq, SpipGetByIDUseCaseRes]
