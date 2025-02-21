@@ -10,10 +10,11 @@ import (
 	ketoHelper "shared/helper/ory/keto"
 	"shared/middleware"
 
+	ory "github.com/ory/client-go"
 	"gorm.io/gorm"
 )
 
-func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeMux, keto *ketoHelper.KetoGRPCClient, jwtToken helper.JWTTokenizer, db *gorm.DB) {
+func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeMux, keto *ketoHelper.KetoGRPCClient, ory *ory.APIClient, jwtToken helper.JWTTokenizer, db *gorm.DB) {
 
 	// gateways
 	generateId := gateway.ImplGenerateId()                                 //
@@ -89,6 +90,7 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 		Mux:  mux,
 		JWT:  jwtToken,
 		Keto: keto,
+		Ory:  ory,
 	}
 
 	// controllers

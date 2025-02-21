@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"iam/gateway"
 	"iam/model"
 	"iam/usecase"
@@ -13,7 +14,7 @@ func (c Controller) UserGetOneHandler(u usecase.UserGetOne) helper.APIData {
 	apiData := helper.APIData{
 		Access:  model.MANAJEMEN_PENGGUNA_DAFTAR_PENGGUNA_READ,
 		Method:  http.MethodGet,
-		Url:     "/users/{id}",
+		Url:     "/api/users/{id}",
 		Summary: "Get user detail by id",
 		Tag:     "IAM - User Management",
 		Examples: []helper.ExampleResponse{
@@ -43,7 +44,7 @@ func (c Controller) UserGetOneHandler(u usecase.UserGetOne) helper.APIData {
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
-
+		fmt.Println("ini di UserGetOneHandler")
 		userID := r.PathValue("id")
 
 		req := usecase.UserGetOneReq{
@@ -55,9 +56,9 @@ func (c Controller) UserGetOneHandler(u usecase.UserGetOne) helper.APIData {
 		HandleUsecase(r.Context(), w, u, req)
 	}
 
-	authorizationHandler := Authorization(handler, apiData.Access)
-	authenticatedHandler := Authentication(authorizationHandler, c.JWT)
-	c.Mux.HandleFunc(apiData.GetMethodUrl(), authenticatedHandler)
+	auth := AuthenticationKratos(handler, c.Ory, c.Keto)
+	// authenticatedHandler := Authentication(authorizationHandler, c.JWT)
+	c.Mux.HandleFunc(apiData.GetMethodUrl(), auth)
 
 	return apiData
 }

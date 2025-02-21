@@ -13,6 +13,7 @@ import (
 	ketoHelper "shared/helper/ory/keto"
 
 	"github.com/google/uuid"
+	ory "github.com/ory/client-go"
 )
 
 const requestIDKey core.ContextKey = "REQUEST_ID"
@@ -76,6 +77,58 @@ func Authentication(next http.HandlerFunc, jwt helper.JWTTokenizer) http.Handler
 
 		next.ServeHTTP(w, r)
 
+	}
+
+}
+
+func AuthenticationKratos(next http.HandlerFunc, ory *ory.APIClient, keto *ketoHelper.KetoGRPCClient) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		// fmt.Println("=== Incoming Request Headers ===")
+		// for key, values := range r.Header {
+		// 	for _, value := range values {
+		// 		fmt.Printf("%s: %s\n", key, value)
+		// 	}
+		// }
+		// fmt.Println("=================================")
+
+		cookies := r.Header.Get("Cookie")
+		// fmt.Println("cookies: " + cookies)
+
+		// // Look up session.
+		session, _, err := ory.FrontendAPI.ToSession(r.Context()).Cookie(cookies).Execute()
+		// Check if a session exists and if it is active.
+		// You could add your own logic here to check if the session is valid for the specific endpoint, e.g. using the `session.AuthenticatedAt` field.
+
+		if err != nil || !*session.Active {
+			msg := "unverified session cookie"
+			writeJSON(w, http.StatusUnauthorized, Response{Status: "failed", Error: &msg})
+			return
+		}
+
+		sessionBytes, err := json.Marshal(session)
+		if err != nil {
+			fmt.Println("Error marshaling session to JSON:", err)
+			return
+		}
+		var sessionNew model.Session
+		err = json.Unmarshal(sessionBytes, &sessionNew)
+		if err != nil {
+			fmt.Println("Error unmarshaling JSON:", err)
+			return
+		}
+
+		// Cetak hasil parsing
+		// fmt.Println("Parsed Session Struct:")
+		// fmt.Printf("%+v\n", sessionNew)
+
+		ua := model.NewUserAccessKeto(string(sessionNew.Identity.ID), keto)
+
+		ctx := core.AttachDataToContext(r.Context(), UserAccessContext, ua)
+		ctx = core.AttachDataToContext(ctx, UserIDContext, sessionNew.Identity.ID)
+		r = r.WithContext(ctx)
+
+		next.ServeHTTP(w, r)
 	}
 
 }

@@ -13,7 +13,7 @@ func (c Controller) UserGetAllHandler(u usecase.UserGetAll) helper.APIData {
 	apiData := helper.APIData{
 		Access:  model.MANAJEMEN_PENGGUNA_DAFTAR_PENGGUNA_READ,
 		Method:  http.MethodGet,
-		Url:     "/users",
+		Url:     "/api/users",
 		Summary: "Get all users",
 		Tag:     "IAM - User Management",
 		QueryParams: []helper.QueryParam{
