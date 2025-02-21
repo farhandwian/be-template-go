@@ -22,6 +22,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	spipDeleteGateway := gateway.ImplSpipDelete(mariaDB)
 	spipCreateGateway := gateway.ImplSpipSave(mariaDB)
 
+	// Gateway Kategori Risiko
+	kategoriRisikoGetAllGateway := gateway.ImplKategoriRisikoGetAll(mariaDB)
+	kategoriRisikoGetOneGateway := gateway.ImplKategoriRisikoGetByID(mariaDB)
+	kategoriRisikoDeleteGateway := gateway.ImplKategoriRisikoDelete(mariaDB)
+	kategoriRisikoCreateGateway := gateway.ImplKategoriRisikoSave(mariaDB)
+
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
 
@@ -31,6 +37,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	spipDeleteUseCase := usecase.ImplSpipDeleteUseCase(spipDeleteGateway)
 	SpipCreateUseCase := usecase.ImplSpipCreateUseCase(generateIdGateway, spipCreateGateway)
 	spipUpdateUseCase := usecase.ImplSpipUpdateUseCase(spipGetOneGateway, spipCreateGateway)
+
+	// Usecase Kategori Risiko
+	kategoriRisikoGetAllUseCase := usecase.ImplKategoriRisikoGetAllUseCase(kategoriRisikoGetAllGateway)
+	kategoriRisikoGetOneUseCase := usecase.ImplKategoriRisikoGetByIDUseCase(kategoriRisikoGetOneGateway)
+	kategoriRisikoDeleteUseCase := usecase.ImplKategoriRisikoDeleteUseCase(kategoriRisikoDeleteGateway)
+	kategoriRisikoCreateUseCase := usecase.ImplKategoriRisikoCreateUseCase(generateIdGateway, kategoriRisikoCreateGateway)
+	kategoriRisikoUpdateUseCase := usecase.ImplKategoriRisikoUpdateUseCase(kategoriRisikoGetOneGateway, kategoriRisikoCreateGateway)
 
 	c := controller.Controller{
 		Mux: mux,
@@ -44,5 +57,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.SpipGetByIDHandler(spipGetOneUseCase)).
 		Add(c.SpipCreateHandler(SpipCreateUseCase)).
 		Add(c.SpipDeleteHandler(spipDeleteUseCase)).
-		Add(c.SpipUpdateHandler(spipUpdateUseCase))
+		Add(c.SpipUpdateHandler(spipUpdateUseCase)).
+		Add(c.KategoriRisikoGetAllHandler(kategoriRisikoGetAllUseCase)).
+		Add(c.KategoriRisikoGetByIDHandler(kategoriRisikoGetOneUseCase)).
+		Add(c.KategoriRisikoCreateHandler(kategoriRisikoCreateUseCase)).
+		Add(c.KategoriRisikoDeleteHandler(kategoriRisikoDeleteUseCase)).
+		Add(c.KategoriRisikoUpdateHandler(kategoriRisikoUpdateUseCase))
 }
