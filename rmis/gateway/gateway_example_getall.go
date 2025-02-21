@@ -2,8 +2,8 @@ package gateway
 
 import (
 	"context"
-	"example/model"
 	"fmt"
+	"rmis/model"
 	"shared/core"
 	"shared/middleware"
 

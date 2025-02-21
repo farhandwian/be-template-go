@@ -1,10 +1,10 @@
 package wiring
 
 import (
-	"example/controller"
-	"example/gateway"
-	"example/usecase"
 	"net/http"
+	"rmis/controller"
+	"rmis/gateway"
+	"rmis/usecase"
 	"shared/helper"
 	"shared/helper/cronjob"
 

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"example/wiring"
 	"net/http"
 	"os"
+	"rmis/wiring"
 	"shared/config"
 	"shared/helper"
 	"shared/helper/cronjob"

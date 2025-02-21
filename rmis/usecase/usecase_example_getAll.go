@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"context"
-	"example/gateway"
-	"example/model"
+	"rmis/gateway"
+	"rmis/model"
 	"shared/core"
 	"shared/usecase"
 )

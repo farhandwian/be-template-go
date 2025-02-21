@@ -1,11 +1,11 @@
 package config
 
 import (
-	"example/model"
 	"fmt"
 	iamModel "iam/model"
 	"log"
 	"os"
+	"rmis/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -45,7 +45,12 @@ func InitMariaDatabase() *gorm.DB {
 	}
 
 	db.AutoMigrate(
-		&model.Example{},
+		&model.OPD{},
+		&model.SPIP{},
+		&model.KategoriRisiko{},
+		&model.PenyebabRisiko{},
+		&model.KriterieaKemungkinan{},
+		&model.KriteriaDampak{},
 		&iamModel.User{},
 	)
 	// &model.SKPerizinan{},

@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"example/usecase"
 	"iam/controller"
 	iammodel "iam/model"
 	"net/http"
+	"rmis/usecase"
 	"shared/helper"
 )
 

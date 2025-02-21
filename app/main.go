@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"encoding/json"
-	example "example/wiring"
 	iam "iam/wiring"
+	rmis "rmis/wiring"
 
 	"net/http"
 	"os"
@@ -54,7 +54,7 @@ func main() {
 	cj := cronjob.NewCronJob(nil, cronjobDB)
 
 	iam.SetupDependencyWithDatabaseAndEmail(apiPrinter, mux, jwtToken, mangantiDB, ec)
-	example.SetupDependency(mangantiDB, mux, jwtToken, apiPrinter, cj, sseDashboard)
+	rmis.SetupDependency(mangantiDB, mux, jwtToken, apiPrinter, cj, sseDashboard)
 	mux.HandleFunc("GET /ping", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
