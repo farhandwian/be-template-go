@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"rmis/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -44,14 +43,14 @@ func InitMariaDatabase() *gorm.DB {
 	}
 
 	db.AutoMigrate(
-		&model.RekapitulasiHasilKuesioner{},
-		// &model.OPD{},
-		// &model.Spip{},
-		// &model.KategoriRisiko{},
-		// &model.PenyebabRisiko{},
-		// &model.KriterieaKemungkinan{},
-		// &model.KriteriaDampak{},
-		// &iamModel.User{},
+	// &model.RekapitulasiHasilKuesioner{},
+	// &model.OPD{},
+	// &model.Spip{},
+	// &model.KategoriRisiko{},
+	// &model.PenyebabRisiko{},
+	// &model.KriterieaKemungkinan{},
+	// &model.KriteriaDampak{},
+	// &iamModel.User{},
 	)
 	// &model.SKPerizinan{},
 	// &model.LaporanPerizinan{},

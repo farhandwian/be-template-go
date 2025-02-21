@@ -12,10 +12,10 @@ import (
 func (c Controller) RekapitulasiHasilKuesionerGetAllHandler(u usecase.RekapitulasiHasilKuesionerGetAllUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodGet,
-		Url:    "/api/rekapitulasi-hasil-kuesioner",
+		Url:    "/api/rekapitulasi-hasil-kuesioners",
 		AccessTest: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "rekapitulasi-hasil-kuesioner",
+			Object:    "rekapitulasi-hasil-kuesioners",
 			Relation:  "read",
 		},
 		Summary: "Get all Sub Unsur RekapitulasiHasilKuesioner",

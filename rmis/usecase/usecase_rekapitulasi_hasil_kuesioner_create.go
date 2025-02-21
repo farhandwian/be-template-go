@@ -15,7 +15,7 @@ type RekapitulasiHasilKuesionerCreateUseCaseReq struct {
 	NamaPemda        string `json:"nama_pemda"`
 	SpipID           string `json:"spip_id"`
 	Pertanyaan       string `json:"pertanyaan"`
-	JawabanResponden string `json:"jawaban_responden"`
+	JawabanResponden []int  `json:"jawaban_responden"`
 }
 
 type RekapitulasiHasilKuesionerCreateUseCaseRes struct {
@@ -36,9 +36,9 @@ func ImplRekapitulasiHasilKuesionerCreateUseCase(
 			return nil, err
 		}
 
-		var jawabanResponden datatypes.JSON
-		if err := json.Unmarshal([]byte(req.JawabanResponden), &jawabanResponden); err != nil {
-			return nil, fmt.Errorf("failed to parse JawabanResponden: %v", err)
+		jawabanRespondenJSON, err := json.Marshal(req.JawabanResponden)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal JawabanResponden: %v", err)
 		}
 
 		spip, err := getSpipById(ctx, gateway.SpipGetByIDReq{ID: req.SpipID})
@@ -56,7 +56,7 @@ func ImplRekapitulasiHasilKuesionerCreateUseCase(
 			SpipID:           &req.SpipID,
 			NamaSpip:         namaSpip,
 			Pertanyaan:       &req.Pertanyaan,
-			JawabanResponden: &jawabanResponden,
+			JawabanResponden: (*datatypes.JSON)(&jawabanRespondenJSON), // Store as JSON without unnecessary unmarshalling
 		}
 
 		if err := obj.CalculateModus(); err != nil {

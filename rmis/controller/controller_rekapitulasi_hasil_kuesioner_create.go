@@ -12,10 +12,10 @@ import (
 func (c Controller) RekapitulasiHasilKuesionerCreateHandler(u usecase.RekapitulasiHasilKuesionerCreateUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodPost,
-		Url:    "/api/rekapitulasi-hasil-kuesioner",
+		Url:    "/api/rekapitulasi-hasil-kuesioners",
 		AccessTest: model.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "rekapitulasi-hasil-kuesioner",
+			Object:    "rekapitulasi-hasil-kuesioners",
 			Relation:  "create",
 		},
 		Body:    usecase.RekapitulasiHasilKuesionerCreateUseCaseReq{},

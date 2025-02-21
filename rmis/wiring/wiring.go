@@ -31,6 +31,8 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	// Gateway Rekapitulasi Hasil Kuesioner
 	rekapitulasiHasilKuesionerCreateGateway := gateway.ImplRekapitulasiHasilKuesionerSave(mariaDB)
 	rekapitulasiHasilKuesionerGetAllGateway := gateway.ImplRekapitulasiHasilkuesionerGetAll(mariaDB)
+	rekapitulasiHasilKuesionerGetOneGateway := gateway.ImplRekapitulasiHasilKuesionerGetByID(mariaDB)
+	rekapitulasiHasilKuesionerDeleteGateway := gateway.ImplRekapitulasiHasilKuesionerDelete(mariaDB)
 
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
@@ -52,6 +54,8 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	// Usecase Rekapitulasi Hasil Kuesioner
 	rekapitulasiHasilKuesionerCreateUseCase := usecase.ImplRekapitulasiHasilKuesionerCreateUseCase(generateIdGateway, rekapitulasiHasilKuesionerCreateGateway, spipGetOneGateway)
 	rekapitulasiHasilKuesionerGetAllUseCase := usecase.ImplRekapitulasiHasilKuesionerGetAllUseCase(rekapitulasiHasilKuesionerGetAllGateway)
+	rekapitulasiHasilKuesionerGetOneUseCase := usecase.ImplRekapitulasiHasilKuesionerGetByIDUseCase(rekapitulasiHasilKuesionerGetOneGateway)
+	rekapitulasiHasilKuesionerDeleteUseCase := usecase.ImplRekapitulasiHasilKuesionerDeleteUseCase(rekapitulasiHasilKuesionerDeleteGateway)
 
 	c := controller.Controller{
 		Mux: mux,
@@ -72,5 +76,7 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.KategoriRisikoDeleteHandler(kategoriRisikoDeleteUseCase)).
 		Add(c.KategoriRisikoUpdateHandler(kategoriRisikoUpdateUseCase)).
 		Add(c.RekapitulasiHasilKuesionerCreateHandler(rekapitulasiHasilKuesionerCreateUseCase)).
-		Add(c.RekapitulasiHasilKuesionerGetAllHandler(rekapitulasiHasilKuesionerGetAllUseCase))
+		Add(c.RekapitulasiHasilKuesionerGetAllHandler(rekapitulasiHasilKuesionerGetAllUseCase)).
+		Add(c.RekapitulasiHasilKuesionerGetByIDHandler(rekapitulasiHasilKuesionerGetOneUseCase)).
+		Add(c.RekapitulasiHasilKuesionerDeleteHandler(rekapitulasiHasilKuesionerDeleteUseCase))
 }
