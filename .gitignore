@@ -1,0 +1,6 @@
+# Ignore all .air.toml files in any subdirectory
+**/.air.toml
+
+# Ignore all tmp/ directories in any subdirectory
+**/tmp/
+**/.env
