@@ -2,13 +2,11 @@ package usecase
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
-
-	"gorm.io/datatypes"
+	"shared/helper"
 )
 
 type RekapitulasiHasilKuesionerCreateUseCaseReq struct {
@@ -36,11 +34,6 @@ func ImplRekapitulasiHasilKuesionerCreateUseCase(
 			return nil, err
 		}
 
-		jawabanRespondenJSON, err := json.Marshal(req.JawabanResponden)
-		if err != nil {
-			return nil, fmt.Errorf("failed to marshal JawabanResponden: %v", err)
-		}
-
 		spip, err := getSpipById(ctx, gateway.SpipGetByIDReq{ID: req.SpipID})
 		if err != nil {
 			return nil, err
@@ -50,13 +43,14 @@ func ImplRekapitulasiHasilKuesionerCreateUseCase(
 			namaSpip = spip.SPIP.Nama
 		}
 
+		jawabanJSON := helper.ToDataTypeJSON(req.JawabanResponden)
 		obj := model.RekapitulasiHasilKuesioner{
 			ID:               &genObj.RandomId,
 			NamaPemda:        &req.NamaPemda,
 			SpipID:           &req.SpipID,
 			NamaSpip:         namaSpip,
 			Pertanyaan:       &req.Pertanyaan,
-			JawabanResponden: (*datatypes.JSON)(&jawabanRespondenJSON), // Store as JSON without unnecessary unmarshalling
+			JawabanResponden: &jawabanJSON,
 		}
 
 		if err := obj.CalculateModus(); err != nil {

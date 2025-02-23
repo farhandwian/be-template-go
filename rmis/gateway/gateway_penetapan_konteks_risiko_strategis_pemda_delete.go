@@ -11,22 +11,22 @@ import (
 	"gorm.io/gorm"
 )
 
-type PenetepanKonteksRisikoStrategisDeletePemdaReq struct {
+type PenetepanKonteksRisikoStrategisPemdaDeleteReq struct {
 	ID string
 }
 
-type PenetepanKonteksRisikoStrategisDeletePemdaRes struct{}
+type PenetepanKonteksRisikoStrategisPemdaDeleteRes struct{}
 
-type PenetepanKonteksRisikoStrategisDeletePemda = core.ActionHandler[PenetepanKonteksRisikoStrategisDeletePemdaReq, PenetepanKonteksRisikoStrategisDeletePemdaRes]
+type PenetepanKonteksRisikoStrategisPemdaDelete = core.ActionHandler[PenetepanKonteksRisikoStrategisPemdaDeleteReq, PenetepanKonteksRisikoStrategisPemdaDeleteRes]
 
-func ImplPenetepanKonteksRisikoStrategisPemda(db *gorm.DB) PenetepanKonteksRisikoStrategisDeletePemda {
-	return func(ctx context.Context, req PenetepanKonteksRisikoStrategisDeletePemdaReq) (*PenetepanKonteksRisikoStrategisDeletePemdaRes, error) {
+func ImplPenetepanKonteksRisikoStrategisPemdaDelete(db *gorm.DB) PenetepanKonteksRisikoStrategisPemdaDelete {
+	return func(ctx context.Context, req PenetepanKonteksRisikoStrategisPemdaDeleteReq) (*PenetepanKonteksRisikoStrategisPemdaDeleteRes, error) {
 		query := middleware.GetDBFromContext(ctx, db)
 
 		if err := query.Delete(&model.RekapitulasiHasilKuesioner{}, "id = ?", req.ID).Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
 
-		return &PenetepanKonteksRisikoStrategisDeletePemdaRes{}, nil
+		return &PenetepanKonteksRisikoStrategisPemdaDeleteRes{}, nil
 	}
 }

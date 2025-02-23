@@ -9,24 +9,24 @@ import (
 	"gorm.io/gorm"
 )
 
-type PenetepanKonteksRisikoStrategisPemdaSaveReq struct {
+type PenetapanKonteksRisikoStrategisPemdaSaveReq struct {
 	PenetepanKonteksRisikoStrategisPemda model.PenetapanKonteksRisikoStrategisPemda
 }
 
-type PenetepanKonteksRisikoStrategisPemdaSaveRes struct {
+type PenetapanKonteksRisikoStrategisPemdaSaveRes struct {
 	ID string
 }
 
-type PenetepanKonteksRisikoStrategisPemdaSave = core.ActionHandler[PenetepanKonteksRisikoStrategisPemdaSaveReq, PenetepanKonteksRisikoStrategisPemdaSaveRes]
+type PenetepanKonteksRisikoStrategisPemdaSave = core.ActionHandler[PenetapanKonteksRisikoStrategisPemdaSaveReq, PenetapanKonteksRisikoStrategisPemdaSaveRes]
 
 func ImplPenetepanKonteksRisikoStrategisPemdaSave(db *gorm.DB) PenetepanKonteksRisikoStrategisPemdaSave {
-	return func(ctx context.Context, req PenetepanKonteksRisikoStrategisPemdaSaveReq) (*PenetepanKonteksRisikoStrategisPemdaSaveRes, error) {
+	return func(ctx context.Context, req PenetapanKonteksRisikoStrategisPemdaSaveReq) (*PenetapanKonteksRisikoStrategisPemdaSaveRes, error) {
 		query := middleware.GetDBFromContext(ctx, db)
 
 		if err := query.Save(&req.PenetepanKonteksRisikoStrategisPemda).Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
 
-		return &PenetepanKonteksRisikoStrategisPemdaSaveRes{ID: *req.PenetepanKonteksRisikoStrategisPemda.ID}, nil
+		return &PenetapanKonteksRisikoStrategisPemdaSaveRes{ID: *req.PenetepanKonteksRisikoStrategisPemda.ID}, nil
 	}
 }

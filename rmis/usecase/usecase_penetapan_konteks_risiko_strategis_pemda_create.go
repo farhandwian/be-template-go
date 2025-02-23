@@ -30,7 +30,6 @@ type PenetapanKonteksRisikoStrategisPemdaCreateUseCase = core.ActionHandler[Pene
 func ImplPenetapanKonteksRisikoStrategisPemdaCreateUseCase(
 	generateId gateway.GenerateId,
 	createPenetapanKonteksRisikoStrategisPemda gateway.PenetepanKonteksRisikoStrategisPemdaSave,
-	getSpipById gateway.SpipGetByID,
 ) PenetapanKonteksRisikoStrategisPemdaCreateUseCase {
 	return func(ctx context.Context, req PenetapanKonteksRisikoStrategisPemdaCreateUseCaseReq) (*PenetapanKonteksRisikoStrategisPemdaCreateUseCaseRes, error) {
 
@@ -54,7 +53,7 @@ func ImplPenetapanKonteksRisikoStrategisPemdaCreateUseCase(
 			NamaYBS:                &req.NamaYBS,
 		}
 
-		if _, err = createPenetapanKonteksRisikoStrategisPemda(ctx, gateway.PenetepanKonteksRisikoStrategisPemdaSaveReq{PenetepanKonteksRisikoStrategisPemda: obj}); err != nil {
+		if _, err = createPenetapanKonteksRisikoStrategisPemda(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaSaveReq{PenetepanKonteksRisikoStrategisPemda: obj}); err != nil {
 			return nil, err
 		}
 

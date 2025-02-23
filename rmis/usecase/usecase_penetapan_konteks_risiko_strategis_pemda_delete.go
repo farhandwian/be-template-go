@@ -14,10 +14,10 @@ type PenetapanKonteksRisikoDeleteUseCaseRes struct{}
 
 type PenetapanKonteksRisikoDeleteUseCase = core.ActionHandler[PenetapanKonteksRisikoDeleteUseCaseReq, PenetapanKonteksRisikoDeleteUseCaseRes]
 
-func ImplPenetapanKonteksRisikoDeleteUseCase(deletePenetapanKonteksRisiko gateway.PenetepanKonteksRisikoStrategisDeletePemda) PenetapanKonteksRisikoDeleteUseCase {
+func ImplPenetapanKonteksRisikoDeleteUseCase(deletePenetapanKonteksRisiko gateway.PenetepanKonteksRisikoStrategisPemdaDelete) PenetapanKonteksRisikoDeleteUseCase {
 	return func(ctx context.Context, req PenetapanKonteksRisikoDeleteUseCaseReq) (*PenetapanKonteksRisikoDeleteUseCaseRes, error) {
 
-		if _, err := deletePenetapanKonteksRisiko(ctx, gateway.PenetepanKonteksRisikoStrategisDeletePemdaReq{ID: req.ID}); err != nil {
+		if _, err := deletePenetapanKonteksRisiko(ctx, gateway.PenetepanKonteksRisikoStrategisPemdaDeleteReq{ID: req.ID}); err != nil {
 			return nil, err
 		}
 
