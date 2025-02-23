@@ -10,7 +10,7 @@ import (
 
 // Root Cause Analysis
 
-type RCA struct {
+type Rca struct {
 	ID                    *string         `json:"id"`
 	NamaUnitPemilikRisiko *string         `json:"nama_unit_pemilik_risiko"`
 	TahunPenilaian        *time.Time      `json:"tahun_penilaian"`
@@ -21,7 +21,7 @@ type RCA struct {
 	KegiatanPengendalian  *string         `json:"kegiatan_pengendalian"`
 }
 
-func (rca *RCA) SetAkarPenyebab() error {
+func (rca *Rca) SetAkarPenyebab() error {
 	if rca.Why == nil {
 		return fmt.Errorf("why field is empty")
 	}

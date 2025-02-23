@@ -19,3 +19,18 @@ func ToDataTypeJSON[T any](a ...T) datatypes.JSON {
 
 	return datatypes.JSON(jsonData)
 }
+
+func ToDataTypeJSONPtr[T any](a ...T) *datatypes.JSON {
+	if len(a) == 0 {
+		return nil
+	}
+
+	jsonData, err := json.Marshal(a)
+	if err != nil {
+
+		return nil
+	}
+
+	jsonValue := datatypes.JSON(jsonData)
+	return &jsonValue
+}
