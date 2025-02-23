@@ -13,7 +13,8 @@ type IdentifikasiRisikoStrategisPemerintahDaerah struct {
 	UrusanPemerintahan *string    `json:"urusan_pemerintahan"`
 	TujuanStrategis    *string    `json:"tujuan_strategis"`
 	IndikatorKinerja   *string    `json:"indikator_kinerja"`
-	KategoriRisiko     *string    `json:"kategori_resiko"` // references kategori_resiko.id
+	KategoriRisikoID   *string    `json:"-"`                    // references kategori_resiko.id
+	KategoriRisikoName *string    `json:"kategori_risiko_name"` // references kategori_resiko
 	UraianRisiko       *string    `json:"uraian_resiko"`
 	NomorUraian        *int       `json:"nomor_risiko"`
 	KodeRisiko         *string    `json:"kode_resiko"`
@@ -31,7 +32,10 @@ func (irspd *IdentifikasiRisikoStrategisPemerintahDaerah) GenerateKodeRisiko(kat
 	}
 
 	if irspd.NomorUraian == nil {
-		return fmt.Errorf("NomorUraian is nil")
+		defaultNum := 1
+		irspd.NomorUraian = &defaultNum
+	} else {
+		*irspd.NomorUraian = *irspd.NomorUraian + 1
 	}
 	yearSuffix := fmt.Sprintf("%02d", irspd.TahunPenilaian.Year()%100)
 	iterStr := fmt.Sprintf("%03d", *irspd.NomorUraian)
