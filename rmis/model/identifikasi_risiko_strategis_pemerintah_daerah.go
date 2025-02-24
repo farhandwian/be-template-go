@@ -25,6 +25,8 @@ type IdentifikasiRisikoStrategisPemerintahDaerah struct {
 	Controllable       *string    `json:"controllable"` // could be boolean if desired
 	UraianDampak       *string    `json:"uraian_dampak"`
 	PihakDampak        *string    `json:"pihak_dampak"`
+	CreatedAt          time.Time  `json:"created_at"`
+	UpdatedAt          time.Time  `json:"updated_at"`
 }
 
 func (irspd *IdentifikasiRisikoStrategisPemerintahDaerah) GenerateKodeRisiko(kategori_risiko string) error {

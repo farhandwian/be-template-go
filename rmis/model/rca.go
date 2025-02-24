@@ -20,6 +20,8 @@ type Rca struct {
 	AkarPenyebab                       *string         `json:"akar_penyebab"`
 	JenisPenyebab                      *string         `json:"jenis_penyebab"`
 	KegiatanPengendalian               *string         `json:"kegiatan_pengendalian"`
+	CreatedAt                          time.Time       `json:"created_at"`
+	UpdatedAt                          time.Time       `json:"updated_at"`
 }
 
 func (rca *Rca) SetAkarPenyebab() error {
