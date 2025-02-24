@@ -71,6 +71,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	hasilAnalisisRisikoGetOneGateway := gateway.ImplHasilAnalisisRisikoGetByID(mariaDB)
 	hasilAnalisisRisikoDeleteGateway := gateway.ImplHasilAnalisisRisikoDelete(mariaDB)
 
+	// Gateway Penilaian Kegiatan Pengendalian
+	penilaianKegiatanPengendalianCreateGateway := gateway.ImplPenilaianKegiatanPengendalianSave(mariaDB)
+	penilaianKegiatanPengendalianGetAllGateway := gateway.ImplPenilaianKegiatanPengendalianGetAll(mariaDB)
+	penilaianKegiatanPengendalianGetOneGateway := gateway.ImplPenilaianKegiatanPengendalianGetByID(mariaDB)
+	penilaianKegiatanPengendalianDeleteGateway := gateway.ImplPenilaianKegiatanPengendalianDelete(mariaDB)
+
 	// =================================================================
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
@@ -137,6 +143,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	hasilAnalisisRisikoDeleteUsecase := usecase.ImplHasilAnalisisRisikoDeleteUseCase(hasilAnalisisRisikoDeleteGateway)
 	hasilAnalisisRisikoUpdateUsecase := usecase.ImplHasilAnalisisRisikoUpdateUseCase(hasilAnalisisRisikoGetOneGateway, hasilAnalisisRisikoCreateGateway)
 
+	// Usecase Penilaian Kegiatan Pengendalian
+	penilaianKegiatanPengendalianCreateUsecase := usecase.ImplPenilaianKegiatanPengendalianCreateUseCase(generateIdGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)
+	penilaianKegiatanPengendalianGetAllUsecase := usecase.ImplPenilaianKegiatanPengendalianGetAllUseCase(penilaianKegiatanPengendalianGetAllGateway)
+	penilaianKegiatanPengendalianGetOneUsecase := usecase.ImplPenilaianKegiatanPengendalianGetByIDUseCase(penilaianKegiatanPengendalianGetOneGateway)
+	penilaianKegiatanPengendalianDeleteUsecase := usecase.ImplPenilaianKegiatanPengendalianDeleteUseCase(penilaianKegiatanPengendalianDeleteGateway)
+	penilaianKegiatanPengendalianUpdateUsecase := usecase.ImplPenilaianKegiatanPengendalianUpdateUseCase(penilaianKegiatanPengendalianGetOneGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)
+
 	c := controller.Controller{
 		Mux: mux,
 		JWT: jwtToken,
@@ -188,5 +201,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.HasilAnalisisRisikoDeleteHandler(hasilAnalisisRisikoDeleteUsecase)).
 		Add(c.HasilAnalisisRisikoGetAllHandler(hasilAnalisisRisikoGetAllUseCase)).
 		Add(c.HasilAnalisisRisikoGetByIDHandler(hasilAnalisisRisikoGetOneUseCase)).
-		Add(c.HasilAnalisisRisikoUpdateHandler(hasilAnalisisRisikoUpdateUsecase))
+		Add(c.HasilAnalisisRisikoUpdateHandler(hasilAnalisisRisikoUpdateUsecase)).
+		Add(c.PenilaianKegiatanPengendalianCreateHandler(penilaianKegiatanPengendalianCreateUsecase)).
+		Add(c.PenilaianKegiatanPengendalianDeleteHandler(penilaianKegiatanPengendalianDeleteUsecase)).
+		Add(c.PenilaianKegiatanPengendalianGetAllHandler(penilaianKegiatanPengendalianGetAllUsecase)).
+		Add(c.PenilaianKegiatanPengendalianGetByIDHandler(penilaianKegiatanPengendalianGetOneUsecase)).
+		Add(c.PenilaianKegiatanPengendalianUpdateHandler(penilaianKegiatanPengendalianUpdateUsecase))
 }
