@@ -8,24 +8,24 @@ import (
 	"shared/helper"
 )
 
-// RcaCreateHandler handles the creation of a new Rca
-func (c Controller) RcaCreateHandler(u usecase.RcaCreateUseCase) helper.APIData {
+// PenyebabRisikoCreateHandler handles the creation of a new PenyebabRisiko
+func (c Controller) PenyebabRisikoCreateHandler(u usecase.PenyebabRisikoCreateUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodPost,
-		Url:    "/api/rcas",
+		Url:    "/api/penyebab-risikos",
 		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "rcas",
+			Object:    "penyebab-risikos",
 			Relation:  "create",
 		},
-		Body:    usecase.RcaCreateUseCaseReq{},
-		Summary: "Create a new Root Cause Analysis (RCA)",
-		Tag:     "Root Cause Analysis (RCA)",
+		Body:    usecase.PenyebabRisikoCreateUseCaseReq{},
+		Summary: "Create a new Penyebab Risiko",
+		Tag:     "penyebab risiko",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
 
-		request, ok := controller.ParseJSON[usecase.RcaCreateUseCaseReq](w, r)
+		request, ok := controller.ParseJSON[usecase.PenyebabRisikoCreateUseCaseReq](w, r)
 		if !ok {
 			return
 		}

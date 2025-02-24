@@ -53,6 +53,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	identifikasiRisikoStrategisPemdaDeleteGateway := gateway.ImplIdentifikasiRisikoStrategisPemdaDelete(mariaDB)
 	identifikasiRisikoStrategisPemdaCreateGateway := gateway.ImplIdentifikasiRisikoStrategisPemdaSave(mariaDB)
 
+	// Gateway Penyebab Risiko
+	penyebabRisikoGetAllGateway := gateway.ImplPenyebabRisikoGetAll(mariaDB)
+	penyebabRisikoGetOneGateway := gateway.ImplPenyebabRisikoGetByID(mariaDB)
+	penyebabRisikoDeleteGateway := gateway.ImplPenyebabRisikoDelete(mariaDB)
+	penyebabRisikoCreateGateway := gateway.ImplPenyebabRisikoSave(mariaDB)
+
 	// =================================================================
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
@@ -98,6 +104,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	identifikasiRisikoStrategisPemdaCreateUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaCreateUseCase(generateIdGateway, identifikasiRisikoStrategisPemdaCreateGateway, kategoriRisikoGetOneGateway)
 	identifikasiRisikoStrategisPemdaUpdateUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(identifikasiRisikoStrategisPemdaGetOneGateway, identifikasiRisikoStrategisPemdaCreateGateway, kategoriRisikoGetOneGateway, rcaGetOneGateway)
 
+	// Usecase Penyebab Risiko
+	penyebabRisikoGetAllUseCase := usecase.ImplPenyebabRisikoGetAllUseCase(penyebabRisikoGetAllGateway)
+	penyebabRisikoGetOneUseCase := usecase.ImplPenyebabRisikoGetByIDUseCase(penyebabRisikoGetOneGateway)
+	penyebabRisikoDeleteUseCase := usecase.ImplPenyebabRisikoDeleteUseCase(penyebabRisikoDeleteGateway)
+	penyebabRisikoCreateUseCase := usecase.ImplPenyebabRisikoCreateUseCase(generateIdGateway, penyebabRisikoCreateGateway)
+	penyebabRisikoUpdateUseCase := usecase.ImplPenyebabRisikoUpdateUseCase(penyebabRisikoGetOneGateway, penyebabRisikoCreateGateway)
+
 	c := controller.Controller{
 		Mux: mux,
 		JWT: jwtToken,
@@ -134,5 +147,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.IdentifikasiRisikoStrategisPemdaGetAllHandler(identifikasiRisikoStrategisPemdaGetAllUseCase)).
 		Add(c.IdentifikasiRisikoStrategisPemdaGetByIDHandler(identifikasiRisikoStrategisPemdaGetOneUseCase)).
 		Add(c.IdentifikasiRisikoStrategisPemdaDeleteHandler(identifikasiRisikoStrategisPemdaDeleteUseCase)).
-		Add(c.IdentifikasiRisikoStrategisPemdaUpdateHandler(identifikasiRisikoStrategisPemdaUpdateUseCase))
+		Add(c.IdentifikasiRisikoStrategisPemdaUpdateHandler(identifikasiRisikoStrategisPemdaUpdateUseCase)).
+		Add(c.PenyebabRisikoCreateHandler(penyebabRisikoCreateUseCase)).
+		Add(c.PenyebabRisikoGetAllHandler(penyebabRisikoGetAllUseCase)).
+		Add(c.PenyebabRisikoGetByIDHandler(penyebabRisikoGetOneUseCase)).
+		Add(c.PenyebabRisikoDeleteHandler(penyebabRisikoDeleteUseCase)).
+		Add(c.PenyebabRisikoUpdateHandler(penyebabRisikoUpdateUseCase))
 }
