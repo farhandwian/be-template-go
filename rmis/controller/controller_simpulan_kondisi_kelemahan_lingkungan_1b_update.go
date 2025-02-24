@@ -12,10 +12,10 @@ import (
 func (c Controller) SimpulanKondisiKelemahanLingkunganUpdateHandler(u usecase.SimpulanKondisiKelemahanLingkunganUpdateUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodPut,
-		Url:    "/api/simpulan-kondisi-kelemahan-lingkungan/{id}",
+		Url:    "/api/simpulan-kondisi-kelemahan-lingkungans/{id}",
 		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "simpulan-kondisi-kelemahan-lingkungan",
+			Object:    "simpulan-kondisi-kelemahan-lingkungans",
 			Relation:  "update",
 		},
 		Body:    usecase.SimpulanKondisiKelemahanLingkunganUpdateUseCaseReq{},

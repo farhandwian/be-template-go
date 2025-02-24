@@ -1,0 +1,37 @@
+package gateway
+
+import (
+	"context"
+	"fmt"
+	"rmis/model"
+	"shared/core"
+	"shared/middleware"
+
+	"gorm.io/gorm"
+)
+
+type HasilAnalisisRisikoGetByIDReq struct {
+	ID string
+}
+
+type HasilAnalisisRisikoGetByIDRes struct {
+	HasilAnalisisRisiko model.HasilAnalisisRisiko
+}
+
+type HasilAnalisisRisikoGetByID = core.ActionHandler[HasilAnalisisRisikoGetByIDReq, HasilAnalisisRisikoGetByIDRes]
+
+func ImplHasilAnalisisRisikoGetByID(db *gorm.DB) HasilAnalisisRisikoGetByID {
+	return func(ctx context.Context, req HasilAnalisisRisikoGetByIDReq) (*HasilAnalisisRisikoGetByIDRes, error) {
+		query := middleware.GetDBFromContext(ctx, db)
+
+		var HasilAnalisisRisiko model.HasilAnalisisRisiko
+		if err := query.First(&HasilAnalisisRisiko, "id = ?", req.ID).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				return nil, fmt.Errorf("HasilAnalisisRisiko id %v is not found", req.ID)
+			}
+			return nil, core.NewInternalServerError(err)
+		}
+
+		return &HasilAnalisisRisikoGetByIDRes{HasilAnalisisRisiko: HasilAnalisisRisiko}, nil
+	}
+}
