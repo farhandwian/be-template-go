@@ -53,6 +53,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	identifikasiRisikoStrategisPemdaDeleteGateway := gateway.ImplIdentifikasiRisikoStrategisPemdaDelete(mariaDB)
 	identifikasiRisikoStrategisPemdaCreateGateway := gateway.ImplIdentifikasiRisikoStrategisPemdaSave(mariaDB)
 
+	// Gateway Simpulan Kondisi Kelemahan Lingkungan
+	simpulanKondisiKelemahanLingkunganGetAllGateway := gateway.ImplSimpulanKondisiKelemahanLingkunganGetAll(mariaDB)
+	simpulanKondisiKelemahanLingkunganGetOneGateway := gateway.ImplSimpulanKondisiKelemahanLingkunganGetByID(mariaDB)
+	simpulanKondisiKelemahanLingkunganDeleteGateway := gateway.ImplSimpulanKondisiKelemahanLingkunganDelete(mariaDB)
+	simpulanKondisiKelemahanLingkunganCreateGateway := gateway.ImplSimpulanKondisiKelemahanLingkunganSave(mariaDB)
+
 	// =================================================================
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
@@ -98,6 +104,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	identifikasiRisikoStrategisPemdaCreateUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaCreateUseCase(generateIdGateway, identifikasiRisikoStrategisPemdaCreateGateway, kategoriRisikoGetOneGateway)
 	identifikasiRisikoStrategisPemdaUpdateUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(identifikasiRisikoStrategisPemdaGetOneGateway, identifikasiRisikoStrategisPemdaCreateGateway, kategoriRisikoGetOneGateway, rcaGetOneGateway)
 
+	// Usecase Simpulan Kondisi Kelemahan Lingkungan
+	simpulanKondisiKelemahanLingkunganGetAllUseCase := usecase.ImplSimpulanKondisiKelemahanLingkunganGetAllUseCase(simpulanKondisiKelemahanLingkunganGetAllGateway)
+	simpulanKondisiKelemahanLingkunganGetOneUseCase := usecase.ImplSimpulanKondisiKelemahanLingkunganGetByIDUseCase(simpulanKondisiKelemahanLingkunganGetOneGateway)
+	simpulanKondisiKelemahanLingkunganDeleteUseCase := usecase.ImplSimpulanKondisiKelemahanLingkunganDeleteUseCase(simpulanKondisiKelemahanLingkunganDeleteGateway)
+	simpulanKondisiKelemahanLingkunganCreateUseCase := usecase.ImplSimpulanKondisiKelemahanLingkunganCreateUseCase(generateIdGateway, simpulanKondisiKelemahanLingkunganCreateGateway)
+	simpulanKondisiKelemahanLingkunganUpdateUseCase := usecase.ImplSimpulanKondisiKelemahanLingkunganUpdateUseCase(simpulanKondisiKelemahanLingkunganGetOneGateway, simpulanKondisiKelemahanLingkunganCreateGateway)
+
 	c := controller.Controller{
 		Mux: mux,
 		JWT: jwtToken,
@@ -134,5 +147,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.IdentifikasiRisikoStrategisPemdaGetAllHandler(identifikasiRisikoStrategisPemdaGetAllUseCase)).
 		Add(c.IdentifikasiRisikoStrategisPemdaGetByIDHandler(identifikasiRisikoStrategisPemdaGetOneUseCase)).
 		Add(c.IdentifikasiRisikoStrategisPemdaDeleteHandler(identifikasiRisikoStrategisPemdaDeleteUseCase)).
-		Add(c.IdentifikasiRisikoStrategisPemdaUpdateHandler(identifikasiRisikoStrategisPemdaUpdateUseCase))
+		Add(c.IdentifikasiRisikoStrategisPemdaUpdateHandler(identifikasiRisikoStrategisPemdaUpdateUseCase)).
+		Add(c.SimpulanKondisiKelemahanLingkunganCreateHandler(simpulanKondisiKelemahanLingkunganCreateUseCase)).
+		Add(c.SimpulanKondisiKelemahanLingkunganGetAllHandler(simpulanKondisiKelemahanLingkunganGetAllUseCase)).
+		Add(c.SimpulanKondisiKelemahanLingkunganGetByIDHandler(simpulanKondisiKelemahanLingkunganGetOneUseCase)).
+		Add(c.SimpulanKondisiKelemahanLingkunganDeleteHandler(simpulanKondisiKelemahanLingkunganDeleteUseCase)).
+		Add(c.SimpulanKondisiKelemahanLingkunganUpdateHandler(simpulanKondisiKelemahanLingkunganUpdateUseCase))
 }
