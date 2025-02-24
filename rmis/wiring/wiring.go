@@ -59,6 +59,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	simpulanKondisiKelemahanLingkunganDeleteGateway := gateway.ImplSimpulanKondisiKelemahanLingkunganDelete(mariaDB)
 	simpulanKondisiKelemahanLingkunganCreateGateway := gateway.ImplSimpulanKondisiKelemahanLingkunganSave(mariaDB)
 
+	// Gateway IKU
+	ikuGetAllGateway := gateway.ImplIKUGetAll(mariaDB)
+	ikuGetOneGateway := gateway.ImplIKUGetByID(mariaDB)
+	ikuDeleteGateway := gateway.ImplIKUDelete(mariaDB)
+	ikuCreateGateway := gateway.ImplIKUSave(mariaDB)
+
 	// =================================================================
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
@@ -84,8 +90,8 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	rekapitulasiHasilKuesionerDeleteUseCase := usecase.ImplRekapitulasiHasilKuesionerDeleteUseCase(rekapitulasiHasilKuesionerDeleteGateway)
 
 	// Usecase Penetapan Konteks Risiko Strategis Pemda
-	penetapanKonteksRisikoStrategisPemdaGetAllUseCase := usecase.ImplPenetapanKonteksRisikoGetAllUseCase(penetapanKonteksRisikoStrategisPemdaGetAllGateway)
-	penetapanKonteksRisikoStrategisPemdaGetOneUseCase := usecase.ImplPenetapanKonteksRisikoGetByIDUseCase(penetapanKonteksRisikoStrategisPemdaGetOneGateway)
+	penetapanKonteksRisikoStrategisPemdaGetAllUseCase := usecase.ImplPenetapanKonteksRisikoGetAllUseCase(penetapanKonteksRisikoStrategisPemdaGetAllGateway, ikuGetAllGateway)
+	penetapanKonteksRisikoStrategisPemdaGetOneUseCase := usecase.ImplPenetapanKonteksRisikoGetByIDUseCase(penetapanKonteksRisikoStrategisPemdaGetOneGateway, ikuGetAllGateway)
 	penetapanKonteksRisikoStrategisPemdaDeleteUseCase := usecase.ImplPenetapanKonteksRisikoDeleteUseCase(penetapanKonteksRisikoStrategisPemdaDeleteGateway)
 	penetapanKonteksRisikoStrategisPemdaCreateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisPemdaCreateUseCase(generateIdGateway, penetapanKonteksRisikoStrategisPemdaCreateGateway)
 	penetapanKonteksRisikoStrategisPemdaUpdateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisPemdaUpdateUseCase(penetapanKonteksRisikoStrategisPemdaGetOneGateway, penetapanKonteksRisikoStrategisPemdaCreateGateway)
@@ -110,6 +116,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	simpulanKondisiKelemahanLingkunganDeleteUseCase := usecase.ImplSimpulanKondisiKelemahanLingkunganDeleteUseCase(simpulanKondisiKelemahanLingkunganDeleteGateway)
 	simpulanKondisiKelemahanLingkunganCreateUseCase := usecase.ImplSimpulanKondisiKelemahanLingkunganCreateUseCase(generateIdGateway, simpulanKondisiKelemahanLingkunganCreateGateway)
 	simpulanKondisiKelemahanLingkunganUpdateUseCase := usecase.ImplSimpulanKondisiKelemahanLingkunganUpdateUseCase(simpulanKondisiKelemahanLingkunganGetOneGateway, simpulanKondisiKelemahanLingkunganCreateGateway)
+
+	// Usecase IKU
+	ikuGetAllUseCase := usecase.ImplIKUGetAllUseCase(ikuGetAllGateway)
+	ikuGetOneUseCase := usecase.ImplIKUGetByIDUseCase(ikuGetOneGateway)
+	ikuDeleteUseCase := usecase.ImplIKUDeleteUseCase(ikuDeleteGateway)
+	ikuCreateUseCase := usecase.ImplIKUCreateUseCase(generateIdGateway, ikuCreateGateway)
+	ikuUpdateUseCase := usecase.ImplIKUUpdateUseCase(ikuGetOneGateway, ikuCreateGateway)
 
 	c := controller.Controller{
 		Mux: mux,
@@ -152,5 +165,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.SimpulanKondisiKelemahanLingkunganGetAllHandler(simpulanKondisiKelemahanLingkunganGetAllUseCase)).
 		Add(c.SimpulanKondisiKelemahanLingkunganGetByIDHandler(simpulanKondisiKelemahanLingkunganGetOneUseCase)).
 		Add(c.SimpulanKondisiKelemahanLingkunganDeleteHandler(simpulanKondisiKelemahanLingkunganDeleteUseCase)).
-		Add(c.SimpulanKondisiKelemahanLingkunganUpdateHandler(simpulanKondisiKelemahanLingkunganUpdateUseCase))
+		Add(c.SimpulanKondisiKelemahanLingkunganUpdateHandler(simpulanKondisiKelemahanLingkunganUpdateUseCase)).
+		Add(c.IKUGetAllHandler(ikuGetAllUseCase)).
+		Add(c.IKUGetByIDHandler(ikuGetOneUseCase)).
+		Add(c.IKUCreateHandler(ikuCreateUseCase)).
+		Add(c.IKUDeleteHandler(ikuDeleteUseCase)).
+		Add(c.IKUUpdateHandler(ikuUpdateUseCase))
 }

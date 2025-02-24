@@ -20,8 +20,8 @@ func (c Controller) PenetapanKonteksRisikoStrategisPemdaDeleteHandler(u usecase.
 			Object:    "penetapan-konteks-risiko-strategis-pemdas",
 			Relation:  "delete",
 		},
-		Summary: "Delete a Rekapitulasi hasil kuesioner",
-		Tag:     "Rekapitulasi hasil kuesioner",
+		Summary: "Delete a Penetapan Konteks Risiko Strategis Pemdar",
+		Tag:     "Penetapan Konteks Risiko Strategis Pemda",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

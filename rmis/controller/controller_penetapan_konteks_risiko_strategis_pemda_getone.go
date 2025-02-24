@@ -18,8 +18,8 @@ func (c Controller) PenetapanKonteksRisikoStrategisPemdaGetOneHandler(u usecase.
 			Object:    "penetapan-konteks-risiko-strategis-pemdas",
 			Relation:  "read",
 		},
-		Summary: "Get a Sub Unsur RekapitulasiHasilKuesioner by ID",
-		Tag:     "Sub Unsur RekapitulasiHasilKuesioner",
+		Summary: "Get a Penetapan Konteks Risiko Strategis Pemda by ID",
+		Tag:     "Penetapan Konteks Risiko Strategis Pemda",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

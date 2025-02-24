@@ -12,17 +12,27 @@ type PenetapanKonteksRisikoGetByIDUseCaseReq struct {
 }
 
 type PenetapanKonteksRisikoGetByIDUseCaseRes struct {
-	PenetapanKonteksRisiko model.PenetapanKonteksRisikoStrategisPemda `json:"rekapitulasi_hasil_kuesioner"`
+	PenetapanKonteksRisiko model.PenetapanKonteksRisikoStrategisPemda `json:"penetapan_konteks_risiko"`
+	IKU                    []model.IKU                                `json:"ikus"`
 }
 
 type PenetapanKonteksRisikoGetByIDUseCase = core.ActionHandler[PenetapanKonteksRisikoGetByIDUseCaseReq, PenetapanKonteksRisikoGetByIDUseCaseRes]
 
-func ImplPenetapanKonteksRisikoGetByIDUseCase(getPenetapanKonteksRisikoByID gateway.PenetapanKonteksRisikoStrategisPemdaGetByID) PenetapanKonteksRisikoGetByIDUseCase {
+func ImplPenetapanKonteksRisikoGetByIDUseCase(getPenetapanKonteksRisikoByID gateway.PenetapanKonteksRisikoStrategisPemdaGetByID, getAllIKUs gateway.IKUGetAll) PenetapanKonteksRisikoGetByIDUseCase {
 	return func(ctx context.Context, req PenetapanKonteksRisikoGetByIDUseCaseReq) (*PenetapanKonteksRisikoGetByIDUseCaseRes, error) {
 		res, err := getPenetapanKonteksRisikoByID(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaGetByIDReq{ID: req.ID})
 		if err != nil {
 			return nil, err
 		}
-		return &PenetapanKonteksRisikoGetByIDUseCaseRes{PenetapanKonteksRisiko: res.PenetapanKonteksRisikoStrategisPemda}, nil
+
+		ikus, err := getAllIKUs(ctx, gateway.IKUGetAllReq{
+			ExternalID: *res.PenetapanKonteksRisikoStrategisPemda.ID,
+		})
+
+		if err != nil {
+			return nil, err
+		}
+
+		return &PenetapanKonteksRisikoGetByIDUseCaseRes{PenetapanKonteksRisiko: res.PenetapanKonteksRisikoStrategisPemda, IKU: ikus.IKU}, nil
 	}
 }

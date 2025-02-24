@@ -19,8 +19,8 @@ func (c Controller) PenetapanKonteksRisikoStrategisPemdaUpdateHandler(u usecase.
 			Relation:  "update",
 		},
 		Body:    usecase.PenetapanKonteksRisikoStrategisPemdaUpdateUseCaseReq{},
-		Summary: "Update a PenetapanKonteksRisikoStrategisPemda",
-		Tag:     "Sub Unsur PenetapanKonteksRisikoStrategisPemda",
+		Summary: "Update a Penetapan Konteks Risiko Strategis Pemda",
+		Tag:     "Penetapan Konteks Risiko Strategis Pemda",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

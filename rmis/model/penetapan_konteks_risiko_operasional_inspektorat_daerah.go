@@ -10,7 +10,6 @@ import (
 
 type PenetapanKonteksRisikoOperasionalInspektoratDaerah struct {
 	ID                 *string         `json:"id"`
-	IsiForm2B          *string         `json:"isi_form2b"`
 	NamaPemda          *string         `json:"nama_pemda"`
 	TahunPenilaian     *time.Time      `json:"tahun_penilaian"`
 	Periode            *string         `json:"periode"`

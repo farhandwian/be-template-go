@@ -47,7 +47,6 @@ func ImplPenetapanKonteksRisikoStrategisPemdaCreateUseCase(
 			PenetapanKonteksRisiko: &req.PenetapanKonteksRisiko,
 			NamaDinas:              &req.NamaDinas,
 			Sasaran:                &req.Sasaran,
-			IKUSasaran:             &req.IKUSasaran,
 			PrioritasPembangunan:   &req.PrioritasPembangunan,
 			Penilaian:              &req.Penilaian,
 			NamaYBS:                &req.NamaYBS,

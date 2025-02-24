@@ -43,7 +43,6 @@ func ImplPenetapanKonteksRisikoStrategisPemdaUpdateUseCase(
 		res.PenetapanKonteksRisikoStrategisPemda.PenetapanKonteksRisiko = &req.PenetapanKonteksRisiko
 		res.PenetapanKonteksRisikoStrategisPemda.NamaDinas = &req.NamaDinas
 		res.PenetapanKonteksRisikoStrategisPemda.Sasaran = &req.Sasaran
-		res.PenetapanKonteksRisikoStrategisPemda.IKUSasaran = &req.IKUSasaran
 		res.PenetapanKonteksRisikoStrategisPemda.PrioritasPembangunan = &req.PrioritasPembangunan
 		res.PenetapanKonteksRisikoStrategisPemda.Penilaian = &req.Penilaian
 		res.PenetapanKonteksRisikoStrategisPemda.NamaYBS = &req.NamaYBS

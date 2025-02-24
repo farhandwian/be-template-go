@@ -8,18 +8,18 @@ import (
 	"shared/helper"
 )
 
-// PenetapanKonteksRisikoStrategisPemda Get All handler
-func (c Controller) PenetapanKonteksRisikoStrategisPemdaGetAllHandler(u usecase.PenetapanKonteksRisikoGetAllUseCase) helper.APIData {
+// IKU Get All handler
+func (c Controller) IKUGetAllHandler(u usecase.IKUGetAllUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodGet,
-		Url:    "/api/penetapan-konteks-risiko-strategis-pemdas",
+		Url:    "/api/ikus",
 		AccessKeto: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "penetapan-konteks-risiko-strategis-pemdas",
+			Object:    "ikus",
 			Relation:  "read",
 		},
-		Summary: "Get all Penetapan Konteks Risiko Strategis Pemda",
-		Tag:     "Penetapan Konteks Risiko Strategis Pemda",
+		Summary: "Get all IKU",
+		Tag:     "IKU",
 		QueryParams: []helper.QueryParam{
 			{Name: "keyword", Type: "string", Description: "name, pic or location", Required: false},
 			{Name: "page", Type: "number", Description: "page", Required: false},
@@ -31,7 +31,7 @@ func (c Controller) PenetapanKonteksRisikoStrategisPemdaGetAllHandler(u usecase.
 		page := controller.GetQueryInt(r, "page", 1)
 		size := controller.GetQueryInt(r, "size", 10)
 		keyword := controller.GetQueryString(r, "keyword", "")
-		req := usecase.PenetapanKonteksRisikoGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword}
+		req := usecase.IKUGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 
