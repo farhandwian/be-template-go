@@ -8,23 +8,23 @@ import (
 	"shared/helper"
 )
 
-// RcaGetByIDHandler handles getting a Rca by ID
-func (c Controller) RcaGetByIDHandler(u usecase.RcaGetByIDUseCase) helper.APIData {
+// HasilAnalisisRisikoGetByIDHandler handles getting a HasilAnalisisRisiko by ID
+func (c Controller) HasilAnalisisRisikoGetByIDHandler(u usecase.HasilAnalisisRisikoGetByIDUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodGet,
-		Url:    "/api/rcas/{id}",
+		Url:    "/api/hasil-analisis-risikos/{id}",
 		AccessKeto: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "rcas",
+			Object:    "hasil-analisis-risikos",
 			Relation:  "read",
 		},
-		Summary: "Get a Root Cause Analysis (RCA) by ID",
-		Tag:     "Root Cause Analysis (RCA)",
+		Summary: "Get a Hasil Analisis Risiko by ID",
+		Tag:     "Hasil Analisis Risiko",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
-		req := usecase.RcaGetByIDUseCaseReq{ID: id}
+		req := usecase.HasilAnalisisRisikoGetByIDUseCaseReq{ID: id}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 

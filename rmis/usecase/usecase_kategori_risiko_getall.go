@@ -15,7 +15,7 @@ type KategoriRisikoGetAllUseCaseReq struct {
 }
 
 type KategoriRisikoGetAllUseCaseRes struct {
-	KategoriRisiko []model.KategoriRisiko `json:"KategoriRisikos"`
+	KategoriRisiko []model.KategoriRisiko `json:"kategori_risiko"`
 	Metadata       *usecase.Metadata      `json:"metadata"`
 }
 

@@ -8,24 +8,24 @@ import (
 	"shared/helper"
 )
 
-// KategoriRisikoCreateHandler handles the creation of a new KategoriRisiko
-func (c Controller) KategoriRisikoCreateHandler(u usecase.KategoriRisikoCreateUseCase) helper.APIData {
+// PenyebabRisikoCreateHandler handles the creation of a new PenyebabRisiko
+func (c Controller) PenyebabRisikoCreateHandler(u usecase.PenyebabRisikoCreateUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodPost,
-		Url:    "/api/kategori-risikos",
+		Url:    "/api/penyebab-risikos",
 		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "kategori-risikos",
+			Object:    "penyebab-risikos",
 			Relation:  "create",
 		},
-		Body:    usecase.KategoriRisikoCreateUseCaseReq{},
-		Summary: "Create a new KategoriRisiko",
-		Tag:     "KategoriRisiko",
+		Body:    usecase.PenyebabRisikoCreateUseCaseReq{},
+		Summary: "Create a new Penyebab Risiko",
+		Tag:     "penyebab risiko",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
 
-		request, ok := controller.ParseJSON[usecase.KategoriRisikoCreateUseCaseReq](w, r)
+		request, ok := controller.ParseJSON[usecase.PenyebabRisikoCreateUseCaseReq](w, r)
 		if !ok {
 			return
 		}

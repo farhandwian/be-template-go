@@ -17,7 +17,7 @@ type PenetapanKonteksRisikoStrategisPemdaGetAllReq struct {
 }
 
 type PenetapanKonteksRisikoStrategisPemdaGetAllRes struct {
-	PenetapanKonteksRisikoStrategisPemda []model.PenetapanKonteksRisikoStrategisPemda `json:"PenetapanKonteksRisikoStrategisPemdas"`
+	PenetapanKonteksRisikoStrategisPemda []model.PenetapanKonteksRisikoStrategisPemda `json:"penetapan_konteks_risiko_strategis_pemda"`
 	Count                                int64                                        `json:"count"`
 }
 

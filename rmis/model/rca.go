@@ -18,6 +18,7 @@ type Rca struct {
 	PernyataanRisiko                   *string         `json:"penyebab_risiko"`
 	Why                                *datatypes.JSON `json:"why"` // it's json because it will contain array of strings
 	AkarPenyebab                       *string         `json:"akar_penyebab"`
+	JenisPenyebabID                    *string         `json:"-"`
 	JenisPenyebab                      *string         `json:"jenis_penyebab"`
 	KegiatanPengendalian               *string         `json:"kegiatan_pengendalian"`
 	CreatedAt                          time.Time       `json:"created_at"`

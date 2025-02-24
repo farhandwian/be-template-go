@@ -12,45 +12,35 @@ type HasilAnalisisRisiko struct {
 	NamaPemda *string `json:"nama_pemda"`
 	// data diambil dari form 3a, 3b, dan 3c
 	// ===========
-	TahunPenilaian        *time.Time `json:"tahun_penilaian"`
-	TujuanStrategis       *string    `json:"tujuan_strategis"`
-	UrusanPemerintahan    *string    `json:"urusan_pemerintahan"`
-	RisikoTeridentifikasi *string    `json:"risiko_teridentifikasi"`
-	KodeRisiko            *string    `json:"kode_risiko"`
-	KategoriRisiko        *string    `json:"kategori_risiko"`
+	IdentifikasiRisikoStrategisPemerintahDaerahID *string    `json:"-"`
+	TahunPenilaian                                *time.Time `json:"tahun_penilaian"`
+	TujuanStrategis                               *string    `json:"tujuan_strategis"`
+	UrusanPemerintahan                            *string    `json:"urusan_pemerintahan"`
+	RisikoTeridentifikasi                         *string    `json:"risiko_teridentifikasi"`
+	KodeRisiko                                    *string    `json:"kode_risiko"`
+	KategoriRisiko                                *string    `json:"kategori_risiko"`
 	// ===========
-	KriteriaKemungkinanInherentRisk *string       `json:"kriteria_kemungkinan_inherent_risk"`
-	SkorKemungkinanInherentRisk     *int          `json:"skor_kemungkinan_inherent_risk"`
-	KriteriaDampakInherentRisk      *string       `json:"kriteria_dampak_inherent_risk"`
-	SkorDampakInherentRisk          *int          `json:"skor_dampak_inherent_risk"`
-	SkalaRisikoInherentRisk         *int          `json:"skala_risiko_inherent_risk"`
-	StatusAda                       statusAda     `json:"status_ada"`
-	UraianControl                   *string       `json:"uraian_control"`
-	KlarifikasiSPIP                 *string       `json:"klarifikasi_spip"`
-	MemadaiControl                  statusMemadai `json:"memadai_control"` // enum memadai (can also be defined as a custom type)
-	KriteriaKemungkinanResidualRisk *string       `json:"kriteria_kemungkinan_residual_risk"`
-	SkorKemungkinanResidualRisk     *int          `json:"skor_kemungkinan_residual_risk"`
-	KriteriaDampakResidualRisk      *string       `json:"kriteria_dampak_residual_risk"`
-	SkorDampakResidualRisk          *int          `json:"skor_dampak_residual_risk"`
-	SkalaRisikoResidualRisk         *int          `json:"skala_risiko_residual_risk"`
+	KriteriaKemungkinanInherentRisk *string   `json:"kriteria_kemungkinan_inherent_risk"`
+	SkorKemungkinanInherentRisk     *int      `json:"skor_kemungkinan_inherent_risk"`
+	KriteriaDampakInherentRisk      *string   `json:"kriteria_dampak_inherent_risk"`
+	SkorDampakInherentRisk          *int      `json:"skor_dampak_inherent_risk"`
+	SkalaRisikoInherentRisk         *int      `json:"skala_risiko_inherent_risk"`
+	StatusAda                       *string   `json:"status_ada"`
+	UraianControl                   *string   `json:"uraian_control"`
+	KlarifikasiSPIP                 *string   `json:"klarifikasi_spip"`
+	MemadaiControl                  *string   `json:"memadai_control"` // enum memadai (can also be defined as a custom type)
+	KriteriaKemungkinanResidualRisk *string   `json:"kriteria_kemungkinan_residual_risk"`
+	SkorKemungkinanResidualRisk     *int      `json:"skor_kemungkinan_residual_risk"`
+	KriteriaDampakResidualRisk      *string   `json:"kriteria_dampak_residual_risk"`
+	SkorDampakResidualRisk          *int      `json:"skor_dampak_residual_risk"`
+	SkalaRisikoResidualRisk         *int      `json:"skala_risiko_residual_risk"`
+	CreatedAt                       time.Time `json:"created_at"`
+	UpdatedAt                       time.Time `json:"updated_at"`
 }
-
-type statusAda string
-type statusMemadai string
-
-const (
-	Ada      statusAda = "Ada"
-	BelumAda statusAda = "Belum Ada"
-)
-
-const (
-	Memadai       statusMemadai = "Memadai"
-	KurangMemadai statusMemadai = "Kurang Memadai"
-)
 
 var RiskMatrix = [][]int{
 	{1, 3, 5, 8, 20},    // Likelihood 1 (Hampir Tidak Terjadi)
-	{2, 7, 10, 13, 21},  // Likelihood 2 (Jarang Terjadi)
+	{2, 7, 11, 13, 21},  // Likelihood 2 (Jarang Terjadi)
 	{4, 10, 14, 17, 22}, // Likelihood 3 (Kadang Terjadi)
 	{6, 12, 16, 19, 24}, // Likelihood 4 (Sering Terjadi)
 	{9, 15, 18, 23, 25}, // Likelihood 5 (Hampir Pasti Terjadi)
@@ -67,7 +57,7 @@ func GetRiskScore(likelihood, impact int) int {
 	return RiskMatrix[likelihood-1][impact-1]
 }
 
-func (har *HasilAnalisisRisiko) SetupSkalaRisiko() error {
+func (har *HasilAnalisisRisiko) SetSkalaRisiko() error {
 	if har.SkorKemungkinanInherentRisk == nil {
 		return fmt.Errorf("SkorKemungkinanInherentRisk is nil")
 	}

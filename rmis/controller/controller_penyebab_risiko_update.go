@@ -8,24 +8,24 @@ import (
 	"shared/helper"
 )
 
-// RcaUpdateHandler handles the creation of a new Rca
-func (c Controller) RcaUpdateHandler(u usecase.RcaUpdateUseCase) helper.APIData {
+// PenyebabRisikoUpdateHandler handles the creation of a new PenyebabRisiko
+func (c Controller) PenyebabRisikoUpdateHandler(u usecase.PenyebabRisikoUpdateUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodPut,
-		Url:    "/api/rcas/{id}",
+		Url:    "/api/penyebab-risikos/{id}",
 		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "rcas",
+			Object:    "penyebab-risikos",
 			Relation:  "update",
 		},
-		Body:    usecase.RcaUpdateUseCaseReq{},
-		Summary: "Update a Root Cause Analysis (RCA)",
-		Tag:     "Root Cause Analysis (RCA)",
+		Body:    usecase.PenyebabRisikoUpdateUseCaseReq{},
+		Summary: "Update a Penyebab Risiko",
+		Tag:     "Penyebab Risiko",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
-		request, ok := controller.ParseJSON[usecase.RcaUpdateUseCaseReq](w, r)
+		request, ok := controller.ParseJSON[usecase.PenyebabRisikoUpdateUseCaseReq](w, r)
 		if !ok {
 			return
 		}

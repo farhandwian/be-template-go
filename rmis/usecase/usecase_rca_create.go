@@ -14,7 +14,7 @@ type RcaCreateUseCaseReq struct {
 	TahunPenilaian                     string   `json:"tahun_penilaian"`
 	IdentifikasiRisikoStrategisPemdaId *string  `json:"identifikasi_risiko_strategis_pemda_id"`
 	Why                                []string `json:"why"`
-	JenisPenyebab                      string   `json:"jenis_penyebab"`
+	JenisPenyebabID                    string   `json:"jenis_penyebab_id"`
 	KegiatanPengendalian               string   `json:"kegiatan_pengendalian"`
 }
 
@@ -28,6 +28,7 @@ func ImplRcaCreateUseCase(
 	generateId gateway.GenerateId,
 	createRca gateway.RcaSave,
 	IdentifikasiRisikoStrategisPemdaGetByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
+	PenyebabRisikoGetByID gateway.PenyebabRisikoGetByID,
 ) RcaCreateUseCase {
 	return func(ctx context.Context, req RcaCreateUseCaseReq) (*RcaCreateUseCaseRes, error) {
 
@@ -40,6 +41,12 @@ func ImplRcaCreateUseCase(
 		tahunPenilaian, err := extractYear(req.TahunPenilaian)
 		if err != nil {
 			return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
+		}
+
+		// Penyebab Risiko
+		penyebabRisikoRes, err := PenyebabRisikoGetByID(ctx, gateway.PenyebabRisikoGetByIDReq{ID: req.JenisPenyebabID})
+		if err != nil {
+			return nil, fmt.Errorf("error getting penyebab risiko table: %v", err)
 		}
 
 		// Identifikasi Risiko Strategis Pemda
@@ -55,7 +62,8 @@ func ImplRcaCreateUseCase(
 			TahunPenilaian:        &tahunPenilaian,
 			PernyataanRisiko:      identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.UraianRisiko,
 			Why:                   whyJSON,
-			JenisPenyebab:         &req.JenisPenyebab,
+			JenisPenyebabID:       &req.JenisPenyebabID,
+			JenisPenyebab:         penyebabRisikoRes.PenyebabRisiko.Nama,
 			KegiatanPengendalian:  &req.KegiatanPengendalian,
 		}
 		obj.SetAkarPenyebab()

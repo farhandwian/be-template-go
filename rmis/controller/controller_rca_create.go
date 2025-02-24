@@ -19,8 +19,8 @@ func (c Controller) RcaCreateHandler(u usecase.RcaCreateUseCase) helper.APIData 
 			Relation:  "create",
 		},
 		Body:    usecase.RcaCreateUseCaseReq{},
-		Summary: "Create a new Rca",
-		Tag:     "Rca",
+		Summary: "Create a new Root Cause Analysis (RCA)",
+		Tag:     "Root Cause Analysis (RCA)",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

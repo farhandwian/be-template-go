@@ -1,5 +1,3 @@
-// File: gateway/gateway_asset.go
-
 package gateway
 
 import (
