@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"rmis/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -43,48 +44,18 @@ func InitMariaDatabase() *gorm.DB {
 	}
 
 	db.AutoMigrate(
-	// &model.RekapitulasiHasilKuesioner{},
-	// &model.OPD{},
-	// &model.Spip{},
-	// &model.KategoriRisiko{},
-	// &model.PenyebabRisiko{},
-	// &model.KriterieaKemungkinan{},
-	// &model.KriteriaDampak{},
-	// &iamModel.User{},
-	// &model.IdentifikasiRisikoStrategisPemerintahDaerah{},
-	// &model.Rca{},
+		// &model.RekapitulasiHasilKuesioner{},
+		// &model.OPD{},
+		// &model.Spip{},
+		// &model.KategoriRisiko{},
+		// &model.PenyebabRisiko{},
+		// &model.KriterieaKemungkinan{},
+		// &model.KriteriaDampak{},
+		// &iamModel.User{},
+		// &model.IdentifikasiRisikoStrategisPemerintahDaerah{},
+		// &model.Rca{},
+		&model.SimpulanKondisiKelemahanLingkungan{},
 	)
-	// &model.SKPerizinan{},
-	// &model.LaporanPerizinan{},
-	// 	&model.Employee{},
-	// 	&model.Asset{},
-	// 	&model.Project{},
-	// 	&model.JDIH{},
-	// 	&sharedModel.Danau{},
-	// 	&sharedModel.Bendungan{},
-	// 	&sharedModel.Bendung{},
-	// 	&sharedModel.Embung{},
-	// 	&sharedModel.AirTanah{},
-	// 	&sharedModel.PengendaliSedimen{},
-	// 	&sharedModel.PengamanPantai{},
-	// 	&sharedModel.Sumur{},
-	// 	&model.CurahHujan{},
-	// &model.Klimatologi{},
-	// 	&sharedModel.AirBaku{},
-	// 	&model.DugaAir{},
-	// 	&sharedModel.PahAbsah{},
-	// 	&sharedModel.Intake{},
-	// &model.AlarmConfig{},
-	// 	&model.DoorControl{},
-	// 	&model.DoorControlHistory{},
-	// 	&sharedModel.ActivityMonitor{},
-	// 	&iamModel.User{},
-	// &model.DoorControl{},
-	// &model.DoorControlHistory{},
-	// &model.AlarmHistory{},
-	// &model.CctvImageProcessing{},
-	// )
-
 	// Verify the connection
 	sqlDB, err := db.DB()
 	if err != nil {

@@ -15,7 +15,7 @@ type SimpulanKondisiKelemahanLingkunganGetAllUseCaseReq struct {
 }
 
 type SimpulanKondisiKelemahanLingkunganGetAllUseCaseRes struct {
-	SimpulanKondisiKelemahanLingkungan []model.SimpulanKondisiKelemahanLingkungan `json:"SimpulanKondisiKelemahanLingkungans"`
+	SimpulanKondisiKelemahanLingkungan []model.SimpulanKondisiKelemahanLingkungan `json:"simpulan_kondisi_kelemahan_lingkungans"`
 	Metadata                           *usecase.Metadata                          `json:"metadata"`
 }
 

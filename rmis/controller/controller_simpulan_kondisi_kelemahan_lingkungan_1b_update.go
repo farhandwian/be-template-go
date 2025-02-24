@@ -20,7 +20,7 @@ func (c Controller) SimpulanKondisiKelemahanLingkunganUpdateHandler(u usecase.Si
 		},
 		Body:    usecase.SimpulanKondisiKelemahanLingkunganUpdateUseCaseReq{},
 		Summary: "Update a SimpulanKondisiKelemahanLingkungan",
-		Tag:     "Sub Unsur SimpulanKondisiKelemahanLingkungan",
+		Tag:     "Simpulan Kondisi Kelemahan Lingkungan",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

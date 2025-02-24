@@ -12,7 +12,7 @@ type SimpulanKondisiKelemahanLingkunganGetByIDUseCaseReq struct {
 }
 
 type SimpulanKondisiKelemahanLingkunganGetByIDUseCaseRes struct {
-	SimpulanKondisiKelemahanLingkungan model.SimpulanKondisiKelemahanLingkungan `json:"rekapitulasi_hasil_kuesioner"`
+	SimpulanKondisiKelemahanLingkungan model.SimpulanKondisiKelemahanLingkungan `json:"simpulan_kondisi_kelemahan_lingkungan"`
 }
 
 type SimpulanKondisiKelemahanLingkunganGetByIDUseCase = core.ActionHandler[SimpulanKondisiKelemahanLingkunganGetByIDUseCaseReq, SimpulanKondisiKelemahanLingkunganGetByIDUseCaseRes]
