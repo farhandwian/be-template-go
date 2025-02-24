@@ -20,7 +20,7 @@ func (c Controller) SimpulanKondisiKelemahanLingkunganDeleteHandler(u usecase.Si
 			Object:    "simpulan-kondisi-kelemahan-lingkungan",
 			Relation:  "delete",
 		},
-		Summary: "Delete a Simpulan Kondisi Kelemahan Lingkungan",
+		Summary: "Delete a SimpulanKondisiKelemahanLingkungan",
 		Tag:     "Simpulan Kondisi Kelemahan Lingkungan",
 	}
 

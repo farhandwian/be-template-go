@@ -18,8 +18,8 @@ func (c Controller) SimpulanKondisiKelemahanLingkunganGetAllHandler(u usecase.Si
 			Object:    "simpulan-kondisi-kelemahan-lingkungans",
 			Relation:  "read",
 		},
-		Summary: "Get all Sub Unsur SimpulanKondisiKelemahanLingkungan",
-		Tag:     "Sub Unsur SimpulanKondisiKelemahanLingkungan",
+		Summary: "Get all SimpulanKondisiKelemahanLingkungan",
+		Tag:     "Simpulan Kondisi Kelemahan Lingkungan",
 		QueryParams: []helper.QueryParam{
 			{Name: "keyword", Type: "string", Description: "name, pic or location", Required: false},
 			{Name: "page", Type: "number", Description: "page", Required: false},

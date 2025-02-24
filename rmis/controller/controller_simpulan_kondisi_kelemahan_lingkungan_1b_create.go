@@ -19,7 +19,7 @@ func (c Controller) SimpulanKondisiKelemahanLingkunganCreateHandler(u usecase.Si
 		},
 		Body:    usecase.SimpulanKondisiKelemahanLingkunganCreateUseCaseReq{},
 		Summary: "Create a new SimpulanKondisiKelemahanLingkungan",
-		Tag:     "Sub Unsur SimpulanKondisiKelemahanLingkungan",
+		Tag:     "Simpulan Kondisi Kelemahan Lingkungan",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

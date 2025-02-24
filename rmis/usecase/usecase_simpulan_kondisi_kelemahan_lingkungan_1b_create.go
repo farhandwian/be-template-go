@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
@@ -35,17 +34,12 @@ func ImplSimpulanKondisiKelemahanLingkunganCreateUseCase(
 			return nil, err
 		}
 
-		tahunPenilaian, err := extractYear(req.TahunPenilaian)
-		if err != nil {
-			return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
-		}
-
 		uraianKelemahanJSON := helper.ToDataTypeJSONPtr(req.UraianKelamahan)
 
 		obj := model.SimpulanKondisiKelemahanLingkungan{
 			ID:                 &genObj.RandomId,
 			NamaPemda:          &req.NamaPemda,
-			TahunPenilaian:     &tahunPenilaian,
+			TahunPenilaian:     &req.TahunPenilaian,
 			UrusanPemerintahan: &req.UrusanPemerintahan,
 			SumberData:         &req.SumberData,
 			UraianKelamahan:    uraianKelemahanJSON,

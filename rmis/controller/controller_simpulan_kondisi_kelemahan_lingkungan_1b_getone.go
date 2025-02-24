@@ -18,8 +18,8 @@ func (c Controller) SimpulanKondisiKelemahanLingkunganGetByIDHandler(u usecase.S
 			Object:    "simpulan-kondisi-kelemahan-lingkungan",
 			Relation:  "read",
 		},
-		Summary: "Get a Sub Unsur Simpulan SimpulanKondisiKelemahanLingkungan by ID",
-		Tag:     "Sub Unsur Simpulan SimpulanKondisiKelemahanLingkungan",
+		Summary: "Get a SimpulanKondisiKelemahanLingkungan by ID",
+		Tag:     "Simpulan Kondisi Kelemahan Lingkungan",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

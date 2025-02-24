@@ -27,7 +27,7 @@ func ImplSimpulanKondisiKelemahanLingkunganGetByID(db *gorm.DB) SimpulanKondisiK
 		var SimpulanKondisiKelemahanLingkungan model.SimpulanKondisiKelemahanLingkungan
 		if err := query.First(&SimpulanKondisiKelemahanLingkungan, "id = ?", req.ID).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
-				return nil, fmt.Errorf("SimpulanKondisiKelemahanLingkungan id %v is not found", req.ID)
+				return nil, fmt.Errorf("simpulan kondisi kelemahan lingkungan id %v is not found", req.ID)
 			}
 			return nil, core.NewInternalServerError(err)
 		}
