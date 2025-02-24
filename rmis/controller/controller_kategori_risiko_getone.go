@@ -18,8 +18,8 @@ func (c Controller) KategoriRisikoGetByIDHandler(u usecase.KategoriRisikoGetByID
 			Object:    "kategori-risikos",
 			Relation:  "read",
 		},
-		Summary: "Get a Sub Unsur Kategori Risiko by ID",
-		Tag:     "Sub Unsur Kategori Risiko",
+		Summary: "Get a Kategori Risiko by ID",
+		Tag:     "Kategori Risiko",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

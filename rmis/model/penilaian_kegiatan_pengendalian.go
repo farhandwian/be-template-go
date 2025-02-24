@@ -8,7 +8,7 @@ type PenilaianKegiatanPengendalian struct {
 	ID                            *string   `json:"id"`
 	NamaPemda                     *string   `json:"nama_pemda"`
 	TahunPenilaian                *string   `json:"tahun_penilaian"`
-	SPIPId                        *string   `json:"spip_id"`
+	SPIPId                        *string   `json:"-"`
 	SPIPName                      *string   `json:"spip_name"` // references spip.name
 	KondisiLingkunganPengendalian *string   `json:"kondisi_lingkungan_pengendalian"`
 	RencanaTindakPerbaikan        *string   `json:"rencana_tindak_perbaikan"`

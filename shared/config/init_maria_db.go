@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"rmis/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -43,18 +44,19 @@ func InitMariaDatabase() *gorm.DB {
 	}
 
 	db.AutoMigrate(
-	// &model.RekapitulasiHasilKuesioner{},
-	// &model.OPD{},
-	// &model.Spip{},
-	// &model.KategoriRisiko{},
-	// &model.PenyebabRisiko{},
-	// &model.KriterieaKemungkinan{},
-	// &model.KriteriaDampak{},
-	// &iamModel.User{},
-	// &model.IdentifikasiRisikoStrategisPemerintahDaerah{},
-	// &model.Rca{},
-	// &model.SimpulanKondisiKelemahanLingkungan{},
-	// &model.HasilAnalisisRisiko{},
+		// &model.RekapitulasiHasilKuesioner{},
+		// &model.OPD{},
+		// &model.Spip{},
+		// &model.KategoriRisiko{},
+		// &model.PenyebabRisiko{},
+		// &model.KriterieaKemungkinan{},
+		// &model.KriteriaDampak{},
+		// &iamModel.User{},
+		// &model.IdentifikasiRisikoStrategisPemerintahDaerah{},
+		// &model.Rca{},
+		// &model.SimpulanKondisiKelemahanLingkungan{},
+		// &model.HasilAnalisisRisiko{},
+		&model.PenilaianKegiatanPengendalian{},
 	)
 	// Verify the connection
 	sqlDB, err := db.DB()
