@@ -10,7 +10,7 @@ import (
 func (c Controller) GetAccessRoleKetoHandler(u usecase.GetAccessRoleKetoUseCase) helper.APIData {
 
 	apiData := helper.APIData{
-		AccessTest: model.AccessKeto{
+		AccessKeto: model.AccessKeto{
 			Namespace: "app",
 			Object:    "none",
 		},
@@ -25,7 +25,7 @@ func (c Controller) GetAccessRoleKetoHandler(u usecase.GetAccessRoleKetoUseCase)
 	handler := func(w http.ResponseWriter, r *http.Request) {
 
 		req := usecase.GetAccessRoleKetoReq{
-			Namespace: apiData.AccessTest.Namespace,
+			Namespace: apiData.AccessKeto.Namespace,
 		}
 
 		HandleUsecase(r.Context(), w, u, req)

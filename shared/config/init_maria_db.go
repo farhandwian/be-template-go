@@ -51,6 +51,8 @@ func InitMariaDatabase() *gorm.DB {
 	// &model.KriterieaKemungkinan{},
 	// &model.KriteriaDampak{},
 	// &iamModel.User{},
+	// &model.IdentifikasiRisikoStrategisPemerintahDaerah{},
+	// &model.Rca{},
 	)
 	// &model.SKPerizinan{},
 	// &model.LaporanPerizinan{},

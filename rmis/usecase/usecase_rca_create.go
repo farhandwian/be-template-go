@@ -45,7 +45,7 @@ func ImplRcaCreateUseCase(
 		// Identifikasi Risiko Strategis Pemda
 		identifikasiRisikoStrategisPemdaRes, err := IdentifikasiRisikoStrategisPemdaGetByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: *req.IdentifikasiRisikoStrategisPemdaId})
 		if err != nil {
-			return nil, fmt.Errorf("error getting identifikasi risiko strategis pemda table")
+			return nil, fmt.Errorf("error getting identifikasi risiko strategis pemda table: %v", err)
 		}
 
 		whyJSON := helper.ToDataTypeJSONPtr(req.Why...)
@@ -58,6 +58,7 @@ func ImplRcaCreateUseCase(
 			JenisPenyebab:         &req.JenisPenyebab,
 			KegiatanPengendalian:  &req.KegiatanPengendalian,
 		}
+		obj.SetAkarPenyebab()
 
 		// Save the RCA entry
 		if _, err = createRca(ctx, gateway.RcaSaveReq{Rca: obj}); err != nil {

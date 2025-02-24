@@ -40,12 +40,13 @@ func ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(
 			return nil, err
 		}
 
-		tahunPenilaian, err := extractYear(req.TahunPenilaian)
-		if err != nil {
-			return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
+		if req.TahunPenilaian != "" {
+			year, err := extractYear(req.TahunPenilaian)
+			if err != nil {
+				return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
+			}
+			res.IdentifikasiRisikoStrategisPemda.TahunPenilaian = &year
 		}
-
-		res.IdentifikasiRisikoStrategisPemda.TahunPenilaian = &tahunPenilaian
 		res.IdentifikasiRisikoStrategisPemda.Periode = &req.Periode
 		res.IdentifikasiRisikoStrategisPemda.UrusanPemerintahan = &req.UrusanPemerintahan
 		res.IdentifikasiRisikoStrategisPemda.TujuanStrategis = &req.TujuanStrategis
@@ -56,13 +57,22 @@ func ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(
 		res.IdentifikasiRisikoStrategisPemda.UraianDampak = &req.UraianDampak
 		res.IdentifikasiRisikoStrategisPemda.PihakDampak = &req.PihakDampak
 
-		res.IdentifikasiRisikoStrategisPemda.KategoriRisikoID = &req.KategoriRisikoID
-		kategoriRisikoRes, err := kodeRisikoByID(ctx, gateway.KategoriRisikoGetByIDReq{ID: req.KategoriRisikoID})
+		if res.IdentifikasiRisikoStrategisPemda.KategoriRisikoID == nil || *res.IdentifikasiRisikoStrategisPemda.KategoriRisikoID == "" {
+			return nil, fmt.Errorf("KategoriRisikoID is missing in the database record")
+		}
+
+		kategoriRisikoRes, err := kodeRisikoByID(ctx, gateway.KategoriRisikoGetByIDReq{
+			ID: *res.IdentifikasiRisikoStrategisPemda.KategoriRisikoID,
+		})
 		if err != nil {
 			return nil, fmt.Errorf("failed to get KategoriRisikoName: %v", err)
 		}
+
 		res.IdentifikasiRisikoStrategisPemda.KategoriRisikoName = kategoriRisikoRes.KategoriRisiko.Nama
-		res.IdentifikasiRisikoStrategisPemda.GenerateKodeRisiko(*kategoriRisikoRes.KategoriRisiko.Kode)
+
+		if res.IdentifikasiRisikoStrategisPemda.KodeRisiko == nil || *res.IdentifikasiRisikoStrategisPemda.KodeRisiko == "" {
+			res.IdentifikasiRisikoStrategisPemda.GenerateKodeRisiko(*kategoriRisikoRes.KategoriRisiko.Kode)
+		}
 
 		rcaRes, err := RcaByID(ctx, gateway.RcaGetByIDReq{ID: req.RcaID})
 		if err != nil {
