@@ -13,7 +13,7 @@ func (c Controller) KategoriRisikoUpdateHandler(u usecase.KategoriRisikoUpdateUs
 	apiData := helper.APIData{
 		Method: http.MethodPut,
 		Url:    "/api/kategori-risikos/{id}",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "kategori-risikos",
 			Relation:  "update",

@@ -15,7 +15,7 @@ func (c Controller) RekapitulasiHasilKuesionerDeleteHandler(u usecase.Rekapitula
 	apiData := helper.APIData{
 		Method: http.MethodDelete,
 		Url:    "/api/rekapitulasi-hasil-kuesioners/{id}",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "rekapitulasi-hasil-kuesioners",
 			Relation:  "delete",

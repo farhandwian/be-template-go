@@ -2,22 +2,20 @@ package usecase
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
-
-	"gorm.io/datatypes"
+	"shared/helper"
 )
 
 type RcaCreateUseCaseReq struct {
-	NamaUnitPemilikRisiko string   `json:"nama_unit_pemilik_risiko"`
-	TahunPenilaian        string   `json:"tahun_penilaian"`
-	PernyataanRisiko      string   `json:"pernyataan_risiko"`
-	Why                   []string `json:"why"`
-	JenisPenyebab         string   `json:"jenis_penyebab"`
-	KegiatanPengendalian  string   `json:"kegiatan_pengendalian"`
+	NamaUnitPemilikRisiko              string   `json:"nama_unit_pemilik_risiko"`
+	TahunPenilaian                     string   `json:"tahun_penilaian"`
+	IdentifikasiRisikoStrategisPemdaId *string  `json:"identifikasi_risiko_strategis_pemda_id"`
+	Why                                []string `json:"why"`
+	JenisPenyebab                      string   `json:"jenis_penyebab"`
+	KegiatanPengendalian               string   `json:"kegiatan_pengendalian"`
 }
 
 type RcaCreateUseCaseRes struct {
@@ -29,6 +27,7 @@ type RcaCreateUseCase = core.ActionHandler[RcaCreateUseCaseReq, RcaCreateUseCase
 func ImplRcaCreateUseCase(
 	generateId gateway.GenerateId,
 	createRca gateway.RcaSave,
+	IdentifikasiRisikoStrategisPemdaGetByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
 ) RcaCreateUseCase {
 	return func(ctx context.Context, req RcaCreateUseCaseReq) (*RcaCreateUseCaseRes, error) {
 
@@ -43,20 +42,19 @@ func ImplRcaCreateUseCase(
 			return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
 		}
 
-		// Convert Why ([]string) to JSON
-		whyJSON, err := json.Marshal(req.Why)
+		// Identifikasi Risiko Strategis Pemda
+		identifikasiRisikoStrategisPemdaRes, err := IdentifikasiRisikoStrategisPemdaGetByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: *req.IdentifikasiRisikoStrategisPemdaId})
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("error getting identifikasi risiko strategis pemda table")
 		}
-		why := datatypes.JSON(whyJSON)
 
-		// Construct the Rca object (Fully Initialized)
+		whyJSON := helper.ToDataTypeJSONPtr(req.Why...)
 		obj := model.Rca{
 			ID:                    &genObj.RandomId,
 			NamaUnitPemilikRisiko: &req.NamaUnitPemilikRisiko,
-			TahunPenilaian:        &tahunPenilaian, // Only store year
-			PenyebabRisiko:        &req.PernyataanRisiko,
-			Why:                   &why, // JSON formatted data
+			TahunPenilaian:        &tahunPenilaian,
+			PernyataanRisiko:      identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.UraianRisiko,
+			Why:                   whyJSON,
 			JenisPenyebab:         &req.JenisPenyebab,
 			KegiatanPengendalian:  &req.KegiatanPengendalian,
 		}

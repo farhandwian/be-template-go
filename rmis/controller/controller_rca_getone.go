@@ -13,7 +13,7 @@ func (c Controller) RcaGetByIDHandler(u usecase.RcaGetByIDUseCase) helper.APIDat
 	apiData := helper.APIData{
 		Method: http.MethodGet,
 		Url:    "/api/rcas/{id}",
-		AccessTest: iammodel.AccessKetoStruct{
+		AccessKeto: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "rcas",
 			Relation:  "read",

@@ -12,6 +12,7 @@ import (
 )
 
 func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTokenizer, printer *helper.ApiPrinter, cj *cronjob.CronJob, sseDashboard *helper.SSE) {
+	// =================================================================
 	// Gateway
 	exampleGetAllGateway := gateway.ImplExampleGateway(mariaDB)
 	generateIdGateway := gateway.ImplGenerateId()
@@ -39,6 +40,18 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penetapanKonteksRisikoStrategisPemdaGetOneGateway := gateway.ImplPenetapanKonteksRisikoStrategisPemdaGetByID(mariaDB)
 	penetapanKonteksRisikoStrategisPemdaDeleteGateway := gateway.ImplPenetepanKonteksRisikoStrategisPemdaDelete(mariaDB)
 	penetapanKonteksRisikoStrategisPemdaCreateGateway := gateway.ImplPenetepanKonteksRisikoStrategisPemdaSave(mariaDB)
+
+	// Gateway Root Cause Analysis (RCA)
+	rcaGetAllGateway := gateway.ImplRcaGetAll(mariaDB)
+	rcaGetOneGateway := gateway.ImplRcaGetByID(mariaDB)
+	rcaDeleteGateway := gateway.ImplRcaDelete(mariaDB)
+	rcaCreateGateway := gateway.ImplRcaSave(mariaDB)
+
+	// Gateway Identifikasi Risiko Strategis Pemda
+	identifikasiRisikoStrategisPemdaGetAllGateway := gateway.ImplIdentifikasiRisikoStrategisPemdaGetAll(mariaDB)
+	identifikasiRisikoStrategisPemdaGetOneGateway := gateway.ImplIdentifikasiRisikoStrategisPemdaGetByID(mariaDB)
+	identifikasiRisikoStrategisPemdaDeleteGateway := gateway.ImplIdentifikasiRisikoStrategisPemdaDelete(mariaDB)
+	identifikasiRisikoStrategisPemdaCreateGateway := gateway.ImplIdentifikasiRisikoStrategisPemdaSave(mariaDB)
 
 	// =================================================================
 	// Usecase
@@ -71,6 +84,20 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penetapanKonteksRisikoStrategisPemdaCreateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisPemdaCreateUseCase(generateIdGateway, penetapanKonteksRisikoStrategisPemdaCreateGateway)
 	penetapanKonteksRisikoStrategisPemdaUpdateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisPemdaUpdateUseCase(penetapanKonteksRisikoStrategisPemdaGetOneGateway, penetapanKonteksRisikoStrategisPemdaCreateGateway)
 
+	// Usecase Root Cause Analysis (RCA)
+	rcaGetAllUseCase := usecase.ImplRcaGetAllUseCase(rcaGetAllGateway)
+	rcaGetOneUseCase := usecase.ImplRcaGetByIDUseCase(rcaGetOneGateway)
+	rcaDeleteUseCase := usecase.ImplRcaDeleteUseCase(rcaDeleteGateway)
+	rcaCreateUseCase := usecase.ImplRcaCreateUseCase(generateIdGateway, rcaCreateGateway, identifikasiRisikoStrategisPemdaGetOneGateway)
+	rcaUpdateUseCase := usecase.ImplRcaUpdateUseCase(rcaGetOneGateway, rcaCreateGateway)
+
+	// Usecase Identifikasi Risiko Strategis Pemda
+	identifikasiRisikoStrategisPemdaGetAllUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaGetAllUseCase(identifikasiRisikoStrategisPemdaGetAllGateway)
+	identifikasiRisikoStrategisPemdaGetOneUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaGetByIDUseCase(identifikasiRisikoStrategisPemdaGetOneGateway)
+	identifikasiRisikoStrategisPemdaDeleteUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaDeleteUseCase(identifikasiRisikoStrategisPemdaDeleteGateway)
+	identifikasiRisikoStrategisPemdaCreateUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaCreateUseCase(generateIdGateway, identifikasiRisikoStrategisPemdaCreateGateway, kategoriRisikoGetOneGateway)
+	identifikasiRisikoStrategisPemdaUpdateUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(identifikasiRisikoStrategisPemdaGetOneGateway, identifikasiRisikoStrategisPemdaCreateGateway, kategoriRisikoGetOneGateway, rcaGetOneGateway)
+
 	c := controller.Controller{
 		Mux: mux,
 		JWT: jwtToken,
@@ -97,5 +124,15 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.PenetapanKonteksRisikoStrategisPemdaGetAllHandler(penetapanKonteksRisikoStrategisPemdaGetAllUseCase)).
 		Add(c.PenetapanKonteksRisikoStrategisPemdaGetOneHandler(penetapanKonteksRisikoStrategisPemdaGetOneUseCase)).
 		Add(c.PenetapanKonteksRisikoStrategisPemdaDeleteHandler(penetapanKonteksRisikoStrategisPemdaDeleteUseCase)).
-		Add(c.PenetapanKonteksRisikoStrategisPemdaUpdateHandler(penetapanKonteksRisikoStrategisPemdaUpdateUseCase))
+		Add(c.PenetapanKonteksRisikoStrategisPemdaUpdateHandler(penetapanKonteksRisikoStrategisPemdaUpdateUseCase)).
+		Add(c.RcaCreateHandler(rcaCreateUseCase)).
+		Add(c.RcaGetAllHandler(rcaGetAllUseCase)).
+		Add(c.RcaGetByIDHandler(rcaGetOneUseCase)).
+		Add(c.RcaDeleteHandler(rcaDeleteUseCase)).
+		Add(c.RcaUpdateHandler(rcaUpdateUseCase)).
+		Add(c.IdentifikasiRisikoStrategisPemdaCreateHandler(identifikasiRisikoStrategisPemdaCreateUseCase)).
+		Add(c.IdentifikasiRisikoStrategisPemdaGetAllHandler(identifikasiRisikoStrategisPemdaGetAllUseCase)).
+		Add(c.IdentifikasiRisikoStrategisPemdaGetByIDHandler(identifikasiRisikoStrategisPemdaGetOneUseCase)).
+		Add(c.IdentifikasiRisikoStrategisPemdaDeleteHandler(identifikasiRisikoStrategisPemdaDeleteUseCase)).
+		Add(c.IdentifikasiRisikoStrategisPemdaUpdateHandler(identifikasiRisikoStrategisPemdaUpdateUseCase))
 }

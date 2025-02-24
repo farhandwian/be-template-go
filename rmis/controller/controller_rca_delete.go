@@ -15,7 +15,7 @@ func (c Controller) RcaDeleteHandler(u usecase.RcaDeleteUseCase) helper.APIData 
 	apiData := helper.APIData{
 		Method: http.MethodDelete,
 		Url:    "/api/rcas/{id}",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "rcas",
 			Relation:  "delete",

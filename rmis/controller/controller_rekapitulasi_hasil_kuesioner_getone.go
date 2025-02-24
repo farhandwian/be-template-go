@@ -13,7 +13,7 @@ func (c Controller) RekapitulasiHasilKuesionerGetByIDHandler(u usecase.Rekapitul
 	apiData := helper.APIData{
 		Method: http.MethodGet,
 		Url:    "/api/rekapitulasi-hasil-kuesioners/{id}",
-		AccessTest: iammodel.AccessKetoStruct{
+		AccessKeto: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "rekapitulasi-hasil-kuesioners",
 			Relation:  "read",

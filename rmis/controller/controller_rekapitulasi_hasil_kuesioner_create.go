@@ -13,7 +13,7 @@ func (c Controller) RekapitulasiHasilKuesionerCreateHandler(u usecase.Rekapitula
 	apiData := helper.APIData{
 		Method: http.MethodPost,
 		Url:    "/api/rekapitulasi-hasil-kuesioners",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "rekapitulasi-hasil-kuesioners",
 			Relation:  "create",

@@ -43,7 +43,7 @@ func ImplRekapitulasiHasilKuesionerCreateUseCase(
 			namaSpip = spip.SPIP.Nama
 		}
 
-		jawabanJSON := helper.ToDataTypeJSON(req.JawabanResponden)
+		jawabanJSON := helper.ToDataTypeJSON(req.JawabanResponden...)
 		obj := model.RekapitulasiHasilKuesioner{
 			ID:               &genObj.RandomId,
 			NamaPemda:        &req.NamaPemda,

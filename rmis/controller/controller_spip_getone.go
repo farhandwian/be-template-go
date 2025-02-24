@@ -13,7 +13,7 @@ func (c Controller) SpipGetByIDHandler(u usecase.SpipGetByIDUseCase) helper.APID
 	apiData := helper.APIData{
 		Method: http.MethodGet,
 		Url:    "/api/spips/{id}",
-		AccessTest: iammodel.AccessKetoStruct{
+		AccessKeto: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "spips",
 			Relation:  "read",

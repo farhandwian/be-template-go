@@ -27,7 +27,7 @@ type APIData struct {
 	Method             string
 	Url                string
 	Access             model.Access
-	AccessTest         model.AccessKeto
+	AccessKeto         model.AccessKeto
 	Body               any
 	QueryParams        []QueryParam
 	Summary            string

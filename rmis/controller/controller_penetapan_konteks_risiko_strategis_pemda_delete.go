@@ -15,7 +15,7 @@ func (c Controller) PenetapanKonteksRisikoStrategisPemdaDeleteHandler(u usecase.
 	apiData := helper.APIData{
 		Method: http.MethodDelete,
 		Url:    "/api/penetapan-konteks-risiko-strategis-pemdas/{id}",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "penetapan-konteks-risiko-strategis-pemdas",
 			Relation:  "delete",

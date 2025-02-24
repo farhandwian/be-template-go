@@ -13,7 +13,7 @@ func (c Controller) RcaCreateHandler(u usecase.RcaCreateUseCase) helper.APIData 
 	apiData := helper.APIData{
 		Method: http.MethodPost,
 		Url:    "/api/rcas",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "rcas",
 			Relation:  "create",

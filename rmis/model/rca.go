@@ -11,14 +11,15 @@ import (
 // Root Cause Analysis
 
 type Rca struct {
-	ID                    *string         `json:"id"`
-	NamaUnitPemilikRisiko *string         `json:"nama_unit_pemilik_risiko"`
-	TahunPenilaian        *time.Time      `json:"tahun_penilaian"`
-	PenyebabRisiko        *string         `json:"penyebab_risiko"`
-	Why                   *datatypes.JSON `json:"why"` // it's json because it will contain array of strings
-	AkarPenyebab          *string         `json:"akar_penyebab"`
-	JenisPenyebab         *string         `json:"jenis_penyebab"`
-	KegiatanPengendalian  *string         `json:"kegiatan_pengendalian"`
+	ID                                 *string         `json:"id"`
+	NamaUnitPemilikRisiko              *string         `json:"nama_unit_pemilik_risiko"`
+	TahunPenilaian                     *time.Time      `json:"tahun_penilaian"`
+	IdentifikasiRisikoStrategisPemdaId *string         `json:"-"`
+	PernyataanRisiko                   *string         `json:"penyebab_risiko"`
+	Why                                *datatypes.JSON `json:"why"` // it's json because it will contain array of strings
+	AkarPenyebab                       *string         `json:"akar_penyebab"`
+	JenisPenyebab                      *string         `json:"jenis_penyebab"`
+	KegiatanPengendalian               *string         `json:"kegiatan_pengendalian"`
 }
 
 func (rca *Rca) SetAkarPenyebab() error {

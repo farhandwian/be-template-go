@@ -13,7 +13,7 @@ func (c Controller) KategoriRisikoCreateHandler(u usecase.KategoriRisikoCreateUs
 	apiData := helper.APIData{
 		Method: http.MethodPost,
 		Url:    "/api/kategori-risikos",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "kategori-risikos",
 			Relation:  "create",

@@ -13,7 +13,7 @@ func (c Controller) IdentifikasiRisikoStrategisPemdaGetAllHandler(u usecase.Iden
 	apiData := helper.APIData{
 		Method: http.MethodGet,
 		Url:    "/api/identifikasi-risiko-strategis-pemdas",
-		AccessTest: iammodel.AccessKetoStruct{
+		AccessKeto: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "identifikasi-risiko-strategis-pemdas",
 			Relation:  "read",

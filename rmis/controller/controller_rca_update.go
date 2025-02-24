@@ -13,7 +13,7 @@ func (c Controller) RcaUpdateHandler(u usecase.RcaUpdateUseCase) helper.APIData 
 	apiData := helper.APIData{
 		Method: http.MethodPut,
 		Url:    "/api/rcas/{id}",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "rcas",
 			Relation:  "update",

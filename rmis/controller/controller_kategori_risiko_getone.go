@@ -13,7 +13,7 @@ func (c Controller) KategoriRisikoGetByIDHandler(u usecase.KategoriRisikoGetByID
 	apiData := helper.APIData{
 		Method: http.MethodGet,
 		Url:    "/api/kategori-risikos/{id}",
-		AccessTest: iammodel.AccessKetoStruct{
+		AccessKeto: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "kategori-risikos",
 			Relation:  "read",

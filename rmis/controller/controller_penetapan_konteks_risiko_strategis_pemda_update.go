@@ -13,7 +13,7 @@ func (c Controller) PenetapanKonteksRisikoStrategisPemdaUpdateHandler(u usecase.
 	apiData := helper.APIData{
 		Method: http.MethodPut,
 		Url:    "/api/penetapan-konteks-risiko-strategis-pemdas/{id}",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "penetapan-konteks-risiko-strategis-pemdas",
 			Relation:  "update",

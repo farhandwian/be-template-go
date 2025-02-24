@@ -13,7 +13,7 @@ func (c Controller) SpipUpdateHandler(u usecase.SpipUpdateUseCase) helper.APIDat
 	apiData := helper.APIData{
 		Method: http.MethodPut,
 		Url:    "/api/spips/{id}",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "spips",
 			Relation:  "update",

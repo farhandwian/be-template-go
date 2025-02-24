@@ -13,7 +13,7 @@ func (c Controller) SpipCreateHandler(u usecase.SpipCreateUseCase) helper.APIDat
 	apiData := helper.APIData{
 		Method: http.MethodPost,
 		Url:    "/api/spips",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "spips",
 			Relation:  "create",

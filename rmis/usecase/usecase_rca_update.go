@@ -47,7 +47,7 @@ func ImplRcaUpdateUseCase(
 			rca.TahunPenilaian = &year
 		}
 
-		rca.PenyebabRisiko = &req.PernyataanRisiko
+		rca.PernyataanRisiko = &req.PernyataanRisiko
 		rca.Why = helper.ToDataTypeJSONPtr(req.Why...)
 		rca.JenisPenyebab = &req.JenisPenyebab
 		rca.KegiatanPengendalian = &req.KegiatanPengendalian

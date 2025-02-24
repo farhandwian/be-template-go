@@ -19,6 +19,7 @@ type IdentifikasiRisikoStrategisPemerintahDaerah struct {
 	NomorUraian        *int       `json:"nomor_risiko"`
 	KodeRisiko         *string    `json:"kode_resiko"`
 	PemilikRisiko      *string    `json:"pemilik_resiko"`
+	RcaID              *string    `json:"-"`
 	UraianSebab        *string    `json:"uraian_sebab"` // references rca.akar_penyebab
 	SumberSebab        *string    `json:"sumber_sebab"` // references rca.jenis_penyebab
 	Controllable       *string    `json:"controllable"` // could be boolean if desired

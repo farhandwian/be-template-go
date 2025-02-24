@@ -15,7 +15,7 @@ func (c Controller) SpipDeleteHandler(u usecase.SpipDeleteUseCase) helper.APIDat
 	apiData := helper.APIData{
 		Method: http.MethodDelete,
 		Url:    "/api/spips/{id}",
-		AccessTest: model.AccessKetoStruct{
+		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
 			Object:    "spips",
 			Relation:  "delete",
