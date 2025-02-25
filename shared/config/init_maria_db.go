@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"rmis/model"
-	"rmis/wiring"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -62,9 +61,10 @@ func InitMariaDatabase() *gorm.DB {
 		// &model.PenilaianKegiatanPengendalian{},
 		&model.PenetapanKonteksRisikoStrategisRenstraOPD{},
 		&model.DaftarRisikoPrioritas{},
+		&model.PenetapanKonteksRisikoOperasional{},
 	)
 
-	wiring.SeedOpd(db)
+	// wiring.SeedOpd(db)
 
 	// Verify the connection
 	sqlDB, err := db.DB()

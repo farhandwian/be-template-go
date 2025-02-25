@@ -96,6 +96,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	daftarRisikoPrioritasGetOneGateway := gateway.ImplDaftarRisikoPrioritasGetByID(mariaDB)
 	daftarRisikoPrioritasDeleteGateway := gateway.ImplDaftarRisikoPrioritasDelete(mariaDB)
 
+	// Gateway Penetapan Konteks Risiko Operasional
+	penetapanKonteksRisikoOperasionalGetAllGateway := gateway.ImplPenetapanKonteksRisikoOperasionalGetAll(mariaDB)
+	penetapanKonteksRisikoOperasionalGetOneGateway := gateway.ImplPenetapanKonteksRisikoOperasionalGetByID(mariaDB)
+	penetapanKonteksRisikoOperasionalDeleteGateway := gateway.ImplPenetepanKonteksRisikoOperasionalDelete(mariaDB)
+	penetapanKonteksRisikoOperasionalCreateGateway := gateway.ImplPenetepanKonteksRisikoOperasionalSave(mariaDB)
+
 	// =================================================================
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
@@ -188,6 +194,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	daftarRisikoPrioritasDeleteUseCase := usecase.ImplDaftarRisikoPrioritasDeleteUseCase(daftarRisikoPrioritasDeleteGateway)
 	daftarRisikoPrioritasUpdateUsecase := usecase.ImplDaftarRisikoPrioritasUpdateUseCase(daftarRisikoPrioritasGetOneGateway, daftarRisikoPrioritasCreateGateway, hasilAnalisisRisikoGetOneGateway, identifikasiRisikoStrategisPemdaGetOneGateway)
 
+	// Usecase Penetapan Konteks Risiko Strategis Renstra OPD
+	penetapanKonteksRisikoOperasionalGetAllUseCase := usecase.ImplPenetapanKonteksRisikoOperasionalGetAllUseCase(penetapanKonteksRisikoOperasionalGetAllGateway, ikuGetAllGateway, opdGetOneGateway)
+	penetapanKonteksRisikoOperasionalGetOneUseCase := usecase.ImplPenetapanKonteksRisikoOperasionalGetByIDUseCase(penetapanKonteksRisikoOperasionalGetOneGateway, ikuGetAllGateway, opdGetOneGateway)
+	penetapanKonteksRisikoOperasionalDeleteUseCase := usecase.ImplPenetapanKonteksRisikoOperasionalDeleteUseCase(penetapanKonteksRisikoOperasionalDeleteGateway)
+	penetapanKonteksRisikoOperasionalCreateUseCase := usecase.ImplPenetapanKonteksRisikoOperasionalCreateUseCase(generateIdGateway, penetapanKonteksRisikoOperasionalCreateGateway)
+	penetapanKonteksRisikoOperasionalUpdateUseCase := usecase.ImplPenetapanKonteksRisikoOperasionalUpdateUseCase(penetapanKonteksRisikoOperasionalGetOneGateway, penetapanKonteksRisikoOperasionalCreateGateway)
+
 	c := controller.Controller{
 		Mux: mux,
 		JWT: jwtToken,
@@ -259,5 +272,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.DaftarRisikoPrioritasGetAllHandler(daftarRisikoPrioritasGetAllUseCase)).
 		Add(c.DaftarRisikoPrioritasGetByIDHandler(daftarRisikoPrioritasGetOneUseCase)).
 		Add(c.DaftarRisikoPrioritasDeleteHandler(daftarRisikoPrioritasDeleteUseCase)).
-		Add(c.DaftarRisikoPrioritasUpdateHandler(daftarRisikoPrioritasUpdateUsecase))
+		Add(c.DaftarRisikoPrioritasUpdateHandler(daftarRisikoPrioritasUpdateUsecase)).
+		Add(c.PenetapanKonteksRisikoOperasionalCreateHandler(penetapanKonteksRisikoOperasionalCreateUseCase)).
+		Add(c.PenetapanKonteksRisikoOperasionalGetAllHandler(penetapanKonteksRisikoOperasionalGetAllUseCase)).
+		Add(c.PenetapanKonteksRisikoOperasionalGetOneHandler(penetapanKonteksRisikoOperasionalGetOneUseCase)).
+		Add(c.PenetapanKonteksRisikoOperasionalDeleteHandler(penetapanKonteksRisikoOperasionalDeleteUseCase)).
+		Add(c.PenetapanKonteksRisikoOperasionalUpdateHandler(penetapanKonteksRisikoOperasionalUpdateUseCase))
 }

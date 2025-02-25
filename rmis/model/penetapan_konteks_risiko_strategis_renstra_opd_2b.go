@@ -8,7 +8,7 @@ type PenetapanKonteksRisikoStrategisRenstraOPD struct {
 	TahunPenilaian     *string `json:"tahun_penilaian"`
 	Periode            *string `json:"periode"`
 	UrusanPemerintahan *string `json:"urusan_pemerintahan"`
-	OPDID              *string `json:"opd_id"` // references opd.nama
+	OPDID              *string `json:"opd_id"` // references opd
 	TujuanStrategis    *string `json:"tujuan_strategis"`
 	SasaranStrategis   *string `json:"sasaran_strategis"`
 	InformasiLain      *string `json:"informasi_lain"`
