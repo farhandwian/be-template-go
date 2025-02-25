@@ -102,6 +102,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penilaianRisikoGetOneGateway := gateway.ImplPenilaianRisikoGetByID(mariaDB)
 	penilaianRisikoDeleteGateway := gateway.ImplPenilaianRisikoDelete(mariaDB)
 
+	// Gateway Pengkomunikasian Pengendalian
+	pengkomunikasianPengendalianCreateGateway := gateway.ImplPengkomunikasianPengendalianSave(mariaDB)
+	pengkomunikasianPengendalianGetAllGateway := gateway.ImplPengkomunikasianPengendalianGetAll(mariaDB)
+	pengkomunikasianPengendalianGetOneGateway := gateway.ImplPengkomunikasianPengendalianGetByID(mariaDB)
+	pengkomunikasianPengendalianDeleteGateway := gateway.ImplPengkomunikasianPengendalianDelete(mariaDB)
+
 	// =================================================================
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
@@ -201,6 +207,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penilaianRisikoDeleteUseCase := usecase.ImplPenilaianRisikoDeleteUseCase(penilaianRisikoDeleteGateway)
 	penilaianRisikoUpdateUseCase := usecase.ImplPenilaianRisikoUpdateUseCase(penilaianRisikoGetOneGateway, penilaianRisikoCreateGateway, daftarRisikoPrioritasGetOneGateway, hasilAnalisisRisikoGetOneGateway)
 
+	// Usecase Pengkomunikasian Pengendalian
+	pengkomunikasianPengendalianCreateUseCase := usecase.ImplPengkomunikasianPengendalianCreateUseCase(generateIdGateway, pengkomunikasianPengendalianCreateGateway, penilaianKegiatanPengendalianGetOneGateway)
+	pengkomunikasianPengendalianGetAllUseCase := usecase.ImplPengkomunikasianPengendalianGetAllUseCase(pengkomunikasianPengendalianGetAllGateway)
+	pengkomunikasianPengendalianGetOneUseCase := usecase.ImplPengkomunikasianPengendalianGetByIDUseCase(pengkomunikasianPengendalianGetOneGateway)
+	pengkomunikasianPengendalianDeleteUseCase := usecase.ImplPengkomunikasianPengendalianDeleteUseCase(pengkomunikasianPengendalianDeleteGateway)
+	pengkomunikasianPengendalianUpdateUseCase := usecase.ImplPengkomunikasianPengendalianUpdateUseCase(pengkomunikasianPengendalianGetOneGateway, pengkomunikasianPengendalianCreateGateway, penilaianKegiatanPengendalianGetOneGateway)
+
 	c := controller.Controller{
 		Mux: mux,
 		JWT: jwtToken,
@@ -277,5 +290,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.PenilaianRisikoGetAllHandler(penilaianRisikoGetAllUseCase)).
 		Add(c.PenilaianRisikoGetByIDHandler(penilaianRisikoGetOneUseCase)).
 		Add(c.PenilaianRisikoDeleteHandler(penilaianRisikoDeleteUseCase)).
-		Add(c.PenilaianRisikoUpdateHandler(penilaianRisikoUpdateUseCase))
+		Add(c.PenilaianRisikoUpdateHandler(penilaianRisikoUpdateUseCase)).
+		Add(c.PengkomunikasianPengendalianCreateHandler(pengkomunikasianPengendalianCreateUseCase)).
+		Add(c.PengkomunikasianPengendalianGetAllHandler(pengkomunikasianPengendalianGetAllUseCase)).
+		Add(c.PengkomunikasianPengendalianGetByIDHandler(pengkomunikasianPengendalianGetOneUseCase)).
+		Add(c.PengkomunikasianPengendalianDeleteHandler(pengkomunikasianPengendalianDeleteUseCase)).
+		Add(c.PengkomunikasianPengendalianUpdateHandler(pengkomunikasianPengendalianUpdateUseCase))
 }
