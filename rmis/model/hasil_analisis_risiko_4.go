@@ -5,6 +5,13 @@ import (
 	"time"
 )
 
+type KriteriaKemungkinan string
+
+const (
+	PersentasePerTahun KriteriaKemungkinan = "Persentase (dlm 1 tahun)"
+	FrekuensiPerTahun  KriteriaKemungkinan = "Jumlah Frekuensi (dlm 1 tahun)"
+)
+
 // form 4
 
 type HasilAnalisisRisiko struct {
@@ -20,22 +27,22 @@ type HasilAnalisisRisiko struct {
 	KodeRisiko                                    *string    `json:"kode_risiko"`
 	KategoriRisiko                                *string    `json:"kategori_risiko"`
 	// ===========
-	KriteriaKemungkinanInherentRisk *string   `json:"kriteria_kemungkinan_inherent_risk"`
-	SkorKemungkinanInherentRisk     *int      `json:"skor_kemungkinan_inherent_risk"`
-	KriteriaDampakInherentRisk      *string   `json:"kriteria_dampak_inherent_risk"`
-	SkorDampakInherentRisk          *int      `json:"skor_dampak_inherent_risk"`
-	SkalaRisikoInherentRisk         *int      `json:"skala_risiko_inherent_risk"`
-	StatusAda                       *string   `json:"status_ada"`
-	UraianControl                   *string   `json:"uraian_control"`
-	KlarifikasiSPIP                 *string   `json:"klarifikasi_spip"`
-	MemadaiControl                  *string   `json:"memadai_control"` // enum memadai (can also be defined as a custom type)
-	KriteriaKemungkinanResidualRisk *string   `json:"kriteria_kemungkinan_residual_risk"`
-	SkorKemungkinanResidualRisk     *int      `json:"skor_kemungkinan_residual_risk"`
-	KriteriaDampakResidualRisk      *string   `json:"kriteria_dampak_residual_risk"`
-	SkorDampakResidualRisk          *int      `json:"skor_dampak_residual_risk"`
-	SkalaRisikoResidualRisk         *int      `json:"skala_risiko_residual_risk"`
-	CreatedAt                       time.Time `json:"created_at"`
-	UpdatedAt                       time.Time `json:"updated_at"`
+	KriteriaKemungkinanInherentRisk *KriteriaKemungkinan `json:"kriteria_kemungkinan_inherent_risk"`
+	SkorKemungkinanInherentRisk     *int                 `json:"skor_kemungkinan_inherent_risk"`
+	KriteriaDampakInherentRisk      *string              `json:"kriteria_dampak_inherent_risk"`
+	SkorDampakInherentRisk          *int                 `json:"skor_dampak_inherent_risk"`
+	SkalaRisikoInherentRisk         *int                 `json:"skala_risiko_inherent_risk"`
+	StatusAda                       *string              `json:"status_ada"`
+	UraianControl                   *string              `json:"uraian_control"`
+	KlarifikasiSPIP                 *string              `json:"klarifikasi_spip"`
+	MemadaiControl                  *string              `json:"memadai_control"` // enum memadai (can also be defined as a custom type)
+	KriteriaKemungkinanResidualRisk *KriteriaKemungkinan `json:"kriteria_kemungkinan_residual_risk"`
+	SkorKemungkinanResidualRisk     *int                 `json:"skor_kemungkinan_residual_risk"`
+	KriteriaDampakResidualRisk      *string              `json:"kriteria_dampak_residual_risk"`
+	SkorDampakResidualRisk          *int                 `json:"skor_dampak_residual_risk"`
+	SkalaRisikoResidualRisk         *int                 `json:"skala_risiko_residual_risk"`
+	CreatedAt                       time.Time            `json:"created_at"`
+	UpdatedAt                       time.Time            `json:"updated_at"`
 }
 
 var RiskMatrix = [][]int{

@@ -48,13 +48,29 @@ func ImplHasilAnalisisRisikoCreateUseCase(
 			return nil, fmt.Errorf("error getting Identifikasi Risiko Strategis Pemda table: %v", err)
 		}
 
+		var kriteriaKemungkinanInherentRisk model.KriteriaKemungkinan
+
+		if req.KriteriaKemungkinanInherentRisk == "persentase" {
+			kriteriaKemungkinanInherentRisk = model.PersentasePerTahun
+		} else if req.KriteriaKemungkinanInherentRisk == "frekuensi" {
+			kriteriaKemungkinanInherentRisk = model.FrekuensiPerTahun
+		}
+
+		var kriteriaKemungkinanResidualRisk model.KriteriaKemungkinan
+
+		if req.KriteriaKemungkinanResidualRisk == "persentase" {
+			kriteriaKemungkinanResidualRisk = model.PersentasePerTahun
+		} else if req.KriteriaKemungkinanResidualRisk == "frekuensi" {
+			kriteriaKemungkinanResidualRisk = model.FrekuensiPerTahun
+		}
+
 		obj := model.HasilAnalisisRisiko{
 			ID: &genObj.RandomId,
 			IdentifikasiRisikoStrategisPemerintahDaerahID: &req.IdentifikasiRisikoStrategisPemdaID,
 			RisikoTeridentifikasi:                         identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.UraianRisiko,
 			KodeRisiko:                                    identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KodeRisiko,
 			KategoriRisiko:                                identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KategoriRisikoName,
-			KriteriaKemungkinanInherentRisk:               &req.KriteriaKemungkinanInherentRisk,
+			KriteriaKemungkinanInherentRisk:               &kriteriaKemungkinanInherentRisk,
 			SkorKemungkinanInherentRisk:                   &req.SkorKemungkinanInherentRisk,
 			KriteriaDampakInherentRisk:                    &req.KriteriaDampakInherentRisk,
 			SkorDampakInherentRisk:                        &req.SkorDampakInherentRisk,
@@ -62,7 +78,7 @@ func ImplHasilAnalisisRisikoCreateUseCase(
 			UraianControl:                                 &req.UraianControl,
 			KlarifikasiSPIP:                               &req.KlarifikasiSPIP,
 			MemadaiControl:                                &req.MemadaiControl,
-			KriteriaKemungkinanResidualRisk:               &req.KriteriaKemungkinanResidualRisk,
+			KriteriaKemungkinanResidualRisk:               &kriteriaKemungkinanResidualRisk,
 			SkorKemungkinanResidualRisk:                   &req.SkorKemungkinanResidualRisk,
 			KriteriaDampakResidualRisk:                    &req.KriteriaDampakResidualRisk,
 			SkorDampakResidualRisk:                        &req.SkorDampakResidualRisk,

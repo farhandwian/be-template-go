@@ -107,6 +107,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penilaianRisikoGetOneGateway := gateway.ImplPenilaianRisikoGetByID(mariaDB)
 	penilaianRisikoDeleteGateway := gateway.ImplPenilaianRisikoDelete(mariaDB)
 
+	// Gateway Kriteria Dampak
+	kriteriaDampakGetAllGateway := gateway.ImplKriteriaDampakGetAll(mariaDB)
+	kriteriaDampakGetOneGateway := gateway.ImplKriteriaDampakGetByID(mariaDB)
+
 	// =================================================================
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
@@ -212,6 +216,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penilaianRisikoDeleteUseCase := usecase.ImplPenilaianRisikoDeleteUseCase(penilaianRisikoDeleteGateway)
 	penilaianRisikoUpdateUseCase := usecase.ImplPenilaianRisikoUpdateUseCase(penilaianRisikoGetOneGateway, penilaianRisikoCreateGateway, daftarRisikoPrioritasGetOneGateway, hasilAnalisisRisikoGetOneGateway)
 
+	// Usecase Kriteria Dampak
+	kriteriaDampakGetAllUseCase := usecase.ImplKriteriaDampakGetAllUseCase(kriteriaDampakGetAllGateway)
+	kriteriaDampakGetOneUseCase := usecase.ImplKriteriaDampakGetByIDUseCase(kriteriaDampakGetOneGateway)
+
 	c := controller.Controller{
 		Mux: mux,
 		JWT: jwtToken,
@@ -293,5 +301,7 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.PenilaianRisikoGetAllHandler(penilaianRisikoGetAllUseCase)).
 		Add(c.PenilaianRisikoGetByIDHandler(penilaianRisikoGetOneUseCase)).
 		Add(c.PenilaianRisikoDeleteHandler(penilaianRisikoDeleteUseCase)).
-		Add(c.PenilaianRisikoUpdateHandler(penilaianRisikoUpdateUseCase))
+		Add(c.PenilaianRisikoUpdateHandler(penilaianRisikoUpdateUseCase)).
+		Add(c.KriteriaDampakGetAllHandler(kriteriaDampakGetAllUseCase)).
+		Add(c.KriteriaDampakGetByIDHandler(kriteriaDampakGetOneUseCase))
 }
