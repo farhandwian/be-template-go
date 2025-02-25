@@ -88,6 +88,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	daftarRisikoPrioritasGetOneGateway := gateway.ImplDaftarRisikoPrioritasGetByID(mariaDB)
 	daftarRisikoPrioritasDeleteGateway := gateway.ImplDaftarRisikoPrioritasDelete(mariaDB)
 
+	// Gateway Penilaian Risiko
+	penilaianRisikoCreateGateway := gateway.ImplPenilaianRisikoSave(mariaDB)
+	penilaianRisikoGetAllGateway := gateway.ImplPenilaianRisikoGetAll(mariaDB)
+	penilaianRisikoGetOneGateway := gateway.ImplPenilaianRisikoGetByID(mariaDB)
+	penilaianRisikoDeleteGateway := gateway.ImplPenilaianRisikoDelete(mariaDB)
+
 	// =================================================================
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
@@ -161,11 +167,11 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	hasilAnalisisRisikoUpdateUsecase := usecase.ImplHasilAnalisisRisikoUpdateUseCase(hasilAnalisisRisikoGetOneGateway, hasilAnalisisRisikoCreateGateway)
 
 	// Usecase Penilaian Kegiatan Pengendalian
-	penilaianKegiatanPengendalianCreateUsecase := usecase.ImplPenilaianKegiatanPengendalianCreateUseCase(generateIdGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)
-	penilaianKegiatanPengendalianGetAllUsecase := usecase.ImplPenilaianKegiatanPengendalianGetAllUseCase(penilaianKegiatanPengendalianGetAllGateway)
-	penilaianKegiatanPengendalianGetOneUsecase := usecase.ImplPenilaianKegiatanPengendalianGetByIDUseCase(penilaianKegiatanPengendalianGetOneGateway)
-	penilaianKegiatanPengendalianDeleteUsecase := usecase.ImplPenilaianKegiatanPengendalianDeleteUseCase(penilaianKegiatanPengendalianDeleteGateway)
-	penilaianKegiatanPengendalianUpdateUsecase := usecase.ImplPenilaianKegiatanPengendalianUpdateUseCase(penilaianKegiatanPengendalianGetOneGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)
+	penilaianKegiatanPengendalianCreateUseCase := usecase.ImplPenilaianKegiatanPengendalianCreateUseCase(generateIdGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)
+	penilaianKegiatanPengendalianGetAllUseCase := usecase.ImplPenilaianKegiatanPengendalianGetAllUseCase(penilaianKegiatanPengendalianGetAllGateway)
+	penilaianKegiatanPengendalianGetOneUseCase := usecase.ImplPenilaianKegiatanPengendalianGetByIDUseCase(penilaianKegiatanPengendalianGetOneGateway)
+	penilaianKegiatanPengendalianDeleteUseCase := usecase.ImplPenilaianKegiatanPengendalianDeleteUseCase(penilaianKegiatanPengendalianDeleteGateway)
+	penilaianKegiatanPengendalianUpdateUseCase := usecase.ImplPenilaianKegiatanPengendalianUpdateUseCase(penilaianKegiatanPengendalianGetOneGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)
 
 	// Usecase Daftar Risiko Prioritas
 	daftarRisikoPrioritasCreateUseCase := usecase.ImplDaftarRisikoPrioritasCreateUseCase(generateIdGateway, daftarRisikoPrioritasCreateGateway, hasilAnalisisRisikoGetOneGateway, identifikasiRisikoStrategisPemdaGetOneGateway)
@@ -173,6 +179,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	daftarRisikoPrioritasGetOneUseCase := usecase.ImplDaftarRisikoPrioritasGetByIDUseCase(daftarRisikoPrioritasGetOneGateway)
 	daftarRisikoPrioritasDeleteUseCase := usecase.ImplDaftarRisikoPrioritasDeleteUseCase(daftarRisikoPrioritasDeleteGateway)
 	daftarRisikoPrioritasUpdateUsecase := usecase.ImplDaftarRisikoPrioritasUpdateUseCase(daftarRisikoPrioritasGetOneGateway, daftarRisikoPrioritasCreateGateway, hasilAnalisisRisikoGetOneGateway, identifikasiRisikoStrategisPemdaGetOneGateway)
+
+	// Usecase Penilaian Risiko
+	penilaianRisikoCreateUseCase := usecase.ImplPenilaianRisikoCreateUseCase(generateIdGateway, penilaianRisikoCreateGateway, daftarRisikoPrioritasGetOneGateway, hasilAnalisisRisikoGetOneGateway)
+	penilaianRisikoGetAllUseCase := usecase.ImplPenilaianRisikoGetAllUseCase(penilaianRisikoGetAllGateway)
+	penilaianRisikoGetOneUseCase := usecase.ImplPenilaianRisikoGetByIDUseCase(penilaianRisikoGetOneGateway)
+	penilaianRisikoDeleteUseCase := usecase.ImplPenilaianRisikoDeleteUseCase(penilaianRisikoDeleteGateway)
+	penilaianRisikoUpdateUseCase := usecase.ImplPenilaianRisikoUpdateUseCase(penilaianRisikoGetOneGateway, penilaianRisikoCreateGateway, daftarRisikoPrioritasGetOneGateway, hasilAnalisisRisikoGetOneGateway)
 
 	c := controller.Controller{
 		Mux: mux,
@@ -231,14 +244,19 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.HasilAnalisisRisikoGetAllHandler(hasilAnalisisRisikoGetAllUseCase)).
 		Add(c.HasilAnalisisRisikoGetByIDHandler(hasilAnalisisRisikoGetOneUseCase)).
 		Add(c.HasilAnalisisRisikoUpdateHandler(hasilAnalisisRisikoUpdateUsecase)).
-		Add(c.PenilaianKegiatanPengendalianCreateHandler(penilaianKegiatanPengendalianCreateUsecase)).
-		Add(c.PenilaianKegiatanPengendalianDeleteHandler(penilaianKegiatanPengendalianDeleteUsecase)).
-		Add(c.PenilaianKegiatanPengendalianGetAllHandler(penilaianKegiatanPengendalianGetAllUsecase)).
-		Add(c.PenilaianKegiatanPengendalianGetByIDHandler(penilaianKegiatanPengendalianGetOneUsecase)).
-		Add(c.PenilaianKegiatanPengendalianUpdateHandler(penilaianKegiatanPengendalianUpdateUsecase)).
+		Add(c.PenilaianKegiatanPengendalianCreateHandler(penilaianKegiatanPengendalianCreateUseCase)).
+		Add(c.PenilaianKegiatanPengendalianDeleteHandler(penilaianKegiatanPengendalianDeleteUseCase)).
+		Add(c.PenilaianKegiatanPengendalianGetAllHandler(penilaianKegiatanPengendalianGetAllUseCase)).
+		Add(c.PenilaianKegiatanPengendalianGetByIDHandler(penilaianKegiatanPengendalianGetOneUseCase)).
+		Add(c.PenilaianKegiatanPengendalianUpdateHandler(penilaianKegiatanPengendalianUpdateUseCase)).
 		Add(c.DaftarRisikoPrioritasCreateHandler(daftarRisikoPrioritasCreateUseCase)).
 		Add(c.DaftarRisikoPrioritasGetAllHandler(daftarRisikoPrioritasGetAllUseCase)).
 		Add(c.DaftarRisikoPrioritasGetByIDHandler(daftarRisikoPrioritasGetOneUseCase)).
 		Add(c.DaftarRisikoPrioritasDeleteHandler(daftarRisikoPrioritasDeleteUseCase)).
-		Add(c.DaftarRisikoPrioritasUpdateHandler(daftarRisikoPrioritasUpdateUsecase))
+		Add(c.DaftarRisikoPrioritasUpdateHandler(daftarRisikoPrioritasUpdateUsecase)).
+		Add(c.PenilaianRisikoCreateHandler(penilaianRisikoCreateUseCase)).
+		Add(c.PenilaianRisikoGetAllHandler(penilaianRisikoGetAllUseCase)).
+		Add(c.PenilaianRisikoGetByIDHandler(penilaianRisikoGetOneUseCase)).
+		Add(c.PenilaianRisikoDeleteHandler(penilaianRisikoDeleteUseCase)).
+		Add(c.PenilaianRisikoUpdateHandler(penilaianRisikoUpdateUseCase))
 }

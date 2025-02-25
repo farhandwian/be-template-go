@@ -40,7 +40,7 @@ func ImplDaftarRisikoPrioritasUpdateUseCase(
 			return nil, err
 		}
 
-		res.DaftarRisikoPrioritas.HasilAnalisisRisiko = &req.HasilAnalisisRisikoID
+		res.DaftarRisikoPrioritas.HasilAnalisisRisikoID = &req.HasilAnalisisRisikoID
 		res.DaftarRisikoPrioritas.RisikoPrioritas = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.RisikoTeridentifikasi
 		res.DaftarRisikoPrioritas.KodeRisiko = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KodeRisiko
 		res.DaftarRisikoPrioritas.KategoriRisiko = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KategoriRisiko

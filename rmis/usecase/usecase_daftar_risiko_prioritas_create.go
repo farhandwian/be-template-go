@@ -44,14 +44,14 @@ func ImplDaftarRisikoPrioritasCreateUseCase(
 		}
 
 		obj := model.DaftarRisikoPrioritas{
-			ID:                  &genObj.RandomId,
-			HasilAnalisisRisiko: &req.HasilAnalisisRisikoID,
-			RisikoPrioritas:     hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.RisikoTeridentifikasi,
-			KodeRisiko:          hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KodeRisiko,
-			KategoriRisiko:      hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KategoriRisiko,
-			PemilikRisiko:       identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.PemilikRisiko,
-			PenyebabRisiko:      identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianSebab,
-			DampakRisiko:        identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianDampak,
+			ID:                    &genObj.RandomId,
+			HasilAnalisisRisikoID: &req.HasilAnalisisRisikoID,
+			RisikoPrioritas:       hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.RisikoTeridentifikasi,
+			KodeRisiko:            hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KodeRisiko,
+			KategoriRisiko:        hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KategoriRisiko,
+			PemilikRisiko:         identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.PemilikRisiko,
+			PenyebabRisiko:        identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianSebab,
+			DampakRisiko:          identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianDampak,
 		}
 
 		if _, err = createDaftarRisikoPrioritas(ctx, gateway.DaftarRisikoPrioritasSaveReq{DaftarRisikoPrioritas: obj}); err != nil {
