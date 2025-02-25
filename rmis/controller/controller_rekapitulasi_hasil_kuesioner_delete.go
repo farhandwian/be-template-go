@@ -21,7 +21,7 @@ func (c Controller) RekapitulasiHasilKuesionerDeleteHandler(u usecase.Rekapitula
 			Relation:  "delete",
 		},
 		Summary: "Delete a Rekapitulasi hasil kuesioner",
-		Tag:     "Rekapitulasi hasil kuesioner",
+		Tag:     "Rekapitulasi Hasil Kuesioner",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

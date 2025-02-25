@@ -18,8 +18,8 @@ func (c Controller) RekapitulasiHasilKuesionerGetByIDHandler(u usecase.Rekapitul
 			Object:    "rekapitulasi-hasil-kuesioners",
 			Relation:  "read",
 		},
-		Summary: "Get a Sub Unsur RekapitulasiHasilKuesioner by ID",
-		Tag:     "Sub Unsur RekapitulasiHasilKuesioner",
+		Summary: "Get a Rekapitulasi Hasil Kuesioner by ID",
+		Tag:     "Rekapitulasi Hasil Kuesioner",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

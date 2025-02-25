@@ -33,7 +33,9 @@ func (c Controller) DaftarRisikoPrioritasGetAllHandler(u usecase.DaftarRisikoPri
 		page := controller.GetQueryInt(r, "page", 1)
 		size := controller.GetQueryInt(r, "size", 10)
 		keyword := controller.GetQueryString(r, "keyword", "")
-		req := usecase.DaftarRisikoPrioritasGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword}
+		sortBy := controller.GetQueryString(r, "sortBy", "")
+		sortOrder := controller.GetQueryString(r, "sortOrder", "")
+		req := usecase.DaftarRisikoPrioritasGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword, SortBy: sortBy, SortOrder: sortOrder}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 

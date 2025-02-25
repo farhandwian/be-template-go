@@ -19,8 +19,8 @@ func (c Controller) RekapitulasiHasilKuesionerCreateHandler(u usecase.Rekapitula
 			Relation:  "create",
 		},
 		Body:    usecase.RekapitulasiHasilKuesionerCreateUseCaseReq{},
-		Summary: "Create a new RekapitulasiHasilKuesioner",
-		Tag:     "Sub Unsur RekapitulasiHasilKuesioner",
+		Summary: "Create a new Rekapitulasi Hasil Kuesioner",
+		Tag:     "Rekapitulasi Hasil Kuesioner",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
