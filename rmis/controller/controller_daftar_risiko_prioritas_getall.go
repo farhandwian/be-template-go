@@ -8,22 +8,24 @@ import (
 	"shared/helper"
 )
 
-// HasilAnalisisRisiko Get All handler
-func (c Controller) HasilAnalisisRisikoGetAllHandler(u usecase.HasilAnalisisRisikoGetAllUseCase) helper.APIData {
+// DaftarRisikoPrioritas Get All handler
+func (c Controller) DaftarRisikoPrioritasGetAllHandler(u usecase.DaftarRisikoPrioritasGetAllUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodGet,
-		Url:    "/api/hasil-analisis-risiko",
+		Url:    "/api/daftar-risiko-prioritas",
 		AccessKeto: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "hasil-analisis-risiko",
+			Object:    "daftar-risiko-prioritas",
 			Relation:  "read",
 		},
-		Summary: "Get all Hasil Analisis Risiko",
-		Tag:     "Hasil Analisis Risiko",
+		Summary: "Get all Daftar Risiko Prioritas",
+		Tag:     "Daftar Risiko Prioritas",
 		QueryParams: []helper.QueryParam{
 			{Name: "keyword", Type: "string", Description: "name, pic or location", Required: false},
 			{Name: "page", Type: "number", Description: "page", Required: false},
 			{Name: "size", Type: "number", Description: "size", Required: false},
+			{Name: "sortBy", Type: "string", Description: "sort by", Required: false},
+			{Name: "sortOrder", Type: "string", Description: "sort order", Required: false},
 		},
 	}
 
@@ -31,7 +33,7 @@ func (c Controller) HasilAnalisisRisikoGetAllHandler(u usecase.HasilAnalisisRisi
 		page := controller.GetQueryInt(r, "page", 1)
 		size := controller.GetQueryInt(r, "size", 10)
 		keyword := controller.GetQueryString(r, "keyword", "")
-		req := usecase.HasilAnalisisRisikoGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword}
+		req := usecase.DaftarRisikoPrioritasGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 

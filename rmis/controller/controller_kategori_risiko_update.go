@@ -19,8 +19,8 @@ func (c Controller) KategoriRisikoUpdateHandler(u usecase.KategoriRisikoUpdateUs
 			Relation:  "update",
 		},
 		Body:    usecase.KategoriRisikoUpdateUseCaseReq{},
-		Summary: "Update a KategoriRisiko",
-		Tag:     "KategoriRisiko",
+		Summary: "Update a Kategori Risiko",
+		Tag:     "Kategori Risiko",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {

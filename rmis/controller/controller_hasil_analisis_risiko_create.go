@@ -12,10 +12,10 @@ import (
 func (c Controller) HasilAnalisisRisikoCreateHandler(u usecase.HasilAnalisisRisikoCreateUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodPost,
-		Url:    "/api/hasil-analisis-risikos",
+		Url:    "/api/hasil-analisis-risiko",
 		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "hasil-analisis-risikos",
+			Object:    "hasil-analisis-risiko",
 			Relation:  "create",
 		},
 		Body:    usecase.HasilAnalisisRisikoCreateUseCaseReq{},
