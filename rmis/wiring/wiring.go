@@ -90,6 +90,11 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 
 	// Gateway OPD
 	opdGetOneGateway := gateway.ImplOPDGetByID(mariaDB)
+	// Gateway Daftar Risiko Prioritas
+	daftarRisikoPrioritasCreateGateway := gateway.ImplDaftarRisikoPrioritasSave(mariaDB)
+	daftarRisikoPrioritasGetAllGateway := gateway.ImplDaftarRisikoPrioritasGetAll(mariaDB)
+	daftarRisikoPrioritasGetOneGateway := gateway.ImplDaftarRisikoPrioritasGetByID(mariaDB)
+	daftarRisikoPrioritasDeleteGateway := gateway.ImplDaftarRisikoPrioritasDelete(mariaDB)
 
 	// =================================================================
 	// Usecase
@@ -176,6 +181,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penetapanKonteksRisikoStrategisRenstraOPDDeleteUseCase := usecase.ImplPenetapanKonteksRisikoRenstraOPDDeleteUseCase(penetapanKonteksRisikoStrategisRenstraOPDDeleteGateway)
 	penetapanKonteksRisikoStrategisRenstraOPDCreateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisRenstraOPDCreateUseCase(generateIdGateway, penetapanKonteksRisikoStrategisRenstraOPDCreateGateway)
 	penetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase(penetapanKonteksRisikoStrategisRenstraOPDGetOneGateway, penetapanKonteksRisikoStrategisRenstraOPDCreateGateway)
+	// Usecase Daftar Risiko Prioritas
+	daftarRisikoPrioritasCreateUseCase := usecase.ImplDaftarRisikoPrioritasCreateUseCase(generateIdGateway, daftarRisikoPrioritasCreateGateway, hasilAnalisisRisikoGetOneGateway, identifikasiRisikoStrategisPemdaGetOneGateway)
+	daftarRisikoPrioritasGetAllUseCase := usecase.ImplDaftarRisikoPrioritasGetAllUseCase(daftarRisikoPrioritasGetAllGateway)
+	daftarRisikoPrioritasGetOneUseCase := usecase.ImplDaftarRisikoPrioritasGetByIDUseCase(daftarRisikoPrioritasGetOneGateway)
+	daftarRisikoPrioritasDeleteUseCase := usecase.ImplDaftarRisikoPrioritasDeleteUseCase(daftarRisikoPrioritasDeleteGateway)
+	daftarRisikoPrioritasUpdateUsecase := usecase.ImplDaftarRisikoPrioritasUpdateUseCase(daftarRisikoPrioritasGetOneGateway, daftarRisikoPrioritasCreateGateway, hasilAnalisisRisikoGetOneGateway, identifikasiRisikoStrategisPemdaGetOneGateway)
 
 	c := controller.Controller{
 		Mux: mux,
@@ -243,5 +254,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.PenetapanKonteksRisikoStrategisRenstraOPDGetAllHandler(penetapanKonteksRisikoStrategisRenstraOPDGetAllUseCase)).
 		Add(c.PenetapanKonteksRisikoStrategisRenstraOPDGetOneHandler(penetapanKonteksRisikoStrategisRenstraOPDGetOneUseCase)).
 		Add(c.PenetapanKonteksRisikoStrategisRenstraOPDDeleteHandler(penetapanKonteksRisikoStrategisRenstraOPDDeleteUseCase)).
-		Add(c.PenetapanKonteksRisikoStrategisRenstraOPDUpdateHandler(penetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase))
+		Add(c.PenetapanKonteksRisikoStrategisRenstraOPDUpdateHandler(penetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase)).
+		Add(c.DaftarRisikoPrioritasCreateHandler(daftarRisikoPrioritasCreateUseCase)).
+		Add(c.DaftarRisikoPrioritasGetAllHandler(daftarRisikoPrioritasGetAllUseCase)).
+		Add(c.DaftarRisikoPrioritasGetByIDHandler(daftarRisikoPrioritasGetOneUseCase)).
+		Add(c.DaftarRisikoPrioritasDeleteHandler(daftarRisikoPrioritasDeleteUseCase)).
+		Add(c.DaftarRisikoPrioritasUpdateHandler(daftarRisikoPrioritasUpdateUsecase))
 }

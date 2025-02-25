@@ -46,7 +46,7 @@ func InitMariaDatabase() *gorm.DB {
 
 	db.AutoMigrate(
 		// &model.RekapitulasiHasilKuesioner{},
-		&model.OPD{},
+		// &model.OPD{},
 		// &model.Spip{},
 		// &model.KategoriRisiko{},
 		// &model.PenyebabRisiko{},
@@ -61,6 +61,7 @@ func InitMariaDatabase() *gorm.DB {
 		// &model.HasilAnalisisRisiko{},
 		// &model.PenilaianKegiatanPengendalian{},
 		&model.PenetapanKonteksRisikoStrategisRenstraOPD{},
+		&model.DaftarRisikoPrioritas{},
 	)
 
 	wiring.SeedOpd(db)

@@ -10,10 +10,12 @@ type DaftarRisikoPrioritas struct {
 	TahunPenilaian     *time.Time `json:"tahun_penilaian"`
 	TujuanStrategis    *string    `json:"tujuan_strategis"`
 	UrusanPemerintahan *string    `json:"urusan_pemerintahan"`
-	RisikoPrioritas    *string    `json:"risiko_prioritas"`
-	KodeRisiko         *string    `json:"kode_resiko"`
-	KategoriRisiko     *string    `json:"kategori_risiko"`
-	PemilikRisiko      *string    `json:"pemilik_risiko"`
-	PenyebabRisiko     *string    `json:"penyebab_risiko"`
-	DampakRisiko       *string    `json:"dampak_risiko"`
+	// Taken from form 3a, 3b, 3c
+	HasilAnalisisRisiko *string `json:"-"`
+	RisikoPrioritas     *string `json:"risiko_prioritas"`
+	KodeRisiko          *string `json:"kode_resiko"`
+	KategoriRisiko      *string `json:"kategori_risiko"`
+	PemilikRisiko       *string `json:"pemilik_risiko"`
+	PenyebabRisiko      *string `json:"penyebab_risiko"`
+	DampakRisiko        *string `json:"dampak_risiko"`
 }

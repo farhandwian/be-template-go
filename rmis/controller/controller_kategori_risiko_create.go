@@ -20,7 +20,7 @@ func (c Controller) KategoriRisikoCreateHandler(u usecase.KategoriRisikoCreateUs
 		},
 		Body:    usecase.KategoriRisikoCreateUseCaseReq{},
 		Summary: "Create a new KategoriRisiko",
-		Tag:     "KategoriRisiko",
+		Tag:     "Kategori Risiko",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
