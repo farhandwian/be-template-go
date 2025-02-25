@@ -12,9 +12,10 @@ type PenetapanKonteksRisikoRenstraOPDGetByIDUseCaseReq struct {
 }
 
 type PenetapanKonteksRisikoRenstraOPDGetByIDUseCaseRes struct {
-	PenetapanKonteksRisikoRenstraOPD model.PenetapanKonteksRisikoStrategisRenstraOPDGet `json:"penetapan_konteks_risiko_strategis_renstra_opd"`
+	PenetapanKonteksRisikoStrategisRenstraOPD model.PenetapanKonteksRisikoStrategisRenstraOPD `json:"penetapan_konteks_risiko_strategis_renstra_opd"`
+	IKUs                                      []model.IKU                                     `json:"ikus"`
+	OPD                                       model.OPD                                       `json:"opd"`
 }
-
 type PenetapanKonteksRisikoRenstraOPDGetByIDUseCase = core.ActionHandler[PenetapanKonteksRisikoRenstraOPDGetByIDUseCaseReq, PenetapanKonteksRisikoRenstraOPDGetByIDUseCaseRes]
 
 func ImplPenetapanKonteksRisikoRenstraOPDGetByIDUseCase(getPenetapanKonteksRisikoRenstraOPDByID gateway.PenetapanKonteksRisikoStrategisRenstraOPDGetByID, getAllIKUs gateway.IKUGetAll, getOneOPD gateway.OPDGetByID) PenetapanKonteksRisikoRenstraOPDGetByIDUseCase {
@@ -37,11 +38,6 @@ func ImplPenetapanKonteksRisikoRenstraOPDGetByIDUseCase(getPenetapanKonteksRisik
 			return nil, err
 		}
 
-		var penetapanKonteksRisikoRes model.PenetapanKonteksRisikoStrategisRenstraOPDGet
-		penetapanKonteksRisikoRes.PenetapanKonteksRisikoStrategisRenstraOPD = res.PenetapanKonteksRisikoStrategisRenstraOPD
-		penetapanKonteksRisikoRes.IKUs = ikus.IKU
-		penetapanKonteksRisikoRes.OPD = opd.OPD
-
-		return &PenetapanKonteksRisikoRenstraOPDGetByIDUseCaseRes{PenetapanKonteksRisikoRenstraOPD: penetapanKonteksRisikoRes}, nil
+		return &PenetapanKonteksRisikoRenstraOPDGetByIDUseCaseRes{PenetapanKonteksRisikoStrategisRenstraOPD: res.PenetapanKonteksRisikoStrategisRenstraOPD, IKUs: ikus.IKU, OPD: opd.OPD}, nil
 	}
 }
