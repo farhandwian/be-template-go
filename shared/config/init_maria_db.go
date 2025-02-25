@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"rmis/model"
+	"rmis/wiring"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -43,24 +45,28 @@ func InitMariaDatabase() *gorm.DB {
 	}
 
 	db.AutoMigrate(
-	// &model.RekapitulasiHasilKuesioner{},
-	// &model.OPD{},
-	// &model.Spip{},
-	// &model.KategoriRisiko{},
-	// &model.PenyebabRisiko{},
-	// &model.KriterieaKemungkinan{},
-	// &model.KriteriaDampak{},
-	// &iamModel.User{},
-	// &model.IdentifikasiRisikoStrategisPemerintahDaerah{},
-	// &model.Rca{},
-	// &model.PenetapanKonteksRisikoStrategisPemda{},
-	// &model.IKU{},
-	// &model.SimpulanKondisiKelemahanLingkungan{},
-	// &model.HasilAnalisisRisiko{},
-	// &model.PenilaianKegiatanPengendalian{},
+		// &model.RekapitulasiHasilKuesioner{},
+		// &model.OPD{},
+		// &model.Spip{},
+		// &model.KategoriRisiko{},
+		// &model.PenyebabRisiko{},
+		// &model.KriterieaKemungkinan{},
+		// &model.KriteriaDampak{},
+		// &iamModel.User{},
+		// &model.IdentifikasiRisikoStrategisPemerintahDaerah{},
+		// &model.Rca{},
+		// &model.PenetapanKonteksRisikoStrategisPemda{},
+		// &model.IKU{},
+		// &model.SimpulanKondisiKelemahanLingkungan{},
+		// &model.HasilAnalisisRisiko{},
+		// &model.PenilaianKegiatanPengendalian{},
+		&model.PenetapanKonteksRisikoStrategisRenstraOPD{},
 	// &model.DaftarRisikoPrioritas{},
 	// &model.PenilaianRisiko{},
 	)
+
+	wiring.SeedOpd(db)
+
 	// Verify the connection
 	sqlDB, err := db.DB()
 	if err != nil {

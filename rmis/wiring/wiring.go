@@ -82,6 +82,14 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penilaianKegiatanPengendalianGetOneGateway := gateway.ImplPenilaianKegiatanPengendalianGetByID(mariaDB)
 	penilaianKegiatanPengendalianDeleteGateway := gateway.ImplPenilaianKegiatanPengendalianDelete(mariaDB)
 
+	// Gateway Penetapan Konteks Risiko Strategis Renstra OPD
+	penetapanKonteksRisikoStrategisRenstraOPDGetAllGateway := gateway.ImplPenetapanKonteksRisikoStrategisRenstraOPDGetAll(mariaDB)
+	penetapanKonteksRisikoStrategisRenstraOPDGetOneGateway := gateway.ImplPenetapanKonteksRisikoStrategisRenstraOPDGetByID(mariaDB)
+	penetapanKonteksRisikoStrategisRenstraOPDDeleteGateway := gateway.ImplPenetepanKonteksRisikoStrategisRenstraOPDDelete(mariaDB)
+	penetapanKonteksRisikoStrategisRenstraOPDCreateGateway := gateway.ImplPenetepanKonteksRisikoStrategisRenstraOPDSave(mariaDB)
+
+	// Gateway OPD
+	opdGetOneGateway := gateway.ImplOPDGetByID(mariaDB)
 	// Gateway Daftar Risiko Prioritas
 	daftarRisikoPrioritasCreateGateway := gateway.ImplDaftarRisikoPrioritasSave(mariaDB)
 	daftarRisikoPrioritasGetAllGateway := gateway.ImplDaftarRisikoPrioritasGetAll(mariaDB)
@@ -173,6 +181,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penilaianKegiatanPengendalianDeleteUseCase := usecase.ImplPenilaianKegiatanPengendalianDeleteUseCase(penilaianKegiatanPengendalianDeleteGateway)
 	penilaianKegiatanPengendalianUpdateUseCase := usecase.ImplPenilaianKegiatanPengendalianUpdateUseCase(penilaianKegiatanPengendalianGetOneGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)
 
+	// Usecase Penetapan Konteks Risiko Strategis Renstra OPD
+	penetapanKonteksRisikoStrategisRenstraOPDGetAllUseCase := usecase.ImplPenetapanKonteksRisikoRenstraOPDGetAllUseCase(penetapanKonteksRisikoStrategisRenstraOPDGetAllGateway, ikuGetAllGateway, opdGetOneGateway)
+	penetapanKonteksRisikoStrategisRenstraOPDGetOneUseCase := usecase.ImplPenetapanKonteksRisikoRenstraOPDGetByIDUseCase(penetapanKonteksRisikoStrategisRenstraOPDGetOneGateway, ikuGetAllGateway, opdGetOneGateway)
+	penetapanKonteksRisikoStrategisRenstraOPDDeleteUseCase := usecase.ImplPenetapanKonteksRisikoRenstraOPDDeleteUseCase(penetapanKonteksRisikoStrategisRenstraOPDDeleteGateway)
+	penetapanKonteksRisikoStrategisRenstraOPDCreateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisRenstraOPDCreateUseCase(generateIdGateway, penetapanKonteksRisikoStrategisRenstraOPDCreateGateway)
+	penetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase(penetapanKonteksRisikoStrategisRenstraOPDGetOneGateway, penetapanKonteksRisikoStrategisRenstraOPDCreateGateway)
 	// Usecase Daftar Risiko Prioritas
 	daftarRisikoPrioritasCreateUseCase := usecase.ImplDaftarRisikoPrioritasCreateUseCase(generateIdGateway, daftarRisikoPrioritasCreateGateway, hasilAnalisisRisikoGetOneGateway, identifikasiRisikoStrategisPemdaGetOneGateway)
 	daftarRisikoPrioritasGetAllUseCase := usecase.ImplDaftarRisikoPrioritasGetAllUseCase(daftarRisikoPrioritasGetAllGateway)
@@ -249,6 +263,11 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.PenilaianKegiatanPengendalianGetAllHandler(penilaianKegiatanPengendalianGetAllUseCase)).
 		Add(c.PenilaianKegiatanPengendalianGetByIDHandler(penilaianKegiatanPengendalianGetOneUseCase)).
 		Add(c.PenilaianKegiatanPengendalianUpdateHandler(penilaianKegiatanPengendalianUpdateUseCase)).
+		Add(c.PenetapanKonteksRisikoStrategisRenstraOPDCreateHandler(penetapanKonteksRisikoStrategisRenstraOPDCreateUseCase)).
+		Add(c.PenetapanKonteksRisikoStrategisRenstraOPDGetAllHandler(penetapanKonteksRisikoStrategisRenstraOPDGetAllUseCase)).
+		Add(c.PenetapanKonteksRisikoStrategisRenstraOPDGetOneHandler(penetapanKonteksRisikoStrategisRenstraOPDGetOneUseCase)).
+		Add(c.PenetapanKonteksRisikoStrategisRenstraOPDDeleteHandler(penetapanKonteksRisikoStrategisRenstraOPDDeleteUseCase)).
+		Add(c.PenetapanKonteksRisikoStrategisRenstraOPDUpdateHandler(penetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase)).
 		Add(c.DaftarRisikoPrioritasCreateHandler(daftarRisikoPrioritasCreateUseCase)).
 		Add(c.DaftarRisikoPrioritasGetAllHandler(daftarRisikoPrioritasGetAllUseCase)).
 		Add(c.DaftarRisikoPrioritasGetByIDHandler(daftarRisikoPrioritasGetOneUseCase)).
