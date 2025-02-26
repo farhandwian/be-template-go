@@ -4,7 +4,7 @@ import "time"
 
 // form 10
 
-type PencatataKejadianRisikoDanRTP struct {
+type PencatatanKejadianRisiko struct {
 	ID                      *string    `json:"id"`
 	NamaPemda               *string    `json:"nama_pemda"`
 	TahunPenilaian          *time.Time `json:"tahun_penilaian"`
