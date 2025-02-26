@@ -14,12 +14,15 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	ory "github.com/ory/client-go"
 )
 
 type Controller struct {
 	Mux  *http.ServeMux
 	JWT  helper.JWTTokenizer
 	Keto *ketoHelper.KetoGRPCClient
+	Ory  *ory.APIClient
 	// Cfg helper.AppConfig
 }
 

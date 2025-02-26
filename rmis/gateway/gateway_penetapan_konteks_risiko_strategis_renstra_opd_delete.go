@@ -23,7 +23,7 @@ func ImplPenetepanKonteksRisikoStrategisRenstraOPDDelete(db *gorm.DB) PenetepanK
 	return func(ctx context.Context, req PenetepanKonteksRisikoStrategisRenstraOPDDeleteReq) (*PenetepanKonteksRisikoStrategisRenstraOPDDeleteRes, error) {
 		query := middleware.GetDBFromContext(ctx, db)
 
-		if err := query.Delete(&model.PenetapanKonteksRisikoStrategisPemda{}, "id = ?", req.ID).Error; err != nil {
+		if err := query.Delete(&model.PenetapanKonteksRisikoStrategisRenstraOPD{}, "id = ?", req.ID).Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
 

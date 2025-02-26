@@ -107,6 +107,9 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penilaianRisikoGetOneGateway := gateway.ImplPenilaianRisikoGetByID(mariaDB)
 	penilaianRisikoDeleteGateway := gateway.ImplPenilaianRisikoDelete(mariaDB)
 
+	// Gateway Kriteria Dampak
+	kriteriaDampakGetAllGateway := gateway.ImplKriteriaDampakGetAll(mariaDB)
+	kriteriaDampakGetOneGateway := gateway.ImplKriteriaDampakGetByID(mariaDB)
 	// Gateway Pengkomunikasian Pengendalian
 	pengkomunikasianPengendalianCreateGateway := gateway.ImplPengkomunikasianPengendalianSave(mariaDB)
 	pengkomunikasianPengendalianGetAllGateway := gateway.ImplPengkomunikasianPengendalianGetAll(mariaDB)
@@ -224,6 +227,9 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penilaianRisikoDeleteUseCase := usecase.ImplPenilaianRisikoDeleteUseCase(penilaianRisikoDeleteGateway)
 	penilaianRisikoUpdateUseCase := usecase.ImplPenilaianRisikoUpdateUseCase(penilaianRisikoGetOneGateway, penilaianRisikoCreateGateway, daftarRisikoPrioritasGetOneGateway, hasilAnalisisRisikoGetOneGateway)
 
+	// Usecase Kriteria Dampak
+	kriteriaDampakGetAllUseCase := usecase.ImplKriteriaDampakGetAllUseCase(kriteriaDampakGetAllGateway)
+	kriteriaDampakGetOneUseCase := usecase.ImplKriteriaDampakGetByIDUseCase(kriteriaDampakGetOneGateway)
 	// Usecase Pengkomunikasian Pengendalian
 	pengkomunikasianPengendalianCreateUseCase := usecase.ImplPengkomunikasianPengendalianCreateUseCase(generateIdGateway, pengkomunikasianPengendalianCreateGateway, penilaianKegiatanPengendalianGetOneGateway)
 	pengkomunikasianPengendalianGetAllUseCase := usecase.ImplPengkomunikasianPengendalianGetAllUseCase(pengkomunikasianPengendalianGetAllGateway)
@@ -320,6 +326,8 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.PenilaianRisikoGetByIDHandler(penilaianRisikoGetOneUseCase)).
 		Add(c.PenilaianRisikoDeleteHandler(penilaianRisikoDeleteUseCase)).
 		Add(c.PenilaianRisikoUpdateHandler(penilaianRisikoUpdateUseCase)).
+		Add(c.KriteriaDampakGetAllHandler(kriteriaDampakGetAllUseCase)).
+		Add(c.KriteriaDampakGetByIDHandler(kriteriaDampakGetOneUseCase)).
 		Add(c.PengkomunikasianPengendalianCreateHandler(pengkomunikasianPengendalianCreateUseCase)).
 		Add(c.PengkomunikasianPengendalianGetAllHandler(pengkomunikasianPengendalianGetAllUseCase)).
 		Add(c.PengkomunikasianPengendalianGetByIDHandler(pengkomunikasianPengendalianGetOneUseCase)).
