@@ -8,24 +8,24 @@ import (
 	"shared/helper"
 )
 
-// PenyebabRisikoUpdateHandler handles the creation of a new PenyebabRisiko
-func (c Controller) PenyebabRisikoUpdateHandler(u usecase.PenyebabRisikoUpdateUseCase) helper.APIData {
+// RancanganPemantauanUpdateHandler handles the creation of a new RancanganPemantauan
+func (c Controller) RancanganPemantauanUpdateHandler(u usecase.RancanganPemantauanUpdateUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodPut,
-		Url:    "/api/penyebab-risiko/{id}",
+		Url:    "/api/rancangan-pemantauan/{id}",
 		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "penyebab-risiko",
+			Object:    "rancangan-pemantauan",
 			Relation:  "update",
 		},
-		Body:    usecase.PenyebabRisikoUpdateUseCaseReq{},
-		Summary: "Update a Penyebab Risiko",
-		Tag:     "Penyebab Risiko",
+		Body:    usecase.RancanganPemantauanUpdateUseCaseReq{},
+		Summary: "Update a Rancangan Pemantauan",
+		Tag:     "Rancangan Pemantauan",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
-		request, ok := controller.ParseJSON[usecase.PenyebabRisikoUpdateUseCaseReq](w, r)
+		request, ok := controller.ParseJSON[usecase.RancanganPemantauanUpdateUseCaseReq](w, r)
 		if !ok {
 			return
 		}

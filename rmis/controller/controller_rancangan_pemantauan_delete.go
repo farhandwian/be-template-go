@@ -8,23 +8,23 @@ import (
 	"shared/helper"
 )
 
-// PenyebabRisikoDeleteHandler handles deleting a PenyebabRisiko
-func (c Controller) PenyebabRisikoDeleteHandler(u usecase.PenyebabRisikoDeleteUseCase) helper.APIData {
+// RancanganPemantauanDeleteHandler handles deleting a RancanganPemantauan
+func (c Controller) RancanganPemantauanDeleteHandler(u usecase.RancanganPemantauanDeleteUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodDelete,
-		Url:    "/api/penyebab-risiko/{id}",
+		Url:    "/api/rancangan-pemantauan/{id}",
 		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "penyebab-risiko",
+			Object:    "rancangan-pemantauan",
 			Relation:  "delete",
 		},
-		Summary: "Delete a Penyebab Risiko",
-		Tag:     "Penyebab Risiko",
+		Summary: "Delete a Rancangan Pemantauan",
+		Tag:     "Rancangan Pemantauan",
 	}
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
-		req := usecase.PenyebabRisikoDeleteUseCaseReq{ID: id}
+		req := usecase.RancanganPemantauanDeleteUseCaseReq{ID: id}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 
