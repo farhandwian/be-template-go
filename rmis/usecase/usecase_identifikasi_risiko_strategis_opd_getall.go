@@ -15,25 +15,37 @@ type IdentifikasiRisikoStrategisOPDGetAllUseCaseReq struct {
 }
 
 type IdentifikasiRisikoStrategisOPDGetAllUseCaseRes struct {
-	IdentifikasiRisikoStrategisOPD []model.IdentifikasiRisikoStrategisOPD `json:"identifkasi_risiko_strategis_opd"`
-	Metadata                       *usecase.Metadata                      `json:"metadata"`
+	IdentifikasiRisikoStrategisOPDs []model.IdentifikasiRisikoStrategisOPDGetRes `json:"identifkasi_risiko_strategis_opds"`
+	Metadata                        *usecase.Metadata                            `json:"metadata"`
 }
 
 type IdentifikasiRisikoStrategisOPDGetAllUseCase = core.ActionHandler[IdentifikasiRisikoStrategisOPDGetAllUseCaseReq, IdentifikasiRisikoStrategisOPDGetAllUseCaseRes]
 
-func ImplIdentifikasiRisikoStrategisOPDGetAllUseCase(getAllIdentifikasiRisikoStrategisOPDs gateway.IdentifikasiRisikoStrategisOPDGetAll) IdentifikasiRisikoStrategisOPDGetAllUseCase {
+func ImplIdentifikasiRisikoStrategisOPDGetAllUseCase(getAllIdentifikasiRisikoStrategisOPDs gateway.IdentifikasiRisikoStrategisOPDGetAll, getOneOPD gateway.OPDGetByID) IdentifikasiRisikoStrategisOPDGetAllUseCase {
 	return func(ctx context.Context, req IdentifikasiRisikoStrategisOPDGetAllUseCaseReq) (*IdentifikasiRisikoStrategisOPDGetAllUseCaseRes, error) {
 
-		res, err := getAllIdentifikasiRisikoStrategisOPDs(ctx, gateway.IdentifikasiRisikoStrategisOPDGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword})
+		identifikasiRisikoStrategisOPDs, err := getAllIdentifikasiRisikoStrategisOPDs(ctx, gateway.IdentifikasiRisikoStrategisOPDGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword})
 		if err != nil {
 			return nil, err
 		}
 
-		totalItems := int(res.Count)
+		totalItems := int(identifikasiRisikoStrategisOPDs.Count)
 		totalPages := (totalItems + req.Size - 1) / (req.Size)
 
+		identifikasiRisikoStrategisOPDsRes := make([]model.IdentifikasiRisikoStrategisOPDGetRes, len(identifikasiRisikoStrategisOPDs.IdentifikasiRisikoStrategisOPD))
+
+		for i, identifikasiRisikoStrategisOPD := range identifikasiRisikoStrategisOPDs.IdentifikasiRisikoStrategisOPD {
+			opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *identifikasiRisikoStrategisOPD.OPDID})
+			if err != nil {
+				return nil, err
+			}
+			identifikasiRisikoStrategisOPDsRes[i] = model.IdentifikasiRisikoStrategisOPDGetRes{
+				IdentifikasiRisikoStrategisOPD: identifikasiRisikoStrategisOPD,
+				OPD:                            opd.OPD,
+			}
+		}
 		return &IdentifikasiRisikoStrategisOPDGetAllUseCaseRes{
-			IdentifikasiRisikoStrategisOPD: res.IdentifikasiRisikoStrategisOPD,
+			IdentifikasiRisikoStrategisOPDs: identifikasiRisikoStrategisOPDsRes,
 			Metadata: &usecase.Metadata{
 				Pagination: usecase.Pagination{
 					Page:       req.Page,

@@ -63,9 +63,11 @@ func InitMariaDatabase() *gorm.DB {
 	// &model.PenetapanKonteksRisikoOperasional{},
 	// &model.PengkomunikasianPengendalian{},
 	// &model.RancanganPemantauan{},
+	// &model.IdentifikasiRisikoStrategisOPD{},
 	)
 
 	// wiring.SeedOpd(db)
+	// wiring.SeedKategoriRisiko(db)
 
 	// Verify the connection
 	sqlDB, err := db.DB()

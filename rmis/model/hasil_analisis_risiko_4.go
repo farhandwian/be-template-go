@@ -7,7 +7,7 @@ import (
 
 type KriteriaKemungkinan string
 
-const (
+var (
 	PersentasePerTahun KriteriaKemungkinan = "Persentase (dlm 1 tahun)"
 	FrekuensiPerTahun  KriteriaKemungkinan = "Jumlah Frekuensi (dlm 1 tahun)"
 )
@@ -87,5 +87,19 @@ func (har *HasilAnalisisRisiko) SetSkalaRisiko() error {
 	// Hitung skala risiko residual risk
 	skalaRisikoResidualRisk := GetRiskScore(*har.SkorKemungkinanResidualRisk, *har.SkorDampakResidualRisk)
 	har.SkalaRisikoResidualRisk = &skalaRisikoResidualRisk
+	return nil
+}
+
+func (har *HasilAnalisisRisiko) SetKriteriaKemungkinan(tipeRisk string, tipeKemungkinan string) error {
+
+	if tipeKemungkinan == "persentase" && tipeRisk == "inherent" {
+		har.KriteriaKemungkinanInherentRisk = &PersentasePerTahun
+	} else if tipeKemungkinan == "frekuensi" && tipeRisk == "inherent" {
+		har.KriteriaKemungkinanInherentRisk = &FrekuensiPerTahun
+	} else if tipeKemungkinan == "persentase" && tipeRisk == "residual" {
+		har.KriteriaKemungkinanResidualRisk = &PersentasePerTahun
+	} else if tipeKemungkinan == "frekuensi" && tipeRisk == "residual" {
+		har.KriteriaKemungkinanResidualRisk = &FrekuensiPerTahun
+	}
 	return nil
 }
