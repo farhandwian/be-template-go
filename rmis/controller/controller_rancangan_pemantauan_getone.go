@@ -8,14 +8,14 @@ import (
 	"shared/helper"
 )
 
-// PenyebabRisikoGetByIDHandler handles getting a PenyebabRisiko by ID
-func (c Controller) PenyebabRisikoGetByIDHandler(u usecase.PenyebabRisikoGetByIDUseCase) helper.APIData {
+// RancanganPemantauanGetByIDHandler handles getting a RancanganPemantauan by ID
+func (c Controller) RancanganPemantauanGetByIDHandler(u usecase.RancanganPemantauanGetByIDUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodGet,
-		Url:    "/api/penyebab-risiko/{id}",
+		Url:    "/api/penyebab-risikos/{id}",
 		AccessKeto: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "penyebab-risiko",
+			Object:    "penyebab-risikos",
 			Relation:  "read",
 		},
 		Summary: "Get a Penyebab Risiko by ID",
@@ -24,7 +24,7 @@ func (c Controller) PenyebabRisikoGetByIDHandler(u usecase.PenyebabRisikoGetByID
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
-		req := usecase.PenyebabRisikoGetByIDUseCaseReq{ID: id}
+		req := usecase.RancanganPemantauanGetByIDUseCaseReq{ID: id}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 
