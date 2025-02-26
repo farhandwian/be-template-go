@@ -122,6 +122,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	rancanganPemantauanGetOneGateway := gateway.ImplRancanganPemantauanGetByID(mariaDB)
 	rancanganPemantauanDeleteGateway := gateway.ImplRancanganPemantauanDelete(mariaDB)
 
+	// Gateway Pencatatan Kejadian Risiko
+	pencatatanKejadianRisikoCreateGateway := gateway.ImplPencatatanKejadianRisikoSave(mariaDB)
+	pencatatanKejadianRisikoGetAllGateway := gateway.ImplPencatatanKejadianRisikoGetAll(mariaDB)
+	pencatatanKejadianRisikoGetOneGateway := gateway.ImplPencatatanKejadianRisikoGetByID(mariaDB)
+	pencatatanKejadianRisikoDeleteGateway := gateway.ImplPencatatanKejadianRisikoDelete(mariaDB)
+
 	// =================================================================
 	// Usecase
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
@@ -244,6 +250,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	rancanganPemantauanDeleteUseCase := usecase.ImplRancanganPemantauanDeleteUseCase(rancanganPemantauanDeleteGateway)
 	rancanganPemantauanUpdateUseCase := usecase.ImplRancanganPemantauanUpdateUseCase(rancanganPemantauanGetOneGateway, rancanganPemantauanCreateGateway)
 
+	// Usecase Pencatatan Kejadian Risiko
+	pencatatanKejadianRisikoCreateUseCase := usecase.ImplPencatatanKejadianRisikoCreateUseCase(generateIdGateway, pencatatanKejadianRisikoCreateGateway)
+	pencatatanKejadianRisikoGetAllUsecase := usecase.ImplPencatatanKejadianRisikoGetAllUseCase(pencatatanKejadianRisikoGetAllGateway)
+	pencatatanKejadianRisikoGetOneUseCase := usecase.ImplPencatatanKejadianRisikoGetByIDUseCase(pencatatanKejadianRisikoGetOneGateway)
+	pencatatanKejadianRisikoDeleteUseCase := usecase.ImplPencatatanKejadianRisikoDeleteUseCase(pencatatanKejadianRisikoDeleteGateway)
+	pencatatanKejadianRisikoUpdateUseCase := usecase.ImplPencatatanKejadianRisikoUpdateUseCase(pencatatanKejadianRisikoGetOneGateway, pencatatanKejadianRisikoCreateGateway)
+
 	c := controller.Controller{
 		Mux: mux,
 		JWT: jwtToken,
@@ -337,5 +350,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.RancanganPemantauanGetAllHandler(rancanganPemantauanGetAllUseCase)).
 		Add(c.RancanganPemantauanGetByIDHandler(rancanganPemantauanGetOneUseCase)).
 		Add(c.RancanganPemantauanDeleteHandler(rancanganPemantauanDeleteUseCase)).
-		Add(c.RancanganPemantauanUpdateHandler(rancanganPemantauanUpdateUseCase))
+		Add(c.RancanganPemantauanUpdateHandler(rancanganPemantauanUpdateUseCase)).
+		Add(c.PencatatanKejadianRisikoCreateHandler(pencatatanKejadianRisikoCreateUseCase)).
+		Add(c.PencatatanKejadianRisikoGetAllHandler(pencatatanKejadianRisikoGetAllUsecase)).
+		Add(c.PencatatanKejadianRisikoGetByIDHandler(pencatatanKejadianRisikoGetOneUseCase)).
+		Add(c.PencatatanKejadianRisikoDeleteHandler(pencatatanKejadianRisikoDeleteUseCase)).
+		Add(c.PencatatanKejadianRisikoUpdateHandler(pencatatanKejadianRisikoUpdateUseCase))
 }

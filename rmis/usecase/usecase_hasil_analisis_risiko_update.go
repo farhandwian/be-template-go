@@ -3,25 +3,26 @@ package usecase
 import (
 	"context"
 	"rmis/gateway"
+	"rmis/model"
 	"shared/core"
 )
 
 type HasilAnalisisRisikoUpdateUseCaseReq struct {
-	ID                                 string `json:"id"`
-	IdentifikasiRisikoStrategisPemdaID string `json:"identifikasi_risiko_strategis_pemda_id"`
-	KriteriaKemungkinanInherentRisk    string `json:"kriteria_kemungkinan_inherent_risk"`
-	SkorKemungkinanInherentRisk        int    `json:"skor_kemungkinan_inherent_risk"`
-	KriteriaDampakInherentRisk         string `json:"kriteria_dampak_inherent_risk"`
-	SkorDampakInherentRisk             int    `json:"skor_dampak_inherent_risk"`
-	StatusAda                          string `json:"status_ada"`
-	UraianControl                      string `json:"uraian_control"`
-	KlarifikasiSPIP                    string `json:"klarifikasi_spip"`
-	MemadaiControl                     string `json:"memadai_control"` // enum memadai (can also be defined as a custom type)
-	KriteriaKemungkinanResidualRisk    string `json:"kriteria_kemungkinan_residual_risk"`
-	SkorKemungkinanResidualRisk        int    `json:"skor_kemungkinan_residual_risk"`
-	KriteriaDampakResidualRisk         string `json:"kriteria_dampak_residual_risk"`
-	SkorDampakResidualRisk             int    `json:"skor_dampak_residual_risk"`
-	SkalaRisikoResidualRisk            int    `json:"skala_risiko_residual_risk"`
+	ID                                 string                    `json:"id"`
+	IdentifikasiRisikoStrategisPemdaID string                    `json:"identifikasi_risiko_strategis_pemda_id"`
+	KriteriaKemungkinanInherentRisk    model.KriteriaKemungkinan `json:"kriteria_kemungkinan_inherent_risk"`
+	SkorKemungkinanInherentRisk        int                       `json:"skor_kemungkinan_inherent_risk"`
+	KriteriaDampakInherentRisk         string                    `json:"kriteria_dampak_inherent_risk"`
+	SkorDampakInherentRisk             int                       `json:"skor_dampak_inherent_risk"`
+	StatusAda                          string                    `json:"status_ada"`
+	UraianControl                      string                    `json:"uraian_control"`
+	KlarifikasiSPIP                    string                    `json:"klarifikasi_spip"`
+	MemadaiControl                     string                    `json:"memadai_control"` // enum memadai (can also be defined as a custom type)
+	KriteriaKemungkinanResidualRisk    model.KriteriaKemungkinan `json:"kriteria_kemungkinan_residual_risk"`
+	SkorKemungkinanResidualRisk        int                       `json:"skor_kemungkinan_residual_risk"`
+	KriteriaDampakResidualRisk         string                    `json:"kriteria_dampak_residual_risk"`
+	SkorDampakResidualRisk             int                       `json:"skor_dampak_residual_risk"`
+	SkalaRisikoResidualRisk            int                       `json:"skala_risiko_residual_risk"`
 }
 
 type HasilAnalisisRisikoUpdateUseCaseRes struct{}

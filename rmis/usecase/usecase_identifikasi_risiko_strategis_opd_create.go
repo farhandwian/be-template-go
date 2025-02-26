@@ -66,15 +66,15 @@ func ImplIdentifikasiRisikoStrategisOPDCreateUseCase(
 			TahunPenilaian:     &tahunPenilaian,
 			Periode:            &req.Periode,
 			UrusanPemerintahan: &req.UrusanPemerintahan,
-			TujuanStrategis:    &req.TujuanStrategis,
-			IndikatorKinerja:   &req.IndikatorKinerja,
-			KategoriRisikoID:   &req.KategoriRisikoID,
-			KategoriRisikoName: kategoriRisikoName,
-			UraianRisiko:       &req.UraianRisiko,
-			PemilikRisiko:      &req.PemilikRisiko,
-			Controllable:       &req.Controllable,
-			UraianDampak:       &req.UraianDampak,
-			PihakDampak:        &req.PihakDampak,
+
+			IndikatorKinerja: &req.IndikatorKinerja,
+			KategoriRisikoID: &req.KategoriRisikoID,
+
+			UraianRisiko:  &req.UraianRisiko,
+			PemilikRisiko: &req.PemilikRisiko,
+			Controllable:  &req.Controllable,
+			UraianDampak:  &req.UraianDampak,
+			PihakDampak:   &req.PihakDampak,
 		}
 
 		obj.GenerateKodeRisiko(*kategoriRisikoRes.KategoriRisiko.Kode)
