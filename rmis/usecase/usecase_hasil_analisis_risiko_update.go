@@ -40,7 +40,6 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 		}
 
 		res.HasilAnalisisRisiko.IdentifikasiRisikoStrategisPemerintahDaerahID = &req.IdentifikasiRisikoStrategisPemdaID
-		res.HasilAnalisisRisiko.KriteriaKemungkinanInherentRisk = &req.KriteriaKemungkinanInherentRisk
 		res.HasilAnalisisRisiko.SkorKemungkinanInherentRisk = &req.SkorKemungkinanInherentRisk
 		res.HasilAnalisisRisiko.KriteriaDampakInherentRisk = &req.KriteriaDampakInherentRisk
 		res.HasilAnalisisRisiko.SkorDampakInherentRisk = &req.SkorDampakInherentRisk
@@ -48,11 +47,13 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 		res.HasilAnalisisRisiko.UraianControl = &req.UraianControl
 		res.HasilAnalisisRisiko.KlarifikasiSPIP = &req.KlarifikasiSPIP
 		res.HasilAnalisisRisiko.MemadaiControl = &req.MemadaiControl
-		res.HasilAnalisisRisiko.KriteriaKemungkinanResidualRisk = &req.KriteriaKemungkinanResidualRisk
 		res.HasilAnalisisRisiko.SkorKemungkinanResidualRisk = &req.SkorKemungkinanResidualRisk
 		res.HasilAnalisisRisiko.KriteriaDampakResidualRisk = &req.KriteriaDampakResidualRisk
 		res.HasilAnalisisRisiko.SkorDampakResidualRisk = &req.SkorDampakResidualRisk
 		res.HasilAnalisisRisiko.SkalaRisikoResidualRisk = &req.SkalaRisikoResidualRisk
+
+		res.HasilAnalisisRisiko.SetKriteriaKemungkinan("inherent", req.KriteriaKemungkinanInherentRisk)
+		res.HasilAnalisisRisiko.SetKriteriaKemungkinan("residual", req.KriteriaKemungkinanResidualRisk)
 
 		res.HasilAnalisisRisiko.SetSkalaRisiko()
 		if _, err := updateHasilAnalisisRisiko(ctx, gateway.HasilAnalisisRisikoSaveReq{HasilAnalisisRisiko: res.HasilAnalisisRisiko}); err != nil {

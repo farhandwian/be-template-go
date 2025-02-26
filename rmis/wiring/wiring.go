@@ -53,6 +53,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	identifikasiRisikoStrategisPemdaDeleteGateway := gateway.ImplIdentifikasiRisikoStrategisPemdaDelete(mariaDB)
 	identifikasiRisikoStrategisPemdaCreateGateway := gateway.ImplIdentifikasiRisikoStrategisPemdaSave(mariaDB)
 
+	// Gateway Identifikasi Risiko Strategis OPD
+	identifikasiRisikoStrategisOPDGetAllGateway := gateway.ImplIdentifikasiRisikoStrategisOPDGetAll(mariaDB)
+	identifikasiRisikoStrategisOPDGetOneGateway := gateway.ImplIdentifikasiRisikoStrategisOPDGetByID(mariaDB)
+	identifikasiRisikoStrategisOPDDeleteGateway := gateway.ImplIdentifikasiRisikoStrategisOPDDelete(mariaDB)
+	identifikasiRisikoStrategisOPDCreateGateway := gateway.ImplIdentifikasiRisikoStrategisOPDSave(mariaDB)
+
 	// Gateway Simpulan Kondisi Kelemahan Lingkungan
 	simpulanKondisiKelemahanLingkunganGetAllGateway := gateway.ImplSimpulanKondisiKelemahanLingkunganGetAll(mariaDB)
 	simpulanKondisiKelemahanLingkunganGetOneGateway := gateway.ImplSimpulanKondisiKelemahanLingkunganGetByID(mariaDB)
@@ -160,6 +166,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	identifikasiRisikoStrategisPemdaDeleteUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaDeleteUseCase(identifikasiRisikoStrategisPemdaDeleteGateway)
 	identifikasiRisikoStrategisPemdaCreateUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaCreateUseCase(generateIdGateway, identifikasiRisikoStrategisPemdaCreateGateway, kategoriRisikoGetOneGateway)
 	identifikasiRisikoStrategisPemdaUpdateUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(identifikasiRisikoStrategisPemdaGetOneGateway, identifikasiRisikoStrategisPemdaCreateGateway, kategoriRisikoGetOneGateway, rcaGetOneGateway)
+
+	// Usecase Identifikasi Risiko Strategis OPD
+	identifikasiRisikoStrategisOPDGetAllUseCase := usecase.ImplIdentifikasiRisikoStrategisOPDGetAllUseCase(identifikasiRisikoStrategisOPDGetAllGateway, opdGetOneGateway)
+	identifikasiRisikoStrategisOPDGetOneUseCase := usecase.ImplIdentifikasiRisikoStrategisOPDGetByIDUseCase(identifikasiRisikoStrategisOPDGetOneGateway, opdGetOneGateway)
+	identifikasiRisikoStrategisOPDDeleteUseCase := usecase.ImplIdentifikasiRisikoStrategisOPDDeleteUseCase(identifikasiRisikoStrategisOPDDeleteGateway)
+	identifikasiRisikoStrategisOPDCreateUseCase := usecase.ImplIdentifikasiRisikoStrategisOPDCreateUseCase(generateIdGateway, identifikasiRisikoStrategisOPDCreateGateway, kategoriRisikoGetOneGateway, opdGetOneGateway)
+	identifikasiRisikoStrategisOPDUpdateUseCase := usecase.ImplIdentifikasiRisikoStrategisOPDUpdateUseCase(identifikasiRisikoStrategisOPDGetOneGateway, identifikasiRisikoStrategisOPDCreateGateway, kategoriRisikoGetOneGateway, rcaGetOneGateway, opdGetOneGateway)
 
 	// Usecase Simpulan Kondisi Kelemahan Lingkungan
 	simpulanKondisiKelemahanLingkunganGetAllUseCase := usecase.ImplSimpulanKondisiKelemahanLingkunganGetAllUseCase(simpulanKondisiKelemahanLingkunganGetAllGateway)
@@ -319,5 +332,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.PengkomunikasianPengendalianGetAllHandler(pengkomunikasianPengendalianGetAllUseCase)).
 		Add(c.PengkomunikasianPengendalianGetByIDHandler(pengkomunikasianPengendalianGetOneUseCase)).
 		Add(c.PengkomunikasianPengendalianDeleteHandler(pengkomunikasianPengendalianDeleteUseCase)).
-		Add(c.PengkomunikasianPengendalianUpdateHandler(pengkomunikasianPengendalianUpdateUseCase))
+		Add(c.PengkomunikasianPengendalianUpdateHandler(pengkomunikasianPengendalianUpdateUseCase)).
+		Add(c.IdentifikasiRisikoStrategisOPDCreateHandler(identifikasiRisikoStrategisOPDCreateUseCase)).
+		Add(c.IdentifikasiRisikoStrategisOPDGetAllHandler(identifikasiRisikoStrategisOPDGetAllUseCase)).
+		Add(c.IdentifikasiRisikoStrategisOPDGetByIDHandler(identifikasiRisikoStrategisOPDGetOneUseCase)).
+		Add(c.IdentifikasiRisikoStrategisOPDDeleteHandler(identifikasiRisikoStrategisOPDDeleteUseCase)).
+		Add(c.IdentifikasiRisikoStrategisOPDUpdateHandler(identifikasiRisikoStrategisOPDUpdateUseCase))
 }

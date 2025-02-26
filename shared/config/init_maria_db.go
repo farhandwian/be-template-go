@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"rmis/model"
+	"rmis/wiring"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -47,7 +48,7 @@ func InitMariaDatabase() *gorm.DB {
 		// &model.RekapitulasiHasilKuesioner{},
 		// &model.OPD{},
 		// &model.Spip{},
-		// &model.KategoriRisiko{},
+		&model.KategoriRisiko{},
 		// &model.PenyebabRisiko{},
 		// &model.KriterieaKemungkinan{},
 		// &model.KriteriaDampak{},
@@ -60,12 +61,14 @@ func InitMariaDatabase() *gorm.DB {
 		// &model.HasilAnalisisRisiko{},
 		// &model.PenilaianKegiatanPengendalian{},
 		// &model.PenetapanKonteksRisikoStrategisRenstraOPD{},
-		&model.DaftarRisikoPrioritas{},
-		&model.PenetapanKonteksRisikoOperasional{},
-	// &model.PengkomunikasianPengendalian{},
+		// &model.DaftarRisikoPrioritas{},
+		// &model.PenetapanKonteksRisikoOperasional{},
+		// &model.PengkomunikasianPengendalian{},
+		&model.IdentifikasiRisikoStrategisOPD{},
 	)
 
 	// wiring.SeedOpd(db)
+	wiring.SeedKategoriRisiko(db)
 
 	// Verify the connection
 	sqlDB, err := db.DB()
