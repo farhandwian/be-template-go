@@ -29,6 +29,11 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 	userGetOneByID := gateway.ImplUserGetOneByIDWithDatabase(db)           // USE DATABASE IMPLEMENTATION
 	userSave := gateway.ImplUserSaveWithDatabse(db)
 	createActivityMonitoringGateway := sharedGateway.ImplCreateActivityMonitoringGateway(db)
+	userGetAllKratos := gateway.ImplUserGetAllIdentitiesKratos(ory)
+	userCreateKratos := gateway.ImplUserCreateKratos(ory)
+	userUpdateKratos := gateway.ImplUserUpdateKratos(ory)
+	userDeleteKratos := gateway.ImplUserDeleteKratos(ory)
+
 	// USE DATABASE IMPLEMENTATION
 
 	// gateway middleware
@@ -68,6 +73,10 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 	userGetAllUsecase := usecase.ImplUserGetAll(userGetAllToUseCase)
 	userGetOneUsecase := usecase.ImplUserGetOne(userGetOneByIDToUseCase)
 	logoutUsecase := usecase.ImplLogout(userGetOneByIDToUseCase, userSaveToUseCase)
+	userGetAllKratosUsecase := usecase.ImplUserGetAllIdentitiesKratos(userGetAllKratos)
+	userCreateKratosUsecase := usecase.ImplUserCreateKratos(userCreateKratos)
+	userUpdateKratosUsecase := usecase.ImplUserUpdateKratos(userUpdateKratos)
+	userDeleteKratosUsecase := usecase.ImplUserDeleteKratos(userDeleteKratos)
 
 	// usecase middlewares
 	accessResetToHandler := middleware.Logging(accessReset, 0)                                                           //
@@ -120,6 +129,9 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 		Add(c.PasswordChangeRequestHandler(passwordChangeRequestToHandler)).
 		Add(c.PasswordChangeSubmitHandler(passwordChangeSubmitToHandler)).
 		Add(c.PasswordResetRequestHandler(passwordResetRequestToHandler)).
-		Add(c.PasswordResetSubmitHandler(passwordResetSubmitToHandler))
-
+		Add(c.PasswordResetSubmitHandler(passwordResetSubmitToHandler)).
+		Add(c.UserGetAllIdentitiesKratosHandler(userGetAllKratosUsecase)).
+		Add(c.UserCreateKratosHandler(userCreateKratosUsecase)).
+		Add(c.UserUpdateKratosHandler(userUpdateKratosUsecase)).
+		Add(c.UserDeleteKratosHandler(userDeleteKratosUsecase))
 }

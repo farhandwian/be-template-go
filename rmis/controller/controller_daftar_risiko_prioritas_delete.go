@@ -1,5 +1,3 @@
-// File: controller/controller_Asset.go
-
 package controller
 
 import (
