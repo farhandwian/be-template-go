@@ -52,6 +52,7 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 	assignAccessKeto := usecase.ImplAssignAccess(keto)
 	deleteAccessKeto := usecase.ImplDeleteAccessKeto(keto)
 	getAccessRoleKeto := usecase.ImplGetAccessRoleKeto(keto)
+	batchAssignAccess := usecase.ImplBatchAssignAccess(keto)
 	emailActivationRequest := usecase.ImplEmailActivationRequest(userGetOneByIDToUseCase, generateJWTToUseCase, sendEmailToUseCase)
 	emailActivationSubmit := usecase.ImplEmailActivationSubmit(validateJWTToUseCase, userGetOneByIDToUseCase, userSaveToUseCase, passwordEncryptToUseCase)
 	loginOTPSubmit := usecase.ImplLoginOTPSubmit(passwordValidateToUseCase, userGetAllToUseCase, generateJWTToUseCase, generateIdToUseCase, userSaveToUseCase, createActivityMonitoringGateway)
@@ -107,6 +108,7 @@ func SetupDependencyWithDatabase(apiPrinter *helper.ApiPrinter, mux *http.ServeM
 		Add(c.UserGetAccessHandler(userGetAccessToHandler)).
 		Add(c.AccessResetHandler(accessResetToHandler)).
 		Add(c.RegisterUserHandler(registerUserToHandler)).
+		Add(c.BatchAssignAccessHandler(batchAssignAccess)).
 		Add(c.EmailActivationRequestHandler(emailActivationRequestToHandler)).
 		Add(c.EmailActivationSubmitHandler(emailActivationSubmitToHandler)).
 		Add(c.LoginHandler(loginToHandler)).

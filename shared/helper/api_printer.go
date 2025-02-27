@@ -274,6 +274,14 @@ func (r ApiPrinter) generateOpenAPISchema(baseURL string) OpenAPISchema {
 			}
 		}
 
+		if endpoint.AccessKeto.Namespace != "" && endpoint.AccessKeto.Object != "" && endpoint.AccessKeto.Relation != "" {
+			operation["x-access-keto"] = map[string]string{
+				"namespace": endpoint.AccessKeto.Namespace,
+				"object":    endpoint.AccessKeto.Object,
+				"relation":  endpoint.AccessKeto.Relation,
+			}
+		}
+
 		pathItem[method] = operation
 	}
 
