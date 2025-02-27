@@ -61,6 +61,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	identifikasiRisikoStrategisOPDDeleteGateway := gateway.ImplIdentifikasiRisikoStrategisOPDDelete(mariaDB)
 	identifikasiRisikoStrategisOPDCreateGateway := gateway.ImplIdentifikasiRisikoStrategisOPDSave(mariaDB)
 
+	// Gateway Identifikasi Risiko Operasional OPD
+	identifikasiRisikoOperasionalOPDGetAllGateway := gateway.ImplIdentifikasiRisikoOperasionalOPDGetAll(mariaDB)
+	identifikasiRisikoOperasionalOPDGetOneGateway := gateway.ImplIdentifikasiRisikoOperasionalOPDGetByID(mariaDB)
+	identifikasiRisikoOperasionalOPDDeleteGateway := gateway.ImplIdentifikasiRisikoOperasionalOPDDelete(mariaDB)
+	identifikasiRisikoOperasionalOPDCreateGateway := gateway.ImplIdentifikasiRisikoOperasionalOPDSave(mariaDB)
+
 	// Gateway Simpulan Kondisi Kelemahan Lingkungan
 	simpulanKondisiKelemahanLingkunganGetAllGateway := gateway.ImplSimpulanKondisiKelemahanLingkunganGetAll(mariaDB)
 	simpulanKondisiKelemahanLingkunganGetOneGateway := gateway.ImplSimpulanKondisiKelemahanLingkunganGetByID(mariaDB)
@@ -194,6 +200,13 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	identifikasiRisikoStrategisOPDDeleteUseCase := usecase.ImplIdentifikasiRisikoStrategisOPDDeleteUseCase(identifikasiRisikoStrategisOPDDeleteGateway)
 	identifikasiRisikoStrategisOPDCreateUseCase := usecase.ImplIdentifikasiRisikoStrategisOPDCreateUseCase(generateIdGateway, identifikasiRisikoStrategisOPDCreateGateway, kategoriRisikoGetOneGateway, opdGetOneGateway)
 	identifikasiRisikoStrategisOPDUpdateUseCase := usecase.ImplIdentifikasiRisikoStrategisOPDUpdateUseCase(identifikasiRisikoStrategisOPDGetOneGateway, identifikasiRisikoStrategisOPDCreateGateway, kategoriRisikoGetOneGateway, rcaGetOneGateway, opdGetOneGateway)
+
+	// Usecase Identifikasi Risiko Operasional OPD
+	identifikasiRisikoOperasionalOPDGetAllUseCase := usecase.ImplIdentifikasiRisikoOperasionalOPDGetAllUseCase(identifikasiRisikoOperasionalOPDGetAllGateway, opdGetOneGateway)
+	identifikasiRisikoOperasionalOPDGetOneUseCase := usecase.ImplIdentifikasiRisikoOperasionalOPDGetByIDUseCase(identifikasiRisikoOperasionalOPDGetOneGateway, opdGetOneGateway)
+	identifikasiRisikoOperasionalOPDDeleteUseCase := usecase.ImplIdentifikasiRisikoOperasionalOPDDeleteUseCase(identifikasiRisikoOperasionalOPDDeleteGateway)
+	identifikasiRisikoOperasionalOPDCreateUseCase := usecase.ImplIdentifikasiRisikoOperasionalOPDCreateUseCase(generateIdGateway, identifikasiRisikoOperasionalOPDCreateGateway, kategoriRisikoGetOneGateway, opdGetOneGateway)
+	identifikasiRisikoOperasionalOPDUpdateUseCase := usecase.ImplIdentifikasiRisikoOperasionalOPDUpdateUseCase(identifikasiRisikoOperasionalOPDGetOneGateway, identifikasiRisikoOperasionalOPDCreateGateway, kategoriRisikoGetOneGateway, rcaGetOneGateway, opdGetOneGateway)
 
 	// Usecase Simpulan Kondisi Kelemahan Lingkungan
 	simpulanKondisiKelemahanLingkunganGetAllUseCase := usecase.ImplSimpulanKondisiKelemahanLingkunganGetAllUseCase(simpulanKondisiKelemahanLingkunganGetAllGateway)
@@ -384,6 +397,11 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.RancanganPemantauanGetByIDHandler(rancanganPemantauanGetOneUseCase)).
 		Add(c.RancanganPemantauanDeleteHandler(rancanganPemantauanDeleteUseCase)).
 		Add(c.RancanganPemantauanUpdateHandler(rancanganPemantauanUpdateUseCase)).
+		Add(c.IdentifikasiRisikoOperasionalOPDCreateHandler(identifikasiRisikoOperasionalOPDCreateUseCase)).
+		Add(c.IdentifikasiRisikoOperasionalOPDGetAllHandler(identifikasiRisikoOperasionalOPDGetAllUseCase)).
+		Add(c.IdentifikasiRisikoOperasionalOPDGetByIDHandler(identifikasiRisikoOperasionalOPDGetOneUseCase)).
+		Add(c.IdentifikasiRisikoOperasionalOPDDeleteHandler(identifikasiRisikoOperasionalOPDDeleteUseCase)).
+		Add(c.IdentifikasiRisikoOperasionalOPDUpdateHandler(identifikasiRisikoOperasionalOPDUpdateUseCase)).
 		Add(c.PencatatanKejadianRisikoCreateHandler(pencatatanKejadianRisikoCreateUseCase)).
 		Add(c.PencatatanKejadianRisikoGetAllHandler(pencatatanKejadianRisikoGetAllUsecase)).
 		Add(c.PencatatanKejadianRisikoGetByIDHandler(pencatatanKejadianRisikoGetOneUseCase)).
