@@ -31,6 +31,7 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.
+				Joins("LEFT JOIN kategori_risiko ON kategori_risiko_id = identifikasi_risiko_strategis_pemerintah_daerah.kategori_risiko_id").
 				Where("nama LIKE ?", keyword).
 				Or("kode LIKE ?", keyword)
 		}

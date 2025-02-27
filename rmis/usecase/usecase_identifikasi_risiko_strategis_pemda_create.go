@@ -55,11 +55,6 @@ func ImplIdentifikasiRisikoStrategisPemdaCreateUseCase(
 			return nil, fmt.Errorf("failed to get KategoriRisikoName: %v", err)
 		}
 
-		var kategoriRisikoName *string
-		if kategoriRisikoRes.KategoriRisiko.Nama != nil {
-			kategoriRisikoName = kategoriRisikoRes.KategoriRisiko.Nama
-		}
-
 		obj := model.IdentifikasiRisikoStrategisPemerintahDaerah{
 			ID:                 &genObj.RandomId,
 			NamaPemda:          &req.NamaPemda,
@@ -69,7 +64,6 @@ func ImplIdentifikasiRisikoStrategisPemdaCreateUseCase(
 			TujuanStrategis:    &req.TujuanStrategis,
 			IndikatorKinerja:   &req.IndikatorKinerja,
 			KategoriRisikoID:   &req.KategoriRisikoID,
-			KategoriRisikoName: kategoriRisikoName,
 			UraianRisiko:       &req.UraianRisiko,
 			PemilikRisiko:      &req.PemilikRisiko,
 			Controllable:       &req.Controllable,
