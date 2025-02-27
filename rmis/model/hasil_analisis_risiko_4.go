@@ -20,6 +20,7 @@ type HasilAnalisisRisiko struct {
 	// data diambil dari form 3a, 3b, dan 3c
 	// ===========
 	IdentifikasiRisikoStrategisPemerintahDaerahID *string    `json:"-"`
+	NomorUraian                                   *int       `json:"nomor_uraian"`
 	TahunPenilaian                                *time.Time `json:"tahun_penilaian"`
 	TujuanStrategis                               *string    `json:"tujuan_strategis"`
 	UrusanPemerintahan                            *string    `json:"urusan_pemerintahan"`

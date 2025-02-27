@@ -35,6 +35,7 @@ func ImplHasilAnalisisRisikoCreateUseCase(
 	generateId gateway.GenerateId,
 	createHasilAnalisisRisiko gateway.HasilAnalisisRisikoSave,
 	IdentifikasiRisikoStrategisPemdaByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
+	IndeksPeringkatPrioritasCreate gateway.IndeksPeringkatPrioritasSave,
 ) HasilAnalisisRisikoCreateUseCase {
 	return func(ctx context.Context, req HasilAnalisisRisikoCreateUseCaseReq) (*HasilAnalisisRisikoCreateUseCaseRes, error) {
 
@@ -51,25 +52,43 @@ func ImplHasilAnalisisRisikoCreateUseCase(
 		obj := model.HasilAnalisisRisiko{
 			ID: &genObj.RandomId,
 			IdentifikasiRisikoStrategisPemerintahDaerahID: &req.IdentifikasiRisikoStrategisPemdaID,
-			RisikoTeridentifikasi:                         identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.UraianRisiko,
-			KodeRisiko:                                    identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KodeRisiko,
-			KategoriRisiko:                                identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KategoriRisikoName,
-			SkorKemungkinanInherentRisk:                   &req.SkorKemungkinanInherentRisk,
-			KriteriaDampakInherentRisk:                    &req.KriteriaDampakInherentRisk,
-			SkorDampakInherentRisk:                        &req.SkorDampakInherentRisk,
-			StatusAda:                                     &req.StatusAda,
-			UraianControl:                                 &req.UraianControl,
-			KlarifikasiSPIP:                               &req.KlarifikasiSPIP,
-			MemadaiControl:                                &req.MemadaiControl,
-			SkorKemungkinanResidualRisk:                   &req.SkorKemungkinanResidualRisk,
-			KriteriaDampakResidualRisk:                    &req.KriteriaDampakResidualRisk,
-			SkorDampakResidualRisk:                        &req.SkorDampakResidualRisk,
+			NomorUraian:                 identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.NomorUraian,
+			RisikoTeridentifikasi:       identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.UraianRisiko,
+			KodeRisiko:                  identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KodeRisiko,
+			KategoriRisiko:              identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KategoriRisikoName,
+			SkorKemungkinanInherentRisk: &req.SkorKemungkinanInherentRisk,
+			KriteriaDampakInherentRisk:  &req.KriteriaDampakInherentRisk,
+			SkorDampakInherentRisk:      &req.SkorDampakInherentRisk,
+			StatusAda:                   &req.StatusAda,
+			UraianControl:               &req.UraianControl,
+			KlarifikasiSPIP:             &req.KlarifikasiSPIP,
+			MemadaiControl:              &req.MemadaiControl,
+			SkorKemungkinanResidualRisk: &req.SkorKemungkinanResidualRisk,
+			KriteriaDampakResidualRisk:  &req.KriteriaDampakResidualRisk,
+			SkorDampakResidualRisk:      &req.SkorDampakResidualRisk,
 		}
 		obj.SetSkalaRisiko()
 		obj.SetKriteriaKemungkinan("inherent", req.KriteriaKemungkinanInherentRisk)
 		obj.SetKriteriaKemungkinan("residual", req.KriteriaKemungkinanResidualRisk)
 
 		if _, err = createHasilAnalisisRisiko(ctx, gateway.HasilAnalisisRisikoSaveReq{HasilAnalisisRisiko: obj}); err != nil {
+			return nil, err
+		}
+
+		genObjIndeksPeringkat, err := generateId(ctx, gateway.GenerateIdReq{})
+		if err != nil {
+			return nil, err
+		}
+
+		objIndeksPeringkat := model.IndeksPeringkatPrioritas{
+			ID:                    &genObjIndeksPeringkat.RandomId,
+			HasilAnalisisRisikoID: obj.ID,
+		}
+
+		objIndeksPeringkat.SetToleransiRisiko(*obj.KategoriRisiko)
+		objIndeksPeringkat.SetMitigasi(*obj.SkalaRisikoResidualRisk)
+		objIndeksPeringkat.SetIntermediateRank(*obj.SkalaRisikoResidualRisk, *obj.NomorUraian)
+		if _, err = IndeksPeringkatPrioritasCreate(ctx, gateway.IndeksPeringkatPrioritasSaveReq{IndeksPeringkatPrioritas: objIndeksPeringkat}); err != nil {
 			return nil, err
 		}
 

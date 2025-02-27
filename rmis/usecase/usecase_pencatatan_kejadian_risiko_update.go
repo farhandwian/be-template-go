@@ -7,7 +7,7 @@ import (
 )
 
 type PencatatanKejadianRisikoUpdateUseCaseReq struct {
-	ID                      string `json:"id"`
+	ID                      string `json:"-"`
 	RisikoTeridentifikasi   string `json:"risiko_teridentifikasi"`
 	KodeRisiko              string `json:"kode_risiko"`
 	TanggalTerjadiRisiko    string `json:"tanggal_terjadi_risiko"`
@@ -47,7 +47,7 @@ func ImplPencatatanKejadianRisikoUpdateUseCase(
 		pencatatanKejadianRisiko.RealisasiPelaksanaanRTP = &req.RealisasiPelaksanaanRTP
 		pencatatanKejadianRisiko.KeteranganRTP = &req.KeteranganRTP
 
-		if _, err := updatePencatatanKejadianRisiko(ctx, gateway.PencatatanKejadianRisikoSaveReq{PencatatanKejadianRisiko: res.PencatatanKejadianRisiko}); err != nil {
+		if _, err := updatePencatatanKejadianRisiko(ctx, gateway.PencatatanKejadianRisikoSaveReq{PencatatanKejadianRisiko: pencatatanKejadianRisiko}); err != nil {
 			return nil, err
 		}
 

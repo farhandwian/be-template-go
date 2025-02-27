@@ -8,7 +8,7 @@ import (
 )
 
 type IdentifikasiRisikoStrategisOPDUpdateUseCaseReq struct {
-	ID                 string `json:"id"`
+	ID                 string `json:"-"`
 	NamaPemda          string `json:"nama_pemda"`
 	OPDID              string `json:"opd_id"`
 	TahunPenilaian     string `json:"tahun_penilaian"`

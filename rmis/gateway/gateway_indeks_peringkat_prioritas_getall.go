@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type PencatatanKejadianRisikoGetAllReq struct {
+type IndeksPeringkatPrioritasGetAllReq struct {
 	Keyword   string
 	Page      int
 	Size      int
@@ -19,28 +19,28 @@ type PencatatanKejadianRisikoGetAllReq struct {
 	SortOrder string
 }
 
-type PencatatanKejadianRisikoGetAllRes struct {
-	PencatatanKejadianRisiko []model.PencatatanKejadianRisiko `json:"pencatatan_kejadian_risiko"`
+type IndeksPeringkatPrioritasGetAllRes struct {
+	IndeksPeringkatPrioritas []model.IndeksPeringkatPrioritas `json:"indeks_peringkat_prioritas"`
 	Count                    int64                            `json:"count"`
 }
 
-type PencatatanKejadianRisikoGetAll = core.ActionHandler[PencatatanKejadianRisikoGetAllReq, PencatatanKejadianRisikoGetAllRes]
+type IndeksPeringkatPrioritasGetAll = core.ActionHandler[IndeksPeringkatPrioritasGetAllReq, IndeksPeringkatPrioritasGetAllRes]
 
-func ImplPencatatanKejadianRisikoGetAll(db *gorm.DB) PencatatanKejadianRisikoGetAll {
-	return func(ctx context.Context, req PencatatanKejadianRisikoGetAllReq) (*PencatatanKejadianRisikoGetAllRes, error) {
+func ImplIndeksPeringkatPrioritasGetAll(db *gorm.DB) IndeksPeringkatPrioritasGetAll {
+	return func(ctx context.Context, req IndeksPeringkatPrioritasGetAllReq) (*IndeksPeringkatPrioritasGetAllRes, error) {
 
 		query := middleware.GetDBFromContext(ctx, db)
 
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.
-				Where("risiko_teridentifikasi LIKE ?", keyword)
+				Where("intermediate_rank LIKE ?", keyword)
 		}
 
 		var count int64
 
 		if err := query.
-			Model(&model.PencatatanKejadianRisiko{}).
+			Model(&model.IndeksPeringkatPrioritas{}).
 			Count(&count).
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
@@ -48,10 +48,10 @@ func ImplPencatatanKejadianRisikoGetAll(db *gorm.DB) PencatatanKejadianRisikoGet
 
 		// Validate sortby
 		allowedSortBy := map[string]bool{
-			"risiko_teridentifikasi": true,
+			"intermediate_rank": true,
 		}
 
-		sortBy, sortOrder, err := helper.ValidateSortParams(allowedSortBy, req.SortBy, req.SortOrder, "risiko_teridentifikasi")
+		sortBy, sortOrder, err := helper.ValidateSortParams(allowedSortBy, req.SortBy, req.SortOrder, "intermediate_rank")
 		if err != nil {
 			return nil, err
 		}
@@ -61,7 +61,7 @@ func ImplPencatatanKejadianRisikoGetAll(db *gorm.DB) PencatatanKejadianRisikoGet
 
 		page, size := ValidatePageSize(req.Page, req.Size)
 
-		var objs []model.PencatatanKejadianRisiko
+		var objs []model.IndeksPeringkatPrioritas
 
 		if err := query.
 			Offset((page - 1) * size).
@@ -72,8 +72,8 @@ func ImplPencatatanKejadianRisikoGetAll(db *gorm.DB) PencatatanKejadianRisikoGet
 			return nil, core.NewInternalServerError(err)
 		}
 
-		return &PencatatanKejadianRisikoGetAllRes{
-			PencatatanKejadianRisiko: objs,
+		return &IndeksPeringkatPrioritasGetAllRes{
+			IndeksPeringkatPrioritas: objs,
 			Count:                    count,
 		}, nil
 	}

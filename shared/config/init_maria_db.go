@@ -64,6 +64,8 @@ func InitMariaDatabase() *gorm.DB {
 	// &model.PengkomunikasianPengendalian{},
 	// &model.RancanganPemantauan{},
 	// &model.IdentifikasiRisikoStrategisOPD{},
+	// &model.PencatatanKejadianRisiko{},
+	// &model.IndeksPeringkatPrioritas{},
 	)
 
 	// wiring.SeedOpd(db)

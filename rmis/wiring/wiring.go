@@ -7,6 +7,7 @@ import (
 	"rmis/usecase"
 	"shared/helper"
 	"shared/helper/cronjob"
+	"shared/middleware"
 
 	"gorm.io/gorm"
 )
@@ -14,6 +15,7 @@ import (
 func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTokenizer, printer *helper.ApiPrinter, cj *cronjob.CronJob, sseDashboard *helper.SSE) {
 	// =================================================================
 	// Gateway
+	// =================================================================
 	exampleGetAllGateway := gateway.ImplExampleGateway(mariaDB)
 	generateIdGateway := gateway.ImplGenerateId()
 
@@ -134,8 +136,15 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	pencatatanKejadianRisikoGetOneGateway := gateway.ImplPencatatanKejadianRisikoGetByID(mariaDB)
 	pencatatanKejadianRisikoDeleteGateway := gateway.ImplPencatatanKejadianRisikoDelete(mariaDB)
 
+	// Gateway Indeks Peringkat Prioritas
+	indeksPeringkatPrioritasCreateGateway := gateway.ImplIndeksPeringkatPrioritasSave(mariaDB)
+	indeksPeringkatPrioritasGetAllGateway := gateway.ImplIndeksPeringkatPrioritasGetAll(mariaDB)
+	indeksPeringkatPrioritasGetOneGateway := gateway.ImplIndeksPeringkatPrioritasGetByID(mariaDB)
+	// indeksPeringkatPrioritasDeleteGateway := gateway.ImplIndeksPeringkatPrioritasDelete(mariaDB)
+
 	// =================================================================
 	// Usecase
+	// =================================================================
 	exampleGetAllUsecase := usecase.ImplExampleGetAllUseCase(exampleGetAllGateway)
 
 	// Usecase SPIP
@@ -207,11 +216,12 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penyebabRisikoUpdateUseCase := usecase.ImplPenyebabRisikoUpdateUseCase(penyebabRisikoGetOneGateway, penyebabRisikoCreateGateway)
 
 	// usecase Hasil Analisis Risiko
-	hasilAnalisisRisikoCreateUseCase := usecase.ImplHasilAnalisisRisikoCreateUseCase(generateIdGateway, hasilAnalisisRisikoCreateGateway, identifikasiRisikoStrategisPemdaGetOneGateway)
+	hasilAnalisisRisikoCreateUseCase := middleware.TransactionMiddleware(usecase.ImplHasilAnalisisRisikoCreateUseCase(generateIdGateway, hasilAnalisisRisikoCreateGateway, identifikasiRisikoStrategisPemdaGetOneGateway, indeksPeringkatPrioritasCreateGateway), mariaDB)
+	// hasilAnalisisRisikoCreateUseCase := usecase.ImplHasilAnalisisRisikoCreateUseCase(generateIdGateway, hasilAnalisisRisikoCreateGateway, identifikasiRisikoStrategisPemdaGetOneGateway, indeksPeringkatPrioritasCreateGateway)
 	hasilAnalisisRisikoGetAllUseCase := usecase.ImplHasilAnalisisRisikoGetAllUseCase(hasilAnalisisRisikoGetAllGateway)
 	hasilAnalisisRisikoGetOneUseCase := usecase.ImplHasilAnalisisRisikoGetByIDUseCase(hasilAnalisisRisikoGetOneGateway)
 	hasilAnalisisRisikoDeleteUsecase := usecase.ImplHasilAnalisisRisikoDeleteUseCase(hasilAnalisisRisikoDeleteGateway)
-	hasilAnalisisRisikoUpdateUsecase := usecase.ImplHasilAnalisisRisikoUpdateUseCase(hasilAnalisisRisikoGetOneGateway, hasilAnalisisRisikoCreateGateway)
+	hasilAnalisisRisikoUpdateUsecase := usecase.ImplHasilAnalisisRisikoUpdateUseCase(hasilAnalisisRisikoGetOneGateway, hasilAnalisisRisikoCreateGateway, indeksPeringkatPrioritasGetOneGateway, indeksPeringkatPrioritasCreateGateway)
 
 	// Usecase Penilaian Kegiatan Pengendalian
 	penilaianKegiatanPengendalianCreateUseCase := usecase.ImplPenilaianKegiatanPengendalianCreateUseCase(generateIdGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)
@@ -270,12 +280,17 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	pencatatanKejadianRisikoDeleteUseCase := usecase.ImplPencatatanKejadianRisikoDeleteUseCase(pencatatanKejadianRisikoDeleteGateway)
 	pencatatanKejadianRisikoUpdateUseCase := usecase.ImplPencatatanKejadianRisikoUpdateUseCase(pencatatanKejadianRisikoGetOneGateway, pencatatanKejadianRisikoCreateGateway)
 
+	// Usecase Indeks Peringkat Prioritas
+	indeksPeringkatPrioritasGetAllUseCase := usecase.ImplIndeksPeringkatPrioritasGetAllUseCase(indeksPeringkatPrioritasGetAllGateway)
+	indeksPeringkatPrioritasGetOneUseCase := usecase.ImplIndeksPeringkatPrioritasGetByIDUseCase(indeksPeringkatPrioritasGetOneGateway)
 	c := controller.Controller{
 		Mux: mux,
 		JWT: jwtToken,
 	}
 
+	// =================================================================
 	// Controllers
+	// =================================================================
 	printer.
 		Add(c.ExampleGetAllHandler(exampleGetAllUsecase)).
 		Add(c.SpipGetAllHandler(spipGetAllUseCase)).
@@ -373,5 +388,7 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.PencatatanKejadianRisikoGetAllHandler(pencatatanKejadianRisikoGetAllUsecase)).
 		Add(c.PencatatanKejadianRisikoGetByIDHandler(pencatatanKejadianRisikoGetOneUseCase)).
 		Add(c.PencatatanKejadianRisikoDeleteHandler(pencatatanKejadianRisikoDeleteUseCase)).
-		Add(c.PencatatanKejadianRisikoUpdateHandler(pencatatanKejadianRisikoUpdateUseCase))
+		Add(c.PencatatanKejadianRisikoUpdateHandler(pencatatanKejadianRisikoUpdateUseCase)).
+		Add(c.IndeksPeringkatPrioritasGetAllHandler(indeksPeringkatPrioritasGetAllUseCase)).
+		Add(c.IndeksPeringkatPrioritasGetByIDHandler(indeksPeringkatPrioritasGetOneUseCase))
 }

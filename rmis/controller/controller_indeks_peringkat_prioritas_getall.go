@@ -8,22 +8,24 @@ import (
 	"shared/helper"
 )
 
-// KriteriaDampak Get All handler
-func (c Controller) KriteriaDampakGetAllHandler(u usecase.KriteriaDampakGetAllUseCase) helper.APIData {
+// IndeksPeringkatPrioritas Get All handler
+func (c Controller) IndeksPeringkatPrioritasGetAllHandler(u usecase.IndeksPeringkatPrioritasGetAllUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodGet,
-		Url:    "/api/kriteria_dampak",
+		Url:    "/api/indeks-peringkat-prioritas",
 		AccessKeto: iammodel.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "kriteria_dampak",
+			Object:    "indeks-peringkat-prioritas",
 			Relation:  "read",
 		},
-		Summary: "Get all KriteriaDampak",
-		Tag:     "KriteriaDampak",
+		Summary: "Get all Indeks Peringkat Prioritas",
+		Tag:     "Indeks Peringkat Prioritas",
 		QueryParams: []helper.QueryParam{
 			{Name: "keyword", Type: "string", Description: "name, pic or location", Required: false},
 			{Name: "page", Type: "number", Description: "page", Required: false},
 			{Name: "size", Type: "number", Description: "size", Required: false},
+			{Name: "sortBy", Type: "string", Description: "sort by", Required: false},
+			{Name: "sortOrder", Type: "string", Description: "sort order", Required: false},
 		},
 	}
 
@@ -31,7 +33,9 @@ func (c Controller) KriteriaDampakGetAllHandler(u usecase.KriteriaDampakGetAllUs
 		page := controller.GetQueryInt(r, "page", 1)
 		size := controller.GetQueryInt(r, "size", 10)
 		keyword := controller.GetQueryString(r, "keyword", "")
-		req := usecase.KriteriaDampakGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword}
+		sortBy := controller.GetQueryString(r, "sortBy", "intermediate_rank")
+		sortOrder := controller.GetQueryString(r, "sortOrder", "desc")
+		req := usecase.IndeksPeringkatPrioritasGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword, SortBy: sortBy, SortOrder: sortOrder}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 

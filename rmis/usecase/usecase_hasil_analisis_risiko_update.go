@@ -8,7 +8,7 @@ import (
 )
 
 type HasilAnalisisRisikoUpdateUseCaseReq struct {
-	ID                                 string                    `json:"id"`
+	ID                                 string                    `json:"-"`
 	IdentifikasiRisikoStrategisPemdaID string                    `json:"identifikasi_risiko_strategis_pemda_id"`
 	KriteriaKemungkinanInherentRisk    model.KriteriaKemungkinan `json:"kriteria_kemungkinan_inherent_risk"`
 	SkorKemungkinanInherentRisk        int                       `json:"skor_kemungkinan_inherent_risk"`
@@ -32,6 +32,8 @@ type HasilAnalisisRisikoUpdateUseCase = core.ActionHandler[HasilAnalisisRisikoUp
 func ImplHasilAnalisisRisikoUpdateUseCase(
 	getHasilAnalisisRisikoById gateway.HasilAnalisisRisikoGetByID,
 	updateHasilAnalisisRisiko gateway.HasilAnalisisRisikoSave,
+	indeksPeringkatPrioritasByID gateway.IndeksPeringkatPrioritasGetByID,
+	IndeksPeringkatPrioritasCreate gateway.IndeksPeringkatPrioritasSave,
 ) HasilAnalisisRisikoUpdateUseCase {
 	return func(ctx context.Context, req HasilAnalisisRisikoUpdateUseCaseReq) (*HasilAnalisisRisikoUpdateUseCaseRes, error) {
 
@@ -39,25 +41,36 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 		if err != nil {
 			return nil, err
 		}
+		hasilAnalisisRisiko := res.HasilAnalisisRisiko
 
-		res.HasilAnalisisRisiko.IdentifikasiRisikoStrategisPemerintahDaerahID = &req.IdentifikasiRisikoStrategisPemdaID
-		res.HasilAnalisisRisiko.SkorKemungkinanInherentRisk = &req.SkorKemungkinanInherentRisk
-		res.HasilAnalisisRisiko.KriteriaDampakInherentRisk = &req.KriteriaDampakInherentRisk
-		res.HasilAnalisisRisiko.SkorDampakInherentRisk = &req.SkorDampakInherentRisk
-		res.HasilAnalisisRisiko.StatusAda = &req.StatusAda
-		res.HasilAnalisisRisiko.UraianControl = &req.UraianControl
-		res.HasilAnalisisRisiko.KlarifikasiSPIP = &req.KlarifikasiSPIP
-		res.HasilAnalisisRisiko.MemadaiControl = &req.MemadaiControl
-		res.HasilAnalisisRisiko.SkorKemungkinanResidualRisk = &req.SkorKemungkinanResidualRisk
-		res.HasilAnalisisRisiko.KriteriaDampakResidualRisk = &req.KriteriaDampakResidualRisk
-		res.HasilAnalisisRisiko.SkorDampakResidualRisk = &req.SkorDampakResidualRisk
-		res.HasilAnalisisRisiko.SkalaRisikoResidualRisk = &req.SkalaRisikoResidualRisk
+		hasilAnalisisRisiko.IdentifikasiRisikoStrategisPemerintahDaerahID = &req.IdentifikasiRisikoStrategisPemdaID
+		hasilAnalisisRisiko.SkorKemungkinanInherentRisk = &req.SkorKemungkinanInherentRisk
+		hasilAnalisisRisiko.KriteriaDampakInherentRisk = &req.KriteriaDampakInherentRisk
+		hasilAnalisisRisiko.SkorDampakInherentRisk = &req.SkorDampakInherentRisk
+		hasilAnalisisRisiko.StatusAda = &req.StatusAda
+		hasilAnalisisRisiko.UraianControl = &req.UraianControl
+		hasilAnalisisRisiko.KlarifikasiSPIP = &req.KlarifikasiSPIP
+		hasilAnalisisRisiko.MemadaiControl = &req.MemadaiControl
+		hasilAnalisisRisiko.SkorKemungkinanResidualRisk = &req.SkorKemungkinanResidualRisk
+		hasilAnalisisRisiko.KriteriaDampakResidualRisk = &req.KriteriaDampakResidualRisk
+		hasilAnalisisRisiko.SkorDampakResidualRisk = &req.SkorDampakResidualRisk
+		hasilAnalisisRisiko.SkalaRisikoResidualRisk = &req.SkalaRisikoResidualRisk
 
-		res.HasilAnalisisRisiko.SetKriteriaKemungkinan("inherent", req.KriteriaKemungkinanInherentRisk)
-		res.HasilAnalisisRisiko.SetKriteriaKemungkinan("residual", req.KriteriaKemungkinanResidualRisk)
+		hasilAnalisisRisiko.SetSkalaRisiko()
+		if _, err := updateHasilAnalisisRisiko(ctx, gateway.HasilAnalisisRisikoSaveReq{HasilAnalisisRisiko: hasilAnalisisRisiko}); err != nil {
+			return nil, err
+		}
 
-		res.HasilAnalisisRisiko.SetSkalaRisiko()
-		if _, err := updateHasilAnalisisRisiko(ctx, gateway.HasilAnalisisRisikoSaveReq{HasilAnalisisRisiko: res.HasilAnalisisRisiko}); err != nil {
+		indeksPeringkatPrioritasByIDRes, err := indeksPeringkatPrioritasByID(ctx, gateway.IndeksPeringkatPrioritasGetByIDReq{ID: *hasilAnalisisRisiko.ID})
+		if err != nil {
+			return nil, err
+		}
+		indeksPeringkatPrioritas := indeksPeringkatPrioritasByIDRes.IndeksPeringkatPrioritas
+
+		indeksPeringkatPrioritas.SetToleransiRisiko(*hasilAnalisisRisiko.KategoriRisiko)
+		indeksPeringkatPrioritas.SetMitigasi(*hasilAnalisisRisiko.SkalaRisikoResidualRisk)
+		indeksPeringkatPrioritas.SetIntermediateRank(*hasilAnalisisRisiko.SkalaRisikoResidualRisk, *hasilAnalisisRisiko.NomorUraian)
+		if _, err = IndeksPeringkatPrioritasCreate(ctx, gateway.IndeksPeringkatPrioritasSaveReq{IndeksPeringkatPrioritas: indeksPeringkatPrioritas}); err != nil {
 			return nil, err
 		}
 
