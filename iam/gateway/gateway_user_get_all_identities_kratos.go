@@ -16,7 +16,7 @@ type UserGetAllIdentitiesKratosReq struct {
 	Size      int    `json:"size"`
 	SortOrder string `json:"sort_order"`
 	SortBy    string `json:"sort_by"`
-	Filter    string `json:"filter"`
+	Keyword   string `json:"keyword"`
 }
 
 type UserGetAllIdentitiesKratosRes struct {
@@ -87,7 +87,7 @@ func ImplUserGetAllIdentitiesKratos(oryClient *ory.APIClient) UserGetAllIdentiti
 			}
 
 			// Apply filter
-			if request.Filter != "" && !matchesFilter(user, request.Filter) {
+			if request.Keyword != "" && !matchesFilter(user, request.Keyword) {
 				continue
 			}
 
@@ -123,7 +123,7 @@ func extractTraits(traits interface{}) map[string]string {
 func matchesFilter(user model.UserKratosGet, filter string) bool {
 	// Implement your filter logic here
 	// Example: return true if the user's name or email contains the filter string
-	return contains(user.Nama, filter) || contains(string(user.Email), filter)
+	return contains(user.Nama, filter) || contains(string(user.Email), filter) || contains(user.NoTelepon, filter)
 }
 
 func contains(source, substr string) bool {
@@ -145,6 +145,16 @@ func sortUsers(users []model.UserKratosGet, sortBy, sortOrder string) {
 				return users[i].Email > users[j].Email
 			}
 			return users[i].Email < users[j].Email
+		case "no_telepon":
+			if sortOrder == "desc" {
+				return users[i].NoTelepon > users[j].NoTelepon
+			}
+			return users[i].NoTelepon < users[j].NoTelepon
+		case "updated_at":
+			if sortOrder == "desc" {
+				return users[i].UpdatedAt.After(users[j].UpdatedAt)
+			}
+			return users[i].UpdatedAt.Before(users[j].UpdatedAt)
 		default:
 			return false
 		}
