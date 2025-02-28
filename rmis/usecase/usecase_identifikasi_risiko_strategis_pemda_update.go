@@ -68,8 +68,6 @@ func ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(
 			return nil, fmt.Errorf("failed to get KategoriRisikoName: %v", err)
 		}
 
-		res.IdentifikasiRisikoStrategisPemda.KategoriRisikoName = kategoriRisikoRes.KategoriRisiko.Nama
-
 		if res.IdentifikasiRisikoStrategisPemda.KodeRisiko == nil || *res.IdentifikasiRisikoStrategisPemda.KodeRisiko == "" {
 			res.IdentifikasiRisikoStrategisPemda.GenerateKodeRisiko(*kategoriRisikoRes.KategoriRisiko.Kode)
 		}
