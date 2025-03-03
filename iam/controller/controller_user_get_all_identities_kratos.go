@@ -19,10 +19,7 @@ func (c Controller) UserGetAllIdentitiesKratosHandler(u usecase.UserGetAllIdenti
 		QueryParams: []helper.QueryParam{
 			{Name: "page", Type: "integer", Description: "Page number", Required: false},
 			{Name: "size", Type: "integer", Description: "Number of items per page", Required: false},
-			{Name: "user_id", Type: "string", Description: "Filter by user ID", Required: false},
-			{Name: "email", Type: "string", Description: "Filter by email", Required: false},
-			{Name: "phone_number", Type: "string", Description: "Filter by phone number", Required: false},
-			{Name: "name_like", Type: "string", Description: "Filter by name (partial match)", Required: false},
+			{Name: "keyword", Type: "string", Description: "filter", Required: false},
 			{Name: "sort_order", Type: "string", Description: "desc or asc", Required: false},
 			{Name: "sort_by", Type: "string", Description: "name, phone_number, email", Required: false},
 		},
@@ -34,6 +31,7 @@ func (c Controller) UserGetAllIdentitiesKratosHandler(u usecase.UserGetAllIdenti
 		size := GetQueryInt(r, "size", 10)
 		sortBy := GetQueryString(r, "sort_by", "")
 		sortOrder := GetQueryString(r, "sort_order", "")
+		keywords := GetQueryString(r, "keyword", "")
 
 		req := usecase.UserGetAllIdentitiesKratosReq{
 			UserGetAllIdentitiesKratosReq: gateway.UserGetAllIdentitiesKratosReq{
@@ -41,6 +39,7 @@ func (c Controller) UserGetAllIdentitiesKratosHandler(u usecase.UserGetAllIdenti
 				Size:      size,
 				SortOrder: sortOrder,
 				SortBy:    sortBy,
+				Keyword:   keywords,
 			},
 		}
 
