@@ -12,10 +12,12 @@ type IdentifikasiRisikoStrategisPemdaGetAllUseCaseReq struct {
 	Keyword string
 	Page    int
 	Size    int
+	Status  string
 }
 
+// Change the response type to use the DTO with KategoriRisikoName
 type IdentifikasiRisikoStrategisPemdaGetAllUseCaseRes struct {
-	IdentifikasiRisikoStrategisPemda []model.IdentifikasiRisikoStrategisPemerintahDaerah `json:"identifkasi_risiko_strategis_pemda"`
+	IdentifikasiRisikoStrategisPemda []model.IdentifikasiRisikoStrategisPemerintahDaerah `json:"identifikasi_risiko_strategis_pemda"`
 	Metadata                         *usecase.Metadata                                   `json:"metadata"`
 }
 
@@ -24,13 +26,17 @@ type IdentifikasiRisikoStrategisPemdaGetAllUseCase = core.ActionHandler[Identifi
 func ImplIdentifikasiRisikoStrategisPemdaGetAllUseCase(getAllIdentifikasiRisikoStrategisPemdas gateway.IdentifikasiRisikoStrategisPemdaGetAll) IdentifikasiRisikoStrategisPemdaGetAllUseCase {
 	return func(ctx context.Context, req IdentifikasiRisikoStrategisPemdaGetAllUseCaseReq) (*IdentifikasiRisikoStrategisPemdaGetAllUseCaseRes, error) {
 
-		res, err := getAllIdentifikasiRisikoStrategisPemdas(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword})
+		// Fetch the results from the gateway (which already includes the mapped KategoriRisikoName)
+		res, err := getAllIdentifikasiRisikoStrategisPemdas(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetAllReq{
+			Page: req.Page, Size: req.Size, Keyword: req.Keyword, Status: req.Status,
+		})
 		if err != nil {
 			return nil, err
 		}
 
+		// Pagination calculation
 		totalItems := int(res.Count)
-		totalPages := (totalItems + req.Size - 1) / (req.Size)
+		totalPages := (totalItems + req.Size - 1) / req.Size
 
 		return &IdentifikasiRisikoStrategisPemdaGetAllUseCaseRes{
 			IdentifikasiRisikoStrategisPemda: res.IdentifikasiRisikoStrategisPemda,

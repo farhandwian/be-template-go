@@ -39,48 +39,49 @@ func ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(
 		if err != nil {
 			return nil, err
 		}
+		identifikasiRisikoStrategisPemda := res.IdentifikasiRisikoStrategisPemda
 
 		if req.TahunPenilaian != "" {
 			year, err := extractYear(req.TahunPenilaian)
 			if err != nil {
 				return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
 			}
-			res.IdentifikasiRisikoStrategisPemda.TahunPenilaian = &year
+			identifikasiRisikoStrategisPemda.TahunPenilaian = &year
 		}
-		res.IdentifikasiRisikoStrategisPemda.Periode = &req.Periode
-		res.IdentifikasiRisikoStrategisPemda.UrusanPemerintahan = &req.UrusanPemerintahan
-		res.IdentifikasiRisikoStrategisPemda.TujuanStrategis = &req.TujuanStrategis
-		res.IdentifikasiRisikoStrategisPemda.IndikatorKinerja = &req.IndikatorKinerja
-		res.IdentifikasiRisikoStrategisPemda.UraianRisiko = &req.UraianRisiko
-		res.IdentifikasiRisikoStrategisPemda.PemilikRisiko = &req.PemilikRisiko
-		res.IdentifikasiRisikoStrategisPemda.Controllable = &req.Controllable
-		res.IdentifikasiRisikoStrategisPemda.UraianDampak = &req.UraianDampak
-		res.IdentifikasiRisikoStrategisPemda.PihakDampak = &req.PihakDampak
+		identifikasiRisikoStrategisPemda.Periode = &req.Periode
+		identifikasiRisikoStrategisPemda.UrusanPemerintahan = &req.UrusanPemerintahan
+		identifikasiRisikoStrategisPemda.TujuanStrategis = &req.TujuanStrategis
+		identifikasiRisikoStrategisPemda.IndikatorKinerja = &req.IndikatorKinerja
+		identifikasiRisikoStrategisPemda.UraianRisiko = &req.UraianRisiko
+		identifikasiRisikoStrategisPemda.PemilikRisiko = &req.PemilikRisiko
+		identifikasiRisikoStrategisPemda.Controllable = &req.Controllable
+		identifikasiRisikoStrategisPemda.UraianDampak = &req.UraianDampak
+		identifikasiRisikoStrategisPemda.PihakDampak = &req.PihakDampak
 
-		if res.IdentifikasiRisikoStrategisPemda.KategoriRisikoID == nil || *res.IdentifikasiRisikoStrategisPemda.KategoriRisikoID == "" {
+		if identifikasiRisikoStrategisPemda.KategoriRisikoID == nil || *identifikasiRisikoStrategisPemda.KategoriRisikoID == "" {
 			return nil, fmt.Errorf("KategoriRisikoID is missing in the database record")
 		}
 
 		kategoriRisikoRes, err := kodeRisikoByID(ctx, gateway.KategoriRisikoGetByIDReq{
-			ID: *res.IdentifikasiRisikoStrategisPemda.KategoriRisikoID,
+			ID: *identifikasiRisikoStrategisPemda.KategoriRisikoID,
 		})
 		if err != nil {
 			return nil, fmt.Errorf("failed to get KategoriRisikoName: %v", err)
 		}
 
-		if res.IdentifikasiRisikoStrategisPemda.KodeRisiko == nil || *res.IdentifikasiRisikoStrategisPemda.KodeRisiko == "" {
-			res.IdentifikasiRisikoStrategisPemda.GenerateKodeRisiko(*kategoriRisikoRes.KategoriRisiko.Kode)
+		if identifikasiRisikoStrategisPemda.KodeRisiko == nil || *identifikasiRisikoStrategisPemda.KodeRisiko == "" {
+			identifikasiRisikoStrategisPemda.GenerateKodeRisiko(*kategoriRisikoRes.KategoriRisiko.Kode)
 		}
 
 		rcaRes, err := RcaByID(ctx, gateway.RcaGetByIDReq{ID: req.RcaID})
 		if err != nil {
 			return nil, fmt.Errorf("failed to get RcaName: %v", err)
 		}
-		res.IdentifikasiRisikoStrategisPemda.RcaID = rcaRes.Rca.ID
-		res.IdentifikasiRisikoStrategisPemda.UraianSebab = rcaRes.Rca.AkarPenyebab
-		res.IdentifikasiRisikoStrategisPemda.SumberSebab = rcaRes.Rca.PernyataanRisiko
+		identifikasiRisikoStrategisPemda.RcaID = rcaRes.Rca.ID
+		identifikasiRisikoStrategisPemda.UraianSebab = rcaRes.Rca.AkarPenyebab
+		identifikasiRisikoStrategisPemda.SumberSebab = rcaRes.Rca.PernyataanRisiko
 
-		if _, err := updateIdentifikasiRisikoStrategisPemda(ctx, gateway.IdentifikasiRisikoStrategisPemdaSaveReq{IdentifikasiRisikoStrategisPemda: res.IdentifikasiRisikoStrategisPemda}); err != nil {
+		if _, err := updateIdentifikasiRisikoStrategisPemda(ctx, gateway.IdentifikasiRisikoStrategisPemdaSaveReq{IdentifikasiRisikoStrategisPemda: identifikasiRisikoStrategisPemda}); err != nil {
 			return nil, err
 		}
 

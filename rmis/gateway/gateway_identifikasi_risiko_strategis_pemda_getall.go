@@ -5,15 +5,19 @@ import (
 	"fmt"
 	"rmis/model"
 	"shared/core"
+	"shared/helper"
 	"shared/middleware"
 
 	"gorm.io/gorm"
 )
 
 type IdentifikasiRisikoStrategisPemdaGetAllReq struct {
-	Keyword string
-	Page    int
-	Size    int
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
+	Status    string
 }
 
 type IdentifikasiRisikoStrategisPemdaGetAllRes struct {
@@ -31,26 +35,41 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.
-				Joins("LEFT JOIN kategori_risiko ON kategori_risiko_id = identifikasi_risiko_strategis_pemerintah_daerah.kategori_risiko_id").
 				Where("nama LIKE ?", keyword).
 				Or("kode LIKE ?", keyword)
 		}
 
-		var count int64
+		if req.Status != "" {
+			query = query.Where("status = ?", req.Status)
+		}
 
+		var count int64
 		if err := query.
 			Model(&model.IdentifikasiRisikoStrategisPemerintahDaerah{}).
 			Count(&count).
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
+		allowedSortBy := map[string]bool{
+			"nama_pemda": true,
+		}
+
+		sortBy, sortOrder, err := helper.ValidateSortParams(allowedSortBy, req.SortBy, req.SortOrder, "nama_pemda")
+		if err != nil {
+			return nil, err
+		}
+
+		// Apply sorting
+		orderClause := fmt.Sprintf("%s %s", sortBy, sortOrder)
 
 		page, size := ValidatePageSize(req.Page, req.Size)
 
 		var objs []model.IdentifikasiRisikoStrategisPemerintahDaerah
-
 		if err := query.
+			Preload("KategoriRisiko").
+			Preload("Rca").
 			Offset((page - 1) * size).
+			Order(orderClause).
 			Limit(size).
 			Find(&objs).
 			Error; err != nil {

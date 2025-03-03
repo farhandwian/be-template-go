@@ -20,6 +20,7 @@ type IdentifikasiRisikoStrategisPemdaGetByIDUseCase = core.ActionHandler[Identif
 func ImplIdentifikasiRisikoStrategisPemdaGetByIDUseCase(getIdentifikasiRisikoStrategisPemdaByID gateway.IdentifikasiRisikoStrategisPemdaGetByID) IdentifikasiRisikoStrategisPemdaGetByIDUseCase {
 	return func(ctx context.Context, req IdentifikasiRisikoStrategisPemdaGetByIDUseCaseReq) (*IdentifikasiRisikoStrategisPemdaGetByIDUseCaseRes, error) {
 		res, err := getIdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: req.ID})
+
 		if err != nil {
 			return nil, err
 		}
