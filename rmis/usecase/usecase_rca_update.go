@@ -11,13 +11,13 @@ import (
 )
 
 type RcaUpdateUseCaseReq struct {
-	ID                    string   `json:"id"`
-	NamaUnitPemilikRisiko string   `json:"nama_unit_pemilik_risiko"`
-	TahunPenilaian        string   `json:"tahun_penilaian"`
-	PernyataanRisiko      string   `json:"pernyataan_risiko"`
-	Why                   []string `json:"why"`
-	JenisPenyebab         string   `json:"jenis_penyebab"`
-	KegiatanPengendalian  string   `json:"kegiatan_pengendalian"`
+	ID                                 string   `json:"id"`
+	PemilikRisiko                      string   `json:"pemilik_risiko"`
+	TahunPenilaian                     string   `json:"tahun_penilaian"`
+	Why                                []string `json:"why"`
+	PenyebabRisikoID                   string   `json:"penyebab_risiko_id"`
+	IdentifikasiRisikoStrategisPemdaId string   `json:"identifikasi_risiko_strategis_pemda_id"`
+	KegiatanPengendalian               string   `json:"kegiatan_pengendalian"`
 }
 
 type RcaUpdateUseCaseRes struct{}
@@ -27,6 +27,8 @@ type RcaUpdateUseCase = core.ActionHandler[RcaUpdateUseCaseReq, RcaUpdateUseCase
 func ImplRcaUpdateUseCase(
 	getRcaById gateway.RcaGetByID,
 	updateRca gateway.RcaSave,
+	IdentifikasiRisikoStrategisPemdaGetByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
+	PenyebabRisikoGetByID gateway.PenyebabRisikoGetByID,
 ) RcaUpdateUseCase {
 	return func(ctx context.Context, req RcaUpdateUseCaseReq) (*RcaUpdateUseCaseRes, error) {
 
@@ -37,7 +39,7 @@ func ImplRcaUpdateUseCase(
 
 		rca := res.Rca
 
-		rca.NamaUnitPemilikRisiko = &req.NamaUnitPemilikRisiko
+		rca.PemilikRisiko = &req.PemilikRisiko
 
 		if req.TahunPenilaian != "" {
 			year, err := extractYear(req.TahunPenilaian)
@@ -47,9 +49,21 @@ func ImplRcaUpdateUseCase(
 			rca.TahunPenilaian = &year
 		}
 
-		rca.PernyataanRisiko = &req.PernyataanRisiko
+		// Penyebab Risiko
+		_, err = PenyebabRisikoGetByID(ctx, gateway.PenyebabRisikoGetByIDReq{ID: req.PenyebabRisikoID})
+		if err != nil {
+			return nil, fmt.Errorf("error getting penyebab risiko table: %v", err)
+		}
+
+		// Identifikasi Risiko Strategis Pemda
+		_, err = IdentifikasiRisikoStrategisPemdaGetByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: req.IdentifikasiRisikoStrategisPemdaId})
+		if err != nil {
+			return nil, fmt.Errorf("error getting identifikasi risiko strategis pemda table: %v", err)
+		}
+
+		rca.IdentifikasiRisikoStrategisPemdaID = &req.IdentifikasiRisikoStrategisPemdaId
+		rca.PenyebabRisikoID = &req.PenyebabRisikoID
 		rca.Why = helper.ToDataTypeJSONPtr(req.Why...)
-		rca.JenisPenyebab = &req.JenisPenyebab
 		rca.KegiatanPengendalian = &req.KegiatanPengendalian
 		rca.SetAkarPenyebab()
 

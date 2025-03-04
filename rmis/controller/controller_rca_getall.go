@@ -24,6 +24,8 @@ func (c Controller) RcaGetAllHandler(u usecase.RcaGetAllUseCase) helper.APIData 
 			{Name: "keyword", Type: "string", Description: "name, pic or location", Required: false},
 			{Name: "page", Type: "number", Description: "page", Required: false},
 			{Name: "size", Type: "number", Description: "size", Required: false},
+			{Name: "sortBy", Type: "string", Description: "sort by", Required: false},
+			{Name: "sortOrder", Type: "string", Description: "sort order", Required: false},
 		},
 	}
 
@@ -31,7 +33,9 @@ func (c Controller) RcaGetAllHandler(u usecase.RcaGetAllUseCase) helper.APIData 
 		page := controller.GetQueryInt(r, "page", 1)
 		size := controller.GetQueryInt(r, "size", 10)
 		keyword := controller.GetQueryString(r, "keyword", "")
-		req := usecase.RcaGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword}
+		sortBy := controller.GetQueryString(r, "sortBy", "")
+		sortOrder := controller.GetQueryString(r, "sortOrder", "")
+		req := usecase.RcaGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword, SortBy: sortBy, SortOrder: sortOrder}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 

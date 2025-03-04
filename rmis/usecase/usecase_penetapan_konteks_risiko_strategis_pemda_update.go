@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"rmis/gateway"
 	"shared/core"
 	sharedModel "shared/model"
@@ -12,6 +13,7 @@ type PenetapanKonteksRisikoStrategisPemdaUpdateUseCaseReq struct {
 	NamaPemda                       string             `json:"nama_pemda"`
 	Periode                         string             `json:"periode"`
 	SumberData                      string             `json:"sumber_data"`
+	TahunPenilaian                  string             `json:"tahun_penilaian"`
 	TujuanStrategis                 string             `json:"tujuan_strategis"`
 	SasaranStrategis                string             `json:"sasaran_strategis"`
 	IKUSasaran                      string             `json:"iku_sasaran"`
@@ -21,6 +23,7 @@ type PenetapanKonteksRisikoStrategisPemdaUpdateUseCaseReq struct {
 	PenetapanTujuan                 string             `json:"penetapan_tujuan"`
 	PenetapanSasaran                string             `json:"penetapan_sasaran"`
 	PenetapanIku                    string             `json:"penetapan_iku"`
+	UrusanPemerintahan              string             `json:"urusan_pemerintahan"`
 	Status                          sharedModel.Status `json:"status"`
 }
 
@@ -30,7 +33,7 @@ type PenetapanKonteksRisikoStrategisPemdaUpdateUseCase = core.ActionHandler[Pene
 
 func ImplPenetapanKonteksRisikoStrategisPemdaUpdateUseCase(
 	getPenetapanKonteksRisikoStrategisPemdaById gateway.PenetapanKonteksRisikoStrategisPemdaGetByID,
-	updatePenetapanKonteksRisikoStrategisPemda gateway.PenetepanKonteksRisikoStrategisPemdaSave,
+	updatePenetapanKonteksRisikoStrategisPemda gateway.PenetapanKonteksRisikoStrategisPemdaSave,
 ) PenetapanKonteksRisikoStrategisPemdaUpdateUseCase {
 	return func(ctx context.Context, req PenetapanKonteksRisikoStrategisPemdaUpdateUseCaseReq) (*PenetapanKonteksRisikoStrategisPemdaUpdateUseCaseRes, error) {
 
@@ -40,6 +43,12 @@ func ImplPenetapanKonteksRisikoStrategisPemdaUpdateUseCase(
 		}
 		penetapanKonteksRisikoStrategisPemda := res.PenetapanKonteksRisikoStrategisPemda
 
+		tahunPenilaian, err := extractYear(req.TahunPenilaian)
+		if err != nil {
+			return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
+		}
+
+		penetapanKonteksRisikoStrategisPemda.TahunPenilaian = &tahunPenilaian
 		penetapanKonteksRisikoStrategisPemda.NamaPemda = &req.NamaPemda
 		penetapanKonteksRisikoStrategisPemda.Periode = &req.Periode
 		penetapanKonteksRisikoStrategisPemda.SumberData = &req.SumberData
@@ -52,6 +61,7 @@ func ImplPenetapanKonteksRisikoStrategisPemdaUpdateUseCase(
 		penetapanKonteksRisikoStrategisPemda.PenetapanSasaran = &req.PenetapanSasaran
 		penetapanKonteksRisikoStrategisPemda.PenetapanIku = &req.PenetapanIku
 		penetapanKonteksRisikoStrategisPemda.Status = sharedModel.StatusMenungguVerifikasi
+		penetapanKonteksRisikoStrategisPemda.UrusanPemerintahan = &req.UrusanPemerintahan
 		penetapanKonteksRisikoStrategisPemda.IkuSasaran = &req.IKUSasaran
 
 		if _, err := updatePenetapanKonteksRisikoStrategisPemda(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaSaveReq{PenetepanKonteksRisikoStrategisPemda: penetapanKonteksRisikoStrategisPemda}); err != nil {

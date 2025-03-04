@@ -8,19 +8,17 @@ import (
 )
 
 type IdentifikasiRisikoStrategisPemdaUpdateUseCaseReq struct {
-	ID                 string `json:"id"`
-	TahunPenilaian     string `json:"tahun_penilaian"`
-	Periode            string `json:"periode"`
-	UrusanPemerintahan string `json:"urusan_pemerintahan"`
-	TujuanStrategis    string `json:"tujuan_strategis"`
-	IndikatorKinerja   string `json:"indikator_kinerja"`
-	UraianRisiko       string `json:"uraian_resiko"`
-	PemilikRisiko      string `json:"pemilik_resiko"`
-	Controllable       string `json:"controllable"`
-	UraianDampak       string `json:"uraian_dampak"`
-	PihakDampak        string `json:"pihak_dampak"`
-	KategoriRisikoID   string `json:"kategori_resiko_id"`
-	RcaID              string `json:"rca_id"`
+	ID                                     string `json:"id"`
+	PenetapanKonteksRisikoStrategisPemdaID string `json:"penetapan_konteks_risiko_strategis_id"`
+	TujuanStrategis                        string `json:"tujuan_strategis"`
+	IndikatorKinerja                       string `json:"indikator_kinerja"`
+	UraianRisiko                           string `json:"uraian_resiko"`
+	PemilikRisiko                          string `json:"pemilik_resiko"`
+	Controllable                           string `json:"controllable"`
+	UraianDampak                           string `json:"uraian_dampak"`
+	PihakDampak                            string `json:"pihak_dampak"`
+	KategoriRisikoID                       string `json:"kategori_resiko_id"`
+	RcaID                                  string `json:"rca_id"`
 }
 
 type IdentifikasiRisikoStrategisPemdaUpdateUseCaseRes struct{}
@@ -32,6 +30,7 @@ func ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(
 	updateIdentifikasiRisikoStrategisPemda gateway.IdentifikasiRisikoStrategisPemdaSave,
 	kodeRisikoByID gateway.KategoriRisikoGetByID,
 	RcaByID gateway.RcaGetByID,
+	penetapanKonteksRisikoStrategisPemdaID gateway.PenetapanKonteksRisikoStrategisPemdaGetByID,
 ) IdentifikasiRisikoStrategisPemdaUpdateUseCase {
 	return func(ctx context.Context, req IdentifikasiRisikoStrategisPemdaUpdateUseCaseReq) (*IdentifikasiRisikoStrategisPemdaUpdateUseCaseRes, error) {
 
@@ -40,16 +39,6 @@ func ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(
 			return nil, err
 		}
 		identifikasiRisikoStrategisPemda := res.IdentifikasiRisikoStrategisPemda
-
-		if req.TahunPenilaian != "" {
-			year, err := extractYear(req.TahunPenilaian)
-			if err != nil {
-				return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
-			}
-			identifikasiRisikoStrategisPemda.TahunPenilaian = &year
-		}
-		identifikasiRisikoStrategisPemda.Periode = &req.Periode
-		identifikasiRisikoStrategisPemda.UrusanPemerintahan = &req.UrusanPemerintahan
 		identifikasiRisikoStrategisPemda.TujuanStrategis = &req.TujuanStrategis
 		identifikasiRisikoStrategisPemda.IndikatorKinerja = &req.IndikatorKinerja
 		identifikasiRisikoStrategisPemda.UraianRisiko = &req.UraianRisiko
@@ -65,21 +54,26 @@ func ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(
 		kategoriRisikoRes, err := kodeRisikoByID(ctx, gateway.KategoriRisikoGetByIDReq{
 			ID: *identifikasiRisikoStrategisPemda.KategoriRisikoID,
 		})
+
+		penetapanKonteksRisikoStrategisPemdaRes, err := penetapanKonteksRisikoStrategisPemdaID(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaGetByIDReq{ID: req.PenetapanKonteksRisikoStrategisPemdaID})
+		if err != nil {
+			return nil, fmt.Errorf("failed to get PenetapanKonteksRisikoStrategisPemda: %v", err)
+		}
 		if err != nil {
 			return nil, fmt.Errorf("failed to get KategoriRisikoName: %v", err)
 		}
 
 		if identifikasiRisikoStrategisPemda.KodeRisiko == nil || *identifikasiRisikoStrategisPemda.KodeRisiko == "" {
-			identifikasiRisikoStrategisPemda.GenerateKodeRisiko(*kategoriRisikoRes.KategoriRisiko.Kode)
+			identifikasiRisikoStrategisPemda.GenerateKodeRisiko(*penetapanKonteksRisikoStrategisPemdaRes.PenetapanKonteksRisikoStrategisPemda.TahunPenilaian, *kategoriRisikoRes.KategoriRisiko.Kode)
 		}
 
-		rcaRes, err := RcaByID(ctx, gateway.RcaGetByIDReq{ID: req.RcaID})
-		if err != nil {
-			return nil, fmt.Errorf("failed to get RcaName: %v", err)
-		}
-		identifikasiRisikoStrategisPemda.RcaID = rcaRes.Rca.ID
-		identifikasiRisikoStrategisPemda.UraianSebab = rcaRes.Rca.AkarPenyebab
-		identifikasiRisikoStrategisPemda.SumberSebab = rcaRes.Rca.PernyataanRisiko
+		// rcaRes, err := RcaByID(ctx, gateway.RcaGetByIDReq{ID: req.RcaID})
+		// if err != nil {
+		// 	return nil, fmt.Errorf("failed to get RcaName: %v", err)
+		// }
+		// identifikasiRisikoStrategisPemda.RcaID = rcaRes.Rca.ID
+		// identifikasiRisikoStrategisPemda.UraianSebab = rcaRes.Rca.AkarPenyebab
+		// identifikasiRisikoStrategisPemda.SumberSebab = rcaRes.Rca.PernyataanRisiko
 
 		if _, err := updateIdentifikasiRisikoStrategisPemda(ctx, gateway.IdentifikasiRisikoStrategisPemdaSaveReq{IdentifikasiRisikoStrategisPemda: identifikasiRisikoStrategisPemda}); err != nil {
 			return nil, err

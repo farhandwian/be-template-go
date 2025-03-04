@@ -55,7 +55,7 @@ func ImplHasilAnalisisRisikoCreateUseCase(
 			NomorUraian:                 identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.NomorUraian,
 			RisikoTeridentifikasi:       identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.UraianRisiko,
 			KodeRisiko:                  identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KodeRisiko,
-			KategoriRisiko:              identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KategoriRisiko.Nama,
+			KategoriRisiko:              identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.IndikatorKinerja,
 			SkorKemungkinanInherentRisk: &req.SkorKemungkinanInherentRisk,
 			KriteriaDampakInherentRisk:  &req.KriteriaDampakInherentRisk,
 			SkorDampakInherentRisk:      &req.SkorDampakInherentRisk,

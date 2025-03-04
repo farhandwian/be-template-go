@@ -23,7 +23,7 @@ func ImplIdentifikasiRisikoStrategisPemdaDelete(db *gorm.DB) IdentifikasiRisikoS
 	return func(ctx context.Context, req IdentifikasiRisikoStrategisPemdaDeleteReq) (*IdentifikasiRisikoStrategisPemdaDeleteRes, error) {
 		query := middleware.GetDBFromContext(ctx, db)
 
-		if err := query.Delete(&model.IdentifikasiRisikoStrategisPemerintahDaerah{}, "id = ?", req.ID).Error; err != nil {
+		if err := query.Delete(&model.IdentifikasiRisikoStrategisPemda{}, "id = ?", req.ID).Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
 

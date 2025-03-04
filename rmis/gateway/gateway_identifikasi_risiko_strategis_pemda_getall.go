@@ -21,8 +21,8 @@ type IdentifikasiRisikoStrategisPemdaGetAllReq struct {
 }
 
 type IdentifikasiRisikoStrategisPemdaGetAllRes struct {
-	IdentifikasiRisikoStrategisPemda []model.IdentifikasiRisikoStrategisPemerintahDaerah `json:"identifikasi_risiko_strategis_pemda"`
-	Count                            int64                                               `json:"count"`
+	IdentifikasiRisikoStrategisPemda []model.IdentifikasiRisikoStrategisPemda `json:"identifikasi_risiko_strategis_pemda"`
+	Count                            int64                                    `json:"count"`
 }
 
 type IdentifikasiRisikoStrategisPemdaGetAll = core.ActionHandler[IdentifikasiRisikoStrategisPemdaGetAllReq, IdentifikasiRisikoStrategisPemdaGetAllRes]
@@ -45,7 +45,7 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 
 		var count int64
 		if err := query.
-			Model(&model.IdentifikasiRisikoStrategisPemerintahDaerah{}).
+			Model(&model.IdentifikasiRisikoStrategisPemda{}).
 			Count(&count).
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
@@ -64,10 +64,11 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 
 		page, size := ValidatePageSize(req.Page, req.Size)
 
-		var objs []model.IdentifikasiRisikoStrategisPemerintahDaerah
+		var objs []model.IdentifikasiRisikoStrategisPemda
 		if err := query.
 			Preload("KategoriRisiko").
 			Preload("Rca").
+			Preload("PenetapanKonteksRisikoStrategisPemda").
 			Offset((page - 1) * size).
 			Order(orderClause).
 			Limit(size).

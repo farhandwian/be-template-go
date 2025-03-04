@@ -9,9 +9,11 @@ import (
 )
 
 type RcaGetAllUseCaseReq struct {
-	Keyword string
-	Page    int
-	Size    int
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
 }
 
 type RcaGetAllUseCaseRes struct {
@@ -24,7 +26,7 @@ type RcaGetAllUseCase = core.ActionHandler[RcaGetAllUseCaseReq, RcaGetAllUseCase
 func ImplRcaGetAllUseCase(getAllRcas gateway.RcaGetAll) RcaGetAllUseCase {
 	return func(ctx context.Context, req RcaGetAllUseCaseReq) (*RcaGetAllUseCaseRes, error) {
 
-		res, err := getAllRcas(ctx, gateway.RcaGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword})
+		res, err := getAllRcas(ctx, gateway.RcaGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword, SortBy: req.SortBy, SortOrder: req.SortOrder})
 		if err != nil {
 			return nil, err
 		}

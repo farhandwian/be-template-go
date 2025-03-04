@@ -5,15 +5,19 @@ import (
 	"fmt"
 	"rmis/model"
 	"shared/core"
+	"shared/helper"
 	"shared/middleware"
 
 	"gorm.io/gorm"
 )
 
 type RcaGetAllReq struct {
-	Keyword string
-	Page    int
-	Size    int
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
+	Status    string
 }
 
 type RcaGetAllRes struct {
@@ -43,13 +47,35 @@ func ImplRcaGetAll(db *gorm.DB) RcaGetAll {
 			return nil, core.NewInternalServerError(err)
 		}
 
+		allowedSortBy := map[string]bool{
+			"pemilik_risiko": true,
+		}
+
+		allowerdForeignSortBy := map[string]string{
+			"identifikasi_risiko_strategis_pemda": "identifikasi_risiko_strategis_pemdas.uraian_risiko",
+			"penyebab_risiko":                     "penyebab_risikos.nama",
+		}
+
+		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "pemilik_risiko")
+		if err != nil {
+			return nil, err
+		}
+
+		// Apply sorting
+		orderClause := fmt.Sprintf("%s %s", sortBy, sortOrder)
+
 		page, size := ValidatePageSize(req.Page, req.Size)
 
 		var objs []model.Rca
 
 		if err := query.
+			Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON rcas.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id").
+			Joins("LEFT JOIN penyebab_risikos ON rcas.penyebab_risiko_id = penyebab_risikos.id").
+			Preload("IdentifikasiRisikoStrategisPemda").
+			Preload("PenyebabRisiko").
 			Offset((page - 1) * size).
 			Limit(size).
+			Order(orderClause).
 			Find(&objs).
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)

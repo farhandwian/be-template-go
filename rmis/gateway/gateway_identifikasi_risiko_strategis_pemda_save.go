@@ -10,7 +10,7 @@ import (
 )
 
 type IdentifikasiRisikoStrategisPemdaSaveReq struct {
-	IdentifikasiRisikoStrategisPemda model.IdentifikasiRisikoStrategisPemerintahDaerah
+	IdentifikasiRisikoStrategisPemda model.IdentifikasiRisikoStrategisPemda
 }
 
 type IdentifikasiRisikoStrategisPemdaSaveRes struct {

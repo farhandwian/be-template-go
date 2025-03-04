@@ -10,8 +10,10 @@ import (
 type PenetapanKonteksRisikoStrategisPemda struct {
 	ID                              *string            `json:"id"`
 	NamaPemda                       *string            `json:"nama_pemda"`
+	TahunPenilaian                  *time.Time         `json:"tahun_penilaian"`
 	Periode                         *string            `json:"periode"`
 	SumberData                      *string            `json:"sumber_data"`
+	UrusanPemerintahan              *string            `json:"urusan_pemerintahan"`
 	TujuanStrategis                 *string            `json:"tujuan_strategis"`
 	SasaranStrategis                *string            `json:"sasaran_strategis"`
 	PrioritasPembangunan            *string            `json:"prioritas_pembangunan"`

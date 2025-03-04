@@ -12,7 +12,7 @@ type IdentifikasiRisikoStrategisPemdaGetByIDUseCaseReq struct {
 }
 
 type IdentifikasiRisikoStrategisPemdaGetByIDUseCaseRes struct {
-	IdentifikasiRisikoStrategisPemda model.IdentifikasiRisikoStrategisPemerintahDaerah `json:"identifikasi_risiko_strategis_pemda"`
+	IdentifikasiRisikoStrategisPemda model.IdentifikasiRisikoStrategisPemda `json:"identifikasi_risiko_strategis_pemda"`
 }
 
 type IdentifikasiRisikoStrategisPemdaGetByIDUseCase = core.ActionHandler[IdentifikasiRisikoStrategisPemdaGetByIDUseCaseReq, IdentifikasiRisikoStrategisPemdaGetByIDUseCaseRes]

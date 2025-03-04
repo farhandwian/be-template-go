@@ -7,15 +7,16 @@ import (
 	"rmis/model"
 	"shared/core"
 	"shared/helper"
+	sharedModel "shared/model"
 )
 
 type RcaCreateUseCaseReq struct {
-	NamaUnitPemilikRisiko              string   `json:"nama_unit_pemilik_risiko"`
+	PemilikRisiko                      string   `json:"pemilik_risiko"`
 	TahunPenilaian                     string   `json:"tahun_penilaian"`
-	IdentifikasiRisikoStrategisPemdaId *string  `json:"identifikasi_risiko_strategis_pemda_id"`
 	Why                                []string `json:"why"`
-	JenisPenyebabID                    string   `json:"jenis_penyebab_id"`
 	KegiatanPengendalian               string   `json:"kegiatan_pengendalian"`
+	PenyebabRisikoID                   string   `json:"penyebab_risiko_id"`
+	IdentifikasiRisikoStrategisPemdaId string   `json:"identifikasi_risiko_strategis_pemda_id"`
 }
 
 type RcaCreateUseCaseRes struct {
@@ -44,27 +45,27 @@ func ImplRcaCreateUseCase(
 		}
 
 		// Penyebab Risiko
-		penyebabRisikoRes, err := PenyebabRisikoGetByID(ctx, gateway.PenyebabRisikoGetByIDReq{ID: req.JenisPenyebabID})
+		_, err = PenyebabRisikoGetByID(ctx, gateway.PenyebabRisikoGetByIDReq{ID: req.PenyebabRisikoID})
 		if err != nil {
 			return nil, fmt.Errorf("error getting penyebab risiko table: %v", err)
 		}
 
 		// Identifikasi Risiko Strategis Pemda
-		identifikasiRisikoStrategisPemdaRes, err := IdentifikasiRisikoStrategisPemdaGetByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: *req.IdentifikasiRisikoStrategisPemdaId})
+		_, err = IdentifikasiRisikoStrategisPemdaGetByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: req.IdentifikasiRisikoStrategisPemdaId})
 		if err != nil {
 			return nil, fmt.Errorf("error getting identifikasi risiko strategis pemda table: %v", err)
 		}
 
 		whyJSON := helper.ToDataTypeJSONPtr(req.Why...)
 		obj := model.Rca{
-			ID:                    &genObj.RandomId,
-			NamaUnitPemilikRisiko: &req.NamaUnitPemilikRisiko,
-			TahunPenilaian:        &tahunPenilaian,
-			PernyataanRisiko:      identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.UraianRisiko,
-			Why:                   whyJSON,
-			JenisPenyebabID:       &req.JenisPenyebabID,
-			JenisPenyebab:         penyebabRisikoRes.PenyebabRisiko.Nama,
-			KegiatanPengendalian:  &req.KegiatanPengendalian,
+			ID:                                 &genObj.RandomId,
+			IdentifikasiRisikoStrategisPemdaID: &req.IdentifikasiRisikoStrategisPemdaId,
+			PemilikRisiko:                      &req.PemilikRisiko,
+			TahunPenilaian:                     &tahunPenilaian,
+			Why:                                whyJSON,
+			PenyebabRisikoID:                   &req.PenyebabRisikoID,
+			KegiatanPengendalian:               &req.KegiatanPengendalian,
+			Status:                             sharedModel.StatusMenungguVerifikasi,
 		}
 		obj.SetAkarPenyebab()
 

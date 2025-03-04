@@ -17,8 +17,8 @@ type IdentifikasiRisikoStrategisPemdaGetAllUseCaseReq struct {
 
 // Change the response type to use the DTO with KategoriRisikoName
 type IdentifikasiRisikoStrategisPemdaGetAllUseCaseRes struct {
-	IdentifikasiRisikoStrategisPemda []model.IdentifikasiRisikoStrategisPemerintahDaerah `json:"identifikasi_risiko_strategis_pemda"`
-	Metadata                         *usecase.Metadata                                   `json:"metadata"`
+	IdentifikasiRisikoStrategisPemda []model.IdentifikasiRisikoStrategisPemda `json:"identifikasi_risiko_strategis_pemda"`
+	Metadata                         *usecase.Metadata                        `json:"metadata"`
 }
 
 type IdentifikasiRisikoStrategisPemdaGetAllUseCase = core.ActionHandler[IdentifikasiRisikoStrategisPemdaGetAllUseCaseReq, IdentifikasiRisikoStrategisPemdaGetAllUseCaseRes]

@@ -17,9 +17,9 @@ type PenetapanKonteksRisikoStrategisPemdaSaveRes struct {
 	ID string
 }
 
-type PenetepanKonteksRisikoStrategisPemdaSave = core.ActionHandler[PenetapanKonteksRisikoStrategisPemdaSaveReq, PenetapanKonteksRisikoStrategisPemdaSaveRes]
+type PenetapanKonteksRisikoStrategisPemdaSave = core.ActionHandler[PenetapanKonteksRisikoStrategisPemdaSaveReq, PenetapanKonteksRisikoStrategisPemdaSaveRes]
 
-func ImplPenetepanKonteksRisikoStrategisPemdaSave(db *gorm.DB) PenetepanKonteksRisikoStrategisPemdaSave {
+func ImplPenetepanKonteksRisikoStrategisPemdaSave(db *gorm.DB) PenetapanKonteksRisikoStrategisPemdaSave {
 	return func(ctx context.Context, req PenetapanKonteksRisikoStrategisPemdaSaveReq) (*PenetapanKonteksRisikoStrategisPemdaSaveRes, error) {
 		query := middleware.GetDBFromContext(ctx, db)
 

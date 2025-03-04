@@ -43,6 +43,7 @@ func main() {
 	cj := cronjob.NewCronJob(nil, cronjobDB)
 
 	wiring.SetupDependency(mariaDB, mux, jwtToken, apiPrinter, cj, ssed)
+	// wiring.SeedJenisPenyebab(mariaDB)
 
 	apiPrinter.PrintAPIDataTable().PublishAPI(mux, os.Getenv("SERVER_URL"), "/openapi")
 
