@@ -75,10 +75,18 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 		page, size := ValidatePageSize(req.Page, req.Size)
 
 		var objs []model.IdentifikasiRisikoStrategisPemda
+		// Select(`
+		// rcas.*,
+		// identifikasi_risiko_strategis_pemdas.uraian_risiko AS identifikasi_risiko_uraian_risiko,
+		// penyebab_risikos.nama AS penyebab_risiko_nama
+		// `).
+		// 	Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON rcas.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id").
+		// 	Joins("LEFT JOIN penyebab_risikos ON rcas.penyebab_risiko_id = penyebab_risikos.id").
+		// 	Offset((page - 1) * size).
 		if err := query.
-			// Preload("KategoriRisiko").
-			// Preload("Rca").
-			// Preload("PenetapanKonteksRisikoStrategisPemda").
+			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON identifikasi_risiko_strategis_pemdas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
+			Joins("LEFT JOIN kategori_risikos ON identifikasi_risiko_strategis_pemdas.kategori_risiko_id = kategori_risikos.kategori_risikos").
+			Joins("LEFT JOIN rcas ON identifikasi_risiko_strategis_pemdas.rca_id = rcas.id").
 			Offset((page - 1) * size).
 			Order(orderClause).
 			Limit(size).

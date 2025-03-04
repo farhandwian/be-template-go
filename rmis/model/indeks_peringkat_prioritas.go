@@ -46,6 +46,7 @@ func (ipr *IndeksPeringkatPrioritas) SetToleransiRisiko(kategoriRisiko string) e
 func (ipr *IndeksPeringkatPrioritas) SetMitigasi(skalaRisikoResidualRisk int) {
 	acceptable := MitigasiAcceptable
 	notAcceptable := MitigasiNotAcceptable
+	fmt.Println(*ipr.ToleransiRisiko)
 
 	if skalaRisikoResidualRisk <= *ipr.ToleransiRisiko {
 		ipr.Mitigasi = &acceptable

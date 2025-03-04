@@ -6,6 +6,7 @@ import (
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type HasilAnalisisRisikoCreateUseCaseReq struct {
@@ -41,7 +42,8 @@ func ImplHasilAnalisisRisikoCreateUseCase(
 	createHasilAnalisisRisiko gateway.HasilAnalisisRisikoSave,
 	IdentifikasiRisikoStrategisPemdaByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
 	IndeksPeringkatPrioritasCreate gateway.IndeksPeringkatPrioritasSave,
-	PenetapanKonteksRisikoStrategisPemdaByID gateway.PenetapanKonteksRisikoOperasionalGetByID,
+	PenetapanKonteksRisikoStrategisPemdaByID gateway.PenetapanKonteksRisikoStrategisPemdaGetByID,
+	KategoriRisikoByID gateway.KategoriRisikoGetByID,
 ) HasilAnalisisRisikoCreateUseCase {
 	return func(ctx context.Context, req HasilAnalisisRisikoCreateUseCaseReq) (*HasilAnalisisRisikoCreateUseCaseRes, error) {
 
@@ -55,7 +57,7 @@ func ImplHasilAnalisisRisikoCreateUseCase(
 			return nil, fmt.Errorf("error getting Identifikasi Risiko Strategis Pemda table: %v", err)
 		}
 
-		_, err = PenetapanKonteksRisikoStrategisPemdaByID(ctx, gateway.PenetapanKonteksRisikoOperasionalGetByIDReq{ID: req.PenetapanKonteksRisikoStrategisPemdaID})
+		_, err = PenetapanKonteksRisikoStrategisPemdaByID(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaGetByIDReq{ID: req.PenetapanKonteksRisikoStrategisPemdaID})
 		if err != nil {
 			return nil, fmt.Errorf("error getting Penetapan Konteks Risiko Strategis Pemda table: %v", err)
 		}
@@ -88,7 +90,9 @@ func ImplHasilAnalisisRisikoCreateUseCase(
 			PenetapanKonteksRisikoStrategisPemdaID: &req.PenetapanKonteksRisikoStrategisPemdaID,
 			SkalaDampak:                            &req.SkalaDampak,
 			SkalaKemungkinan:                       &req.SkalaKemungkinan,
+			Status:                                 sharedModel.StatusMenungguVerifikasi,
 		}
+		fmt.Println("TEST BANG")
 		obj.SetSkalaRisiko()
 
 		if _, err = createHasilAnalisisRisiko(ctx, gateway.HasilAnalisisRisikoSaveReq{HasilAnalisisRisiko: obj}); err != nil {
@@ -104,8 +108,14 @@ func ImplHasilAnalisisRisikoCreateUseCase(
 			ID:                    &genObjIndeksPeringkat.RandomId,
 			HasilAnalisisRisikoID: obj.ID,
 		}
+		fmt.Println("TEST BANG 2")
 
-		// objIndeksPeringkat.SetToleransiRisiko(*identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KategoriRisiko.Kode)
+		kategoriRisikoRes, err := KategoriRisikoByID(ctx, gateway.KategoriRisikoGetByIDReq{ID: *identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KategoriRisikoID})
+		if err != nil {
+			return nil, fmt.Errorf("error getting Kategori Risiko table: %v", err)
+		}
+
+		objIndeksPeringkat.SetToleransiRisiko(*kategoriRisikoRes.KategoriRisiko.Nama)
 		objIndeksPeringkat.SetMitigasi(*obj.SkalaRisiko)
 		objIndeksPeringkat.SetIntermediateRank(*obj.SkalaRisiko, *identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.NomorUraian)
 		if _, err = IndeksPeringkatPrioritasCreate(ctx, gateway.IndeksPeringkatPrioritasSaveReq{IndeksPeringkatPrioritas: objIndeksPeringkat}); err != nil {

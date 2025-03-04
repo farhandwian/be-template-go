@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"rmis/gateway"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type HasilAnalisisRisikoUpdateUseCaseReq struct {
@@ -27,6 +28,7 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 	IndeksPeringkatPrioritasCreate gateway.IndeksPeringkatPrioritasSave,
 	IdentifikasiRisikoStrategisPemdaByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
 	PenetapanKonteksRisikoStrategisPemdaByID gateway.PenetapanKonteksRisikoOperasionalGetByID,
+	KategoriRisikoByID gateway.KategoriRisikoGetByID,
 ) HasilAnalisisRisikoUpdateUseCase {
 	return func(ctx context.Context, req HasilAnalisisRisikoUpdateUseCaseReq) (*HasilAnalisisRisikoUpdateUseCaseRes, error) {
 
@@ -49,6 +51,7 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 		hasilAnalisisRisiko.SkalaKemungkinan = &req.SkalaKemungkinan
 		hasilAnalisisRisiko.IdentifikasiRisikoStrategisPemdaID = &req.IdentifikasiRisikoStrategisPemdaID
 		hasilAnalisisRisiko.PenetapanKonteksRisikoStrategisPemdaID = &req.PenetapanKonteksRisikoStrategisPemdaID
+		hasilAnalisisRisiko.Status = sharedModel.StatusMenungguVerifikasi
 		hasilAnalisisRisiko.SetSkalaRisiko()
 		if _, err := updateHasilAnalisisRisiko(ctx, gateway.HasilAnalisisRisikoSaveReq{HasilAnalisisRisiko: hasilAnalisisRisiko}); err != nil {
 			return nil, err
@@ -60,7 +63,12 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 		}
 		indeksPeringkatPrioritas := indeksPeringkatPrioritasByIDRes.IndeksPeringkatPrioritas
 
-		// indeksPeringkatPrioritas.SetToleransiRisiko(*identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KategoriRisiko.Kode)
+		kategoriRisikoRes, err := KategoriRisikoByID(ctx, gateway.KategoriRisikoGetByIDReq{ID: *identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KategoriRisikoID})
+		if err != nil {
+			return nil, fmt.Errorf("error getting Kategori Risiko table: %v", err)
+		}
+
+		indeksPeringkatPrioritas.SetToleransiRisiko(*kategoriRisikoRes.KategoriRisiko.Kode)
 		indeksPeringkatPrioritas.SetMitigasi(*hasilAnalisisRisiko.SkalaRisiko)
 		indeksPeringkatPrioritas.SetIntermediateRank(*hasilAnalisisRisiko.SkalaRisiko, *identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.NomorUraian)
 		if _, err = IndeksPeringkatPrioritasCreate(ctx, gateway.IndeksPeringkatPrioritasSaveReq{IndeksPeringkatPrioritas: indeksPeringkatPrioritas}); err != nil {

@@ -12,15 +12,15 @@ type IdentifikasiRisikoStrategisPemda struct {
 	ID                                     *string `json:"id" gorm:"primaryKey"`
 	PenetapanKonteksRisikoStrategisPemdaID *string `json:"-" gorm:"type:VARCHAR(255)"`
 	// PenetapanKonteksRisikoStrategisPemda   *PenetapanKonteksRisikoStrategisPemda `json:"penetapan_konteks_risiko_strategis_pemda" gorm:"foreignKey:PenetapanKonteksRisikoStrategisPemdaID;"`
-	TujuanStrategis  *string `json:"tujuan_strategis"`
-	IndikatorKinerja *string `json:"indikator_kinerja"`
-	KategoriRisikoID *string `json:"-" gorm:"type:VARCHAR(255)"` // references kategori_resiko.id
-	// KategoriRisiko                         *KategoriRisiko                       `json:"kategori_risiko" gorm:"foreignKey:KategoriRisikoID"`
-	UraianRisiko  *string `json:"uraian_resiko"`
-	NomorUraian   *int    `json:"nomor_uraian"`
-	KodeRisiko    *string `json:"kode_resiko"`
-	PemilikRisiko *string `json:"pemilik_resiko"`
-	RcaID         *string `json:"-" gorm:"type:VARCHAR(255)"`
+	TujuanStrategis    *string `json:"tujuan_strategis"`
+	IndikatorKinerja   *string `json:"indikator_kinerja"`
+	KategoriRisikoID   *string `json:"-" gorm:"type:VARCHAR(255)"` // references kategori_resiko.id
+	KategoriRisikoNama *string `json:"kategori_resiko_nama" gorm:"-"`
+	UraianRisiko       *string `json:"uraian_resiko"`
+	NomorUraian        *int    `json:"nomor_uraian"`
+	KodeRisiko         *string `json:"kode_resiko"`
+	PemilikRisiko      *string `json:"pemilik_resiko"`
+	RcaID              *string `json:"-" gorm:"type:VARCHAR(255)"`
 	// Rca           *Rca               `json:"-" gorm:"foreignKey:RcaID"`
 	UraianSebab  *string            `json:"uraian_sebab"` // references rca.akar_penyebab
 	SumberSebab  *string            `json:"sumber_sebab"` // references rca.jenis_penyebab
