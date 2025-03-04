@@ -5,19 +5,22 @@ import (
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type PenetapanKonteksRisikoStrategisPemdaCreateUseCaseReq struct {
-	NamaPemda              string `json:"nama_pemda"`
-	Periode                string `json:"periode"`
-	SumberData             string `json:"sumber_data"`
-	TujuanStrategis        string `json:"tujuan_strategis"`
-	NamaDinas              string `json:"nama_dinas"`
-	Sasaran                string `json:"sasaran"`
-	IKUSasaran             string `json:"iku_sasaran"`
-	PrioritasPembangunan   string `json:"prioritas_pembangunan"`
-	Penilaian              string `json:"penilaian"`
-	PenetapanKonteksRisiko string `json:"penetapan_konteks_resiko"`
+	NamaPemda                       string `json:"nama_pemda"`
+	Periode                         string `json:"periode"`
+	SumberData                      string `json:"sumber_data"`
+	TujuanStrategis                 string `json:"tujuan_strategis"`
+	SasaranStrategis                string `json:"sasaran_strategis"`
+	IKUSasaran                      string `json:"iku_sasaran"`
+	PrioritasPembangunan            string `json:"prioritas_pembangunan"`
+	PenetapanKonteksRisikoStrategis string `json:"penetapan_konteks_resiko_strategis"`
+	NamaDinas                       string `json:"nama_dinas"`
+	PenetapanTujuan                 string `json:"penetapan_tujuan"`
+	PenetapanSasaran                string `json:"penetapan_sasaran"`
+	PenetapanIku                    string `json:"penetapan_iku"`
 }
 
 type PenetapanKonteksRisikoStrategisPemdaCreateUseCaseRes struct {
@@ -38,17 +41,20 @@ func ImplPenetapanKonteksRisikoStrategisPemdaCreateUseCase(
 		}
 
 		obj := model.PenetapanKonteksRisikoStrategisPemda{
-			ID:                     &genObj.RandomId,
-			NamaPemda:              &req.NamaPemda,
-			Periode:                &req.Periode,
-			SumberData:             &req.SumberData,
-			TujuanStrategis:        &req.TujuanStrategis,
-			PenetapanKonteksRisiko: &req.PenetapanKonteksRisiko,
-			NamaDinas:              &req.NamaDinas,
-			Sasaran:                &req.Sasaran,
-			PrioritasPembangunan:   &req.PrioritasPembangunan,
-			Penilaian:              &req.Penilaian,
-			NamaYBS:                &req.NamaYBS,
+			ID:                              &genObj.RandomId,
+			NamaPemda:                       &req.NamaPemda,
+			Periode:                         &req.Periode,
+			SumberData:                      &req.SumberData,
+			TujuanStrategis:                 &req.TujuanStrategis,
+			NamaDinas:                       &req.NamaDinas,
+			SasaranStrategis:                &req.SasaranStrategis,
+			PrioritasPembangunan:            &req.PrioritasPembangunan,
+			PenetapanTujuan:                 &req.PenetapanTujuan,
+			PenetapanSasaran:                &req.PenetapanSasaran,
+			PenetapanIku:                    &req.PenetapanIku,
+			IkuSasaran:                      &req.IKUSasaran,
+			PenetapanKonteksRisikoStrategis: &req.PenetapanKonteksRisikoStrategis,
+			Status:                          sharedModel.StatusMenungguVerifikasi,
 		}
 
 		if _, err = createPenetapanKonteksRisikoStrategisPemda(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaSaveReq{PenetepanKonteksRisikoStrategisPemda: obj}); err != nil {

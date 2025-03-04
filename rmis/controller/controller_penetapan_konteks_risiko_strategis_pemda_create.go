@@ -12,10 +12,10 @@ import (
 func (c Controller) PenetapanKonteksRisikoStrategisPemdaCreateHandler(u usecase.PenetapanKonteksRisikoStrategisPemdaCreateUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodPost,
-		Url:    "/api/penetapan-konteks-risiko-strategis-pemdas",
+		Url:    "/api/penetapan-konteks-risiko-strategis-pemda",
 		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "penetapan-konteks-risiko-strategis-pemdas",
+			Object:    "penetapan-konteks-risiko-strategis-pemda",
 			Relation:  "create",
 		},
 		Body:    usecase.PenetapanKonteksRisikoStrategisPemdaCreateUseCaseReq{},

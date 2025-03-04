@@ -5,15 +5,18 @@ import (
 	"fmt"
 	"rmis/model"
 	"shared/core"
+	"shared/helper"
 	"shared/middleware"
 
 	"gorm.io/gorm"
 )
 
 type PenetapanKonteksRisikoStrategisPemdaGetAllReq struct {
-	Keyword string
-	Page    int
-	Size    int
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
 }
 
 type PenetapanKonteksRisikoStrategisPemdaGetAllRes struct {
@@ -31,7 +34,8 @@ func ImplPenetapanKonteksRisikoStrategisPemdaGetAll(db *gorm.DB) PenetapanKontek
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.
-				Where("nama LIKE ?", keyword)
+				Where("nama_pemda LIKE ?", keyword).
+				Or("penetapan_konteks_resiko_strategis LIKE ?", keyword)
 		}
 
 		var count int64
@@ -43,6 +47,21 @@ func ImplPenetapanKonteksRisikoStrategisPemdaGetAll(db *gorm.DB) PenetapanKontek
 			return nil, core.NewInternalServerError(err)
 		}
 
+		allowedSortBy := map[string]bool{
+			"nama_pemda":        true,
+			"periode":           true,
+			"penetapan_konteks": true,
+			"sumber_data":       true,
+		}
+
+		sortBy, sortOrder, err := helper.ValidateSortParams(allowedSortBy, req.SortBy, req.SortOrder, "nama_pemda")
+		if err != nil {
+			return nil, err
+		}
+
+		// Apply sorting
+		orderClause := fmt.Sprintf("%s %s", sortBy, sortOrder)
+
 		page, size := ValidatePageSize(req.Page, req.Size)
 
 		var objs []model.PenetapanKonteksRisikoStrategisPemda
@@ -50,6 +69,7 @@ func ImplPenetapanKonteksRisikoStrategisPemdaGetAll(db *gorm.DB) PenetapanKontek
 		if err := query.
 			Offset((page - 1) * size).
 			Limit(size).
+			Order(orderClause).
 			Find(&objs).
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)

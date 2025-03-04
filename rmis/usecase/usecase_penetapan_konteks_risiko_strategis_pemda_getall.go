@@ -9,19 +9,16 @@ import (
 )
 
 type PenetapanKonteksRisikoGetAllUseCaseReq struct {
-	Keyword string
-	Page    int
-	Size    int
-}
-
-type PenetapanKonteksRisiko struct {
-	PenetapanKonteksRisiko model.PenetapanKonteksRisikoStrategisPemda `json:"penetapan_konteks_risiko"`
-	IKUs                   []model.IKU
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
 }
 
 type PenetapanKonteksRisikoGetAllUseCaseRes struct {
-	PenetapanKonteksRisikos []PenetapanKonteksRisiko `json:"penetapan_konteks_risikos"`
-	Metadata                *usecase.Metadata        `json:"metadata"`
+	PenetapanKonteksRisikos []model.PenetapanKonteksRisikoStrategisPemda `json:"penetapan_konteks_risikos"`
+	Metadata                *usecase.Metadata                            `json:"metadata"`
 }
 
 type PenetapanKonteksRisikoGetAllUseCase = core.ActionHandler[PenetapanKonteksRisikoGetAllUseCaseReq, PenetapanKonteksRisikoGetAllUseCaseRes]
@@ -29,33 +26,16 @@ type PenetapanKonteksRisikoGetAllUseCase = core.ActionHandler[PenetapanKonteksRi
 func ImplPenetapanKonteksRisikoGetAllUseCase(getAllPenetapanKonteksRisikos gateway.PenetapanKonteksRisikoStrategisPemdaGetAll, getAllIKUs gateway.IKUGetAll) PenetapanKonteksRisikoGetAllUseCase {
 	return func(ctx context.Context, req PenetapanKonteksRisikoGetAllUseCaseReq) (*PenetapanKonteksRisikoGetAllUseCaseRes, error) {
 
-		penetapanKonteksRisikos, err := getAllPenetapanKonteksRisikos(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword})
+		res, err := getAllPenetapanKonteksRisikos(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword, SortBy: req.SortBy, SortOrder: req.SortOrder})
 		if err != nil {
 			return nil, err
 		}
 
-		totalItems := int(penetapanKonteksRisikos.Count)
+		totalItems := int(res.Count)
 		totalPages := (totalItems + req.Size - 1) / (req.Size)
 
-		penetapanKonteksRisikoRes := make([]PenetapanKonteksRisiko, len(penetapanKonteksRisikos.PenetapanKonteksRisikoStrategisPemda))
-		for i, penetapanKonteksRisiko := range penetapanKonteksRisikos.PenetapanKonteksRisikoStrategisPemda {
-			// need improvement
-			ikus, err := getAllIKUs(ctx, gateway.IKUGetAllReq{
-				ExternalID: *penetapanKonteksRisiko.ID,
-			})
-			if err != nil {
-				return nil, err
-			}
-
-			penetapanKonteksRisikoRes[i] = PenetapanKonteksRisiko{
-				PenetapanKonteksRisiko: penetapanKonteksRisiko,
-				IKUs:                   ikus.IKU,
-			}
-
-		}
-
 		return &PenetapanKonteksRisikoGetAllUseCaseRes{
-			PenetapanKonteksRisikos: penetapanKonteksRisikoRes,
+			PenetapanKonteksRisikos: res.PenetapanKonteksRisikoStrategisPemda,
 			Metadata: &usecase.Metadata{
 				Pagination: usecase.Pagination{
 					Page:       req.Page,

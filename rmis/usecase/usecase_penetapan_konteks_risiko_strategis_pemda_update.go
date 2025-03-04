@@ -4,21 +4,24 @@ import (
 	"context"
 	"rmis/gateway"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type PenetapanKonteksRisikoStrategisPemdaUpdateUseCaseReq struct {
-	ID                     string `json:"id"`
-	NamaPemda              string `json:"nama_pemda"`
-	Periode                string `json:"periode"`
-	SumberData             string `json:"sumber_data"`
-	TujuanStrategis        string `json:"tujuan_strategis"`
-	PenetapanKonteksRisiko string `json:"penetapan_konteks_resiko"`
-	NamaDinas              string `json:"nama_dinas"`
-	Sasaran                string `json:"sasaran"`
-	IKUSasaran             string `json:"iku_sasaran"`
-	PrioritasPembangunan   string `json:"prioritas_pembangunan"`
-	Penilaian              string `json:"penilaian"`
-	NamaYBS                string `json:"nama_ybs"`
+	ID                              string             `json:"id"`
+	NamaPemda                       string             `json:"nama_pemda"`
+	Periode                         string             `json:"periode"`
+	SumberData                      string             `json:"sumber_data"`
+	TujuanStrategis                 string             `json:"tujuan_strategis"`
+	SasaranStrategis                string             `json:"sasaran_strategis"`
+	IKUSasaran                      string             `json:"iku_sasaran"`
+	PrioritasPembangunan            string             `json:"prioritas_pembangunan"`
+	PenetapanKonteksRisikoStrategis string             `json:"penetapan_konteks_resiko_strategis"`
+	NamaDinas                       string             `json:"nama_dinas"`
+	PenetapanTujuan                 string             `json:"penetapan_tujuan"`
+	PenetapanSasaran                string             `json:"penetapan_sasaran"`
+	PenetapanIku                    string             `json:"penetapan_iku"`
+	Status                          sharedModel.Status `json:"status"`
 }
 
 type PenetapanKonteksRisikoStrategisPemdaUpdateUseCaseRes struct{}
@@ -35,19 +38,23 @@ func ImplPenetapanKonteksRisikoStrategisPemdaUpdateUseCase(
 		if err != nil {
 			return nil, err
 		}
+		penetapanKonteksRisikoStrategisPemda := res.PenetapanKonteksRisikoStrategisPemda
 
-		res.PenetapanKonteksRisikoStrategisPemda.NamaPemda = &req.NamaPemda
-		res.PenetapanKonteksRisikoStrategisPemda.Periode = &req.Periode
-		res.PenetapanKonteksRisikoStrategisPemda.SumberData = &req.SumberData
-		res.PenetapanKonteksRisikoStrategisPemda.TujuanStrategis = &req.TujuanStrategis
-		res.PenetapanKonteksRisikoStrategisPemda.PenetapanKonteksRisiko = &req.PenetapanKonteksRisiko
-		res.PenetapanKonteksRisikoStrategisPemda.NamaDinas = &req.NamaDinas
-		res.PenetapanKonteksRisikoStrategisPemda.Sasaran = &req.Sasaran
-		res.PenetapanKonteksRisikoStrategisPemda.PrioritasPembangunan = &req.PrioritasPembangunan
-		res.PenetapanKonteksRisikoStrategisPemda.Penilaian = &req.Penilaian
-		res.PenetapanKonteksRisikoStrategisPemda.NamaYBS = &req.NamaYBS
+		penetapanKonteksRisikoStrategisPemda.NamaPemda = &req.NamaPemda
+		penetapanKonteksRisikoStrategisPemda.Periode = &req.Periode
+		penetapanKonteksRisikoStrategisPemda.SumberData = &req.SumberData
+		penetapanKonteksRisikoStrategisPemda.TujuanStrategis = &req.TujuanStrategis
+		penetapanKonteksRisikoStrategisPemda.PenetapanKonteksRisikoStrategis = &req.PenetapanKonteksRisikoStrategis
+		penetapanKonteksRisikoStrategisPemda.NamaDinas = &req.NamaDinas
+		penetapanKonteksRisikoStrategisPemda.SasaranStrategis = &req.SasaranStrategis
+		penetapanKonteksRisikoStrategisPemda.PrioritasPembangunan = &req.PrioritasPembangunan
+		penetapanKonteksRisikoStrategisPemda.PenetapanTujuan = &req.PenetapanTujuan
+		penetapanKonteksRisikoStrategisPemda.PenetapanSasaran = &req.PenetapanSasaran
+		penetapanKonteksRisikoStrategisPemda.PenetapanIku = &req.PenetapanIku
+		penetapanKonteksRisikoStrategisPemda.Status = sharedModel.StatusMenungguVerifikasi
+		penetapanKonteksRisikoStrategisPemda.IkuSasaran = &req.IKUSasaran
 
-		if _, err := updatePenetapanKonteksRisikoStrategisPemda(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaSaveReq{PenetepanKonteksRisikoStrategisPemda: res.PenetapanKonteksRisikoStrategisPemda}); err != nil {
+		if _, err := updatePenetapanKonteksRisikoStrategisPemda(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaSaveReq{PenetepanKonteksRisikoStrategisPemda: penetapanKonteksRisikoStrategisPemda}); err != nil {
 			return nil, err
 		}
 

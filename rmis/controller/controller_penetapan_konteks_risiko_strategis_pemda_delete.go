@@ -14,10 +14,10 @@ import (
 func (c Controller) PenetapanKonteksRisikoStrategisPemdaDeleteHandler(u usecase.PenetapanKonteksRisikoDeleteUseCase) helper.APIData {
 	apiData := helper.APIData{
 		Method: http.MethodDelete,
-		Url:    "/api/penetapan-konteks-risiko-strategis-pemdas/{id}",
+		Url:    "/api/penetapan-konteks-risiko-strategis-pemda/{id}",
 		AccessKeto: model.AccessKetoStruct{
 			Namespace: "rmis",
-			Object:    "penetapan-konteks-risiko-strategis-pemdas",
+			Object:    "penetapan-konteks-risiko-strategis-pemda",
 			Relation:  "delete",
 		},
 		Summary: "Delete a Penetapan Konteks Risiko Strategis Pemdar",
