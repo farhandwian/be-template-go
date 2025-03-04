@@ -8,7 +8,7 @@ import (
 // Form 2A
 
 type PenetapanKonteksRisikoStrategisPemda struct {
-	ID                              *string            `json:"id"`
+	ID                              *string            `json:"id" gorm:"primaryKey"`
 	NamaPemda                       *string            `json:"nama_pemda"`
 	TahunPenilaian                  *time.Time         `json:"tahun_penilaian"`
 	Periode                         *string            `json:"periode"`

@@ -5,15 +5,18 @@ import (
 	"fmt"
 	"rmis/model"
 	"shared/core"
+	"shared/helper"
 	"shared/middleware"
 
 	"gorm.io/gorm"
 )
 
 type HasilAnalisisRisikoGetAllReq struct {
-	Keyword string
-	Page    int
-	Size    int
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
 }
 
 type HasilAnalisisRisikoGetAllRes struct {
@@ -43,6 +46,18 @@ func ImplHasilAnalisisRisikoGetAll(db *gorm.DB) HasilAnalisisRisikoGetAll {
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
+		// Validate sortby
+		allowedSortBy := map[string]bool{
+			"risiko_prioritas": true,
+		}
+
+		sortBy, sortOrder, err := helper.ValidateSortParams(allowedSortBy, req.SortBy, req.SortOrder, "risiko_prioritas")
+		if err != nil {
+			return nil, err
+		}
+
+		// Apply sorting
+		orderClause := fmt.Sprintf("%s %s", sortBy, sortOrder)
 
 		page, size := ValidatePageSize(req.Page, req.Size)
 
@@ -51,6 +66,7 @@ func ImplHasilAnalisisRisikoGetAll(db *gorm.DB) HasilAnalisisRisikoGetAll {
 		if err := query.
 			Offset((page - 1) * size).
 			Limit(size).
+			Order(orderClause).
 			Find(&objs).
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)

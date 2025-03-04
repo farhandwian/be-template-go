@@ -29,21 +29,16 @@ type RcaGetAll = core.ActionHandler[RcaGetAllReq, RcaGetAllRes]
 
 func ImplRcaGetAll(db *gorm.DB) RcaGetAll {
 	return func(ctx context.Context, req RcaGetAllReq) (*RcaGetAllRes, error) {
-
 		query := middleware.GetDBFromContext(ctx, db)
 
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
-			query = query.
-				Where("nama LIKE ?", keyword)
+			query = query.Where("nama LIKE ?", keyword)
 		}
 
 		var count int64
 
-		if err := query.
-			Model(&model.Rca{}).
-			Count(&count).
-			Error; err != nil {
+		if err := query.Model(&model.Rca{}).Count(&count).Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
 
@@ -68,11 +63,15 @@ func ImplRcaGetAll(db *gorm.DB) RcaGetAll {
 
 		var objs []model.Rca
 
+		// Select with proper JOINs and aliases
 		if err := query.
 			Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON rcas.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id").
 			Joins("LEFT JOIN penyebab_risikos ON rcas.penyebab_risiko_id = penyebab_risikos.id").
-			Preload("IdentifikasiRisikoStrategisPemda").
-			Preload("PenyebabRisiko").
+			Select(`
+			rcas.*, 
+			identifikasi_risiko_strategis_pemdas.uraian_risiko AS identifikasi_risiko_uraian_risiko,
+			penyebab_risikos.nama AS penyebab_risiko_nama
+		`).
 			Offset((page - 1) * size).
 			Limit(size).
 			Order(orderClause).
@@ -81,6 +80,7 @@ func ImplRcaGetAll(db *gorm.DB) RcaGetAll {
 			return nil, core.NewInternalServerError(err)
 		}
 
+		fmt.Println(query)
 		return &RcaGetAllRes{
 			Rca:   objs,
 			Count: count,

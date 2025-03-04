@@ -2,27 +2,18 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"rmis/gateway"
-	"rmis/model"
 	"shared/core"
 )
 
 type HasilAnalisisRisikoUpdateUseCaseReq struct {
-	ID                                 string                    `json:"-"`
-	IdentifikasiRisikoStrategisPemdaID string                    `json:"identifikasi_risiko_strategis_pemda_id"`
-	KriteriaKemungkinanInherentRisk    model.KriteriaKemungkinan `json:"kriteria_kemungkinan_inherent_risk"`
-	SkorKemungkinanInherentRisk        int                       `json:"skor_kemungkinan_inherent_risk"`
-	KriteriaDampakInherentRisk         string                    `json:"kriteria_dampak_inherent_risk"`
-	SkorDampakInherentRisk             int                       `json:"skor_dampak_inherent_risk"`
-	StatusAda                          string                    `json:"status_ada"`
-	UraianControl                      string                    `json:"uraian_control"`
-	KlarifikasiSPIP                    string                    `json:"klarifikasi_spip"`
-	MemadaiControl                     string                    `json:"memadai_control"` // enum memadai (can also be defined as a custom type)
-	KriteriaKemungkinanResidualRisk    model.KriteriaKemungkinan `json:"kriteria_kemungkinan_residual_risk"`
-	SkorKemungkinanResidualRisk        int                       `json:"skor_kemungkinan_residual_risk"`
-	KriteriaDampakResidualRisk         string                    `json:"kriteria_dampak_residual_risk"`
-	SkorDampakResidualRisk             int                       `json:"skor_dampak_residual_risk"`
-	SkalaRisikoResidualRisk            int                       `json:"skala_risiko_residual_risk"`
+	ID                                     string `json:"-"`
+	SkalaDampak                            int    `json:"skala_dampak"`
+	SkalaKemungkinan                       int    `json:"skala_kemungkinan"`
+	SkalaRisiko                            int    `json:"skala_risiko"`
+	IdentifikasiRisikoStrategisPemdaID     string `json:"identifikasi_risiko_strategis_pemda_id"`
+	PenetapanKonteksRisikoStrategisPemdaID string `json:"penetapan_konteks_risiko_strategis_pemda_id"`
 }
 
 type HasilAnalisisRisikoUpdateUseCaseRes struct{}
@@ -34,6 +25,8 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 	updateHasilAnalisisRisiko gateway.HasilAnalisisRisikoSave,
 	indeksPeringkatPrioritasByID gateway.IndeksPeringkatPrioritasGetByID,
 	IndeksPeringkatPrioritasCreate gateway.IndeksPeringkatPrioritasSave,
+	IdentifikasiRisikoStrategisPemdaByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
+	PenetapanKonteksRisikoStrategisPemdaByID gateway.PenetapanKonteksRisikoOperasionalGetByID,
 ) HasilAnalisisRisikoUpdateUseCase {
 	return func(ctx context.Context, req HasilAnalisisRisikoUpdateUseCaseReq) (*HasilAnalisisRisikoUpdateUseCaseRes, error) {
 
@@ -42,20 +35,20 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 			return nil, err
 		}
 		hasilAnalisisRisiko := res.HasilAnalisisRisiko
+		identifikasiRisikoStrategisPemdaRes, err := IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: req.IdentifikasiRisikoStrategisPemdaID})
+		if err != nil {
+			return nil, fmt.Errorf("error getting Identifikasi Risiko Strategis Pemda table: %v", err)
+		}
 
-		hasilAnalisisRisiko.IdentifikasiRisikoStrategisPemerintahDaerahID = &req.IdentifikasiRisikoStrategisPemdaID
-		hasilAnalisisRisiko.SkorKemungkinanInherentRisk = &req.SkorKemungkinanInherentRisk
-		hasilAnalisisRisiko.KriteriaDampakInherentRisk = &req.KriteriaDampakInherentRisk
-		hasilAnalisisRisiko.SkorDampakInherentRisk = &req.SkorDampakInherentRisk
-		hasilAnalisisRisiko.StatusAda = &req.StatusAda
-		hasilAnalisisRisiko.UraianControl = &req.UraianControl
-		hasilAnalisisRisiko.KlarifikasiSPIP = &req.KlarifikasiSPIP
-		hasilAnalisisRisiko.MemadaiControl = &req.MemadaiControl
-		hasilAnalisisRisiko.SkorKemungkinanResidualRisk = &req.SkorKemungkinanResidualRisk
-		hasilAnalisisRisiko.KriteriaDampakResidualRisk = &req.KriteriaDampakResidualRisk
-		hasilAnalisisRisiko.SkorDampakResidualRisk = &req.SkorDampakResidualRisk
-		hasilAnalisisRisiko.SkalaRisikoResidualRisk = &req.SkalaRisikoResidualRisk
+		_, err = PenetapanKonteksRisikoStrategisPemdaByID(ctx, gateway.PenetapanKonteksRisikoOperasionalGetByIDReq{ID: req.PenetapanKonteksRisikoStrategisPemdaID})
+		if err != nil {
+			return nil, fmt.Errorf("error getting Penetapan Konteks Risiko Strategis Pemda table: %v", err)
+		}
 
+		hasilAnalisisRisiko.SkalaDampak = &req.SkalaDampak
+		hasilAnalisisRisiko.SkalaKemungkinan = &req.SkalaKemungkinan
+		hasilAnalisisRisiko.IdentifikasiRisikoStrategisPemdaID = &req.IdentifikasiRisikoStrategisPemdaID
+		hasilAnalisisRisiko.PenetapanKonteksRisikoStrategisPemdaID = &req.PenetapanKonteksRisikoStrategisPemdaID
 		hasilAnalisisRisiko.SetSkalaRisiko()
 		if _, err := updateHasilAnalisisRisiko(ctx, gateway.HasilAnalisisRisikoSaveReq{HasilAnalisisRisiko: hasilAnalisisRisiko}); err != nil {
 			return nil, err
@@ -67,9 +60,9 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 		}
 		indeksPeringkatPrioritas := indeksPeringkatPrioritasByIDRes.IndeksPeringkatPrioritas
 
-		indeksPeringkatPrioritas.SetToleransiRisiko(*hasilAnalisisRisiko.KategoriRisiko)
-		indeksPeringkatPrioritas.SetMitigasi(*hasilAnalisisRisiko.SkalaRisikoResidualRisk)
-		indeksPeringkatPrioritas.SetIntermediateRank(*hasilAnalisisRisiko.SkalaRisikoResidualRisk, *hasilAnalisisRisiko.NomorUraian)
+		// indeksPeringkatPrioritas.SetToleransiRisiko(*identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KategoriRisiko.Kode)
+		indeksPeringkatPrioritas.SetMitigasi(*hasilAnalisisRisiko.SkalaRisiko)
+		indeksPeringkatPrioritas.SetIntermediateRank(*hasilAnalisisRisiko.SkalaRisiko, *identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.NomorUraian)
 		if _, err = IndeksPeringkatPrioritasCreate(ctx, gateway.IndeksPeringkatPrioritasSaveReq{IndeksPeringkatPrioritas: indeksPeringkatPrioritas}); err != nil {
 			return nil, err
 		}

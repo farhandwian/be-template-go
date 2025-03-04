@@ -37,7 +37,7 @@ func ImplPenilaianRisikoUpdateUseCase(
 			return nil, err
 		}
 
-		hasilAnalisisRisikoByIDRes, err := hasilAnalisisRisikoByID(ctx, gateway.HasilAnalisisRisikoGetByIDReq{ID: *daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.HasilAnalisisRisikoID})
+		_, err = hasilAnalisisRisikoByID(ctx, gateway.HasilAnalisisRisikoGetByIDReq{ID: *daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.HasilAnalisisRisikoID})
 		if err != nil {
 			return nil, err
 		}
@@ -45,7 +45,7 @@ func ImplPenilaianRisikoUpdateUseCase(
 
 		penilaianRisiko.RisikoPrioritas = daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.RisikoPrioritas
 		penilaianRisiko.KodeRisiko = daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.KodeRisiko
-		penilaianRisiko.UraianPengendalian = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.UraianControl
+		// penilaianRisiko.UraianPengendalian = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.UraianControl
 		penilaianRisiko.DaftarRisikoPrioritasID = &req.DaftarRisikoPrioritasID
 		penilaianRisiko.CelahPengendalian = &req.CelahPengendalian
 		penilaianRisiko.RencanaTindakPengendalian = &req.RencanaTindakPengendalian

@@ -34,16 +34,16 @@ func ImplDaftarRisikoPrioritasUpdateUseCase(
 		}
 
 		identifikasiRisikoStrategisPemdaByIDRes, err := IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{
-			ID: *hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.IdentifikasiRisikoStrategisPemerintahDaerahID})
+			ID: *hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.IdentifikasiRisikoStrategisPemdaID})
 
 		if err != nil {
 			return nil, err
 		}
 
-		res.DaftarRisikoPrioritas.HasilAnalisisRisikoID = &req.HasilAnalisisRisikoID
-		res.DaftarRisikoPrioritas.RisikoPrioritas = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.RisikoTeridentifikasi
-		res.DaftarRisikoPrioritas.KodeRisiko = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KodeRisiko
-		res.DaftarRisikoPrioritas.KategoriRisiko = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KategoriRisiko
+		// res.DaftarRisikoPrioritas.HasilAnalisisRisikoID = &req.HasilAnalisisRisikoID
+		// res.DaftarRisikoPrioritas.RisikoPrioritas = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.RisikoTeridentifikasi
+		// res.DaftarRisikoPrioritas.KodeRisiko = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KodeRisiko
+		// res.DaftarRisikoPrioritas.KategoriRisiko = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KategoriRisiko
 		res.DaftarRisikoPrioritas.PemilikRisiko = identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.PemilikRisiko
 		res.DaftarRisikoPrioritas.PenyebabRisiko = identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianSebab
 		res.DaftarRisikoPrioritas.DampakRisiko = identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianDampak

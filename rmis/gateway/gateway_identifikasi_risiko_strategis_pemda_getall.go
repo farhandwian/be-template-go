@@ -18,6 +18,7 @@ type IdentifikasiRisikoStrategisPemdaGetAllReq struct {
 	SortBy    string
 	SortOrder string
 	Status    string
+	Periode   string
 }
 
 type IdentifikasiRisikoStrategisPemdaGetAllRes struct {
@@ -43,6 +44,10 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 			query = query.Where("status = ?", req.Status)
 		}
 
+		if req.Periode != "" {
+			query = query.Where("periode = ?", req.Periode)
+		}
+
 		var count int64
 		if err := query.
 			Model(&model.IdentifikasiRisikoStrategisPemda{}).
@@ -51,10 +56,15 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 			return nil, core.NewInternalServerError(err)
 		}
 		allowedSortBy := map[string]bool{
-			"nama_pemda": true,
+			"kode_risiko": true,
 		}
 
-		sortBy, sortOrder, err := helper.ValidateSortParams(allowedSortBy, req.SortBy, req.SortOrder, "nama_pemda")
+		allowerdForeignSortBy := map[string]string{
+			"identifikasi_risiko_strategis_pemda": "identifikasi_risiko_strategis_pemdas.uraian_risiko",
+			"penyebab_risiko":                     "penyebab_risikos.nama",
+		}
+
+		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "kode_risiko")
 		if err != nil {
 			return nil, err
 		}
@@ -66,9 +76,9 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 
 		var objs []model.IdentifikasiRisikoStrategisPemda
 		if err := query.
-			Preload("KategoriRisiko").
-			Preload("Rca").
-			Preload("PenetapanKonteksRisikoStrategisPemda").
+			// Preload("KategoriRisiko").
+			// Preload("Rca").
+			// Preload("PenetapanKonteksRisikoStrategisPemda").
 			Offset((page - 1) * size).
 			Order(orderClause).
 			Limit(size).

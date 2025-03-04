@@ -39,16 +39,16 @@ func ImplPenilaianRisikoCreateUseCase(
 			return nil, err
 		}
 
-		hasilAnalisisRisikoByIDRes, err := hasilAnalisisRisikoByID(ctx, gateway.HasilAnalisisRisikoGetByIDReq{ID: *daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.HasilAnalisisRisikoID})
+		_, err = hasilAnalisisRisikoByID(ctx, gateway.HasilAnalisisRisikoGetByIDReq{ID: *daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.HasilAnalisisRisikoID})
 		if err != nil {
 			return nil, err
 		}
 
 		obj := model.PenilaianRisiko{
-			ID:                        &genObj.RandomId,
-			RisikoPrioritas:           daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.RisikoPrioritas,
-			KodeRisiko:                daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.KodeRisiko,
-			UraianPengendalian:        hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.UraianControl,
+			ID:              &genObj.RandomId,
+			RisikoPrioritas: daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.RisikoPrioritas,
+			KodeRisiko:      daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.KodeRisiko,
+			// UraianPengendalian:        hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.UraianControl,
 			CelahPengendalian:         &req.CelahPengendalian,
 			RencanaTindakPengendalian: &req.RencanaTindakPengendalian,
 			PemilikPenanggungJawab:    &req.PemilikPenanggungJawab,

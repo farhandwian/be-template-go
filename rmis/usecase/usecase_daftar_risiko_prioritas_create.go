@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
@@ -35,23 +34,22 @@ func ImplDaftarRisikoPrioritasCreateUseCase(
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.IdentifikasiRisikoStrategisPemerintahDaerahID)
-		identifikasiRisikoStrategisPemdaByIDRes, err := IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{
-			ID: *hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.IdentifikasiRisikoStrategisPemerintahDaerahID})
+		_, err = IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{
+			ID: *hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.IdentifikasiRisikoStrategisPemdaID})
 
 		if err != nil {
 			return nil, err
 		}
 
 		obj := model.DaftarRisikoPrioritas{
-			ID:                    &genObj.RandomId,
-			HasilAnalisisRisikoID: &req.HasilAnalisisRisikoID,
-			RisikoPrioritas:       hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.RisikoTeridentifikasi,
-			KodeRisiko:            hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KodeRisiko,
-			KategoriRisiko:        hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KategoriRisiko,
-			PemilikRisiko:         identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.PemilikRisiko,
-			PenyebabRisiko:        identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianSebab,
-			DampakRisiko:          identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianDampak,
+			ID: &genObj.RandomId,
+			// HasilAnalisisRisikoID: &req.HasilAnalisisRisikoID,
+			// RisikoPrioritas:       hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.RisikoTeridentifikasi,
+			// KodeRisiko:            hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KodeRisiko,
+			// KategoriRisiko:        hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KategoriRisiko,
+			// PemilikRisiko:         identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.PemilikRisiko,
+			// PenyebabRisiko:        identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianSebab,
+			// DampakRisiko:          identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianDampak,
 		}
 
 		if _, err = createDaftarRisikoPrioritas(ctx, gateway.DaftarRisikoPrioritasSaveReq{DaftarRisikoPrioritas: obj}); err != nil {

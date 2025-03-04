@@ -27,9 +27,9 @@ func ImplIdentifikasiRisikoStrategisPemdaGetByID(db *gorm.DB) IdentifikasiRisiko
 		var result model.IdentifikasiRisikoStrategisPemda
 		// Use Preload to load the KategoriRisiko association
 		if err := query.
-			Preload("KategoriRisiko").
-			Preload("Rca").
-			Preload("PenetapanKonteksRisikoStrategisPemda").
+			// Preload("KategoriRisiko").
+			// Preload("Rca").
+			// Preload("PenetapanKonteksRisikoStrategisPemda").
 			First(&result, "id = ?", req.ID).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				return nil, fmt.Errorf("IdentifikasiRisikoStrategisPemda id %v is not found", req.ID)

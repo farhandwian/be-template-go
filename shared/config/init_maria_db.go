@@ -42,7 +42,8 @@ func InitMariaDatabase() *gorm.DB {
 	if err != nil {
 		panic("failed to connect database")
 	}
-
+	// Disable foreign key checks temporarily
+	db.Exec("SET foreign_key_checks = 0;")
 	db.AutoMigrate(
 		// &model.RekapitulasiHasilKuesioner{},
 		// &model.OPD{},
@@ -52,13 +53,13 @@ func InitMariaDatabase() *gorm.DB {
 		// &model.KriterieaKemungkinan{},
 		// &model.KriteriaDampak{},
 		// &iamModel.User{},
-		&model.IdentifikasiRisikoStrategisPemda{},
-		&model.PenetapanKonteksRisikoStrategisPemda{},
-		&model.Rca{},
-	// &model.PenyebabRisiko{},
-	// &model.IKU{},
-	// &model.SimpulanKondisiKelemahanLingkungan{},
-	// &model.HasilAnalisisRisiko{},
+		// &model.IdentifikasiRisikoStrategisPemda{},
+		// &model.PenetapanKonteksRisikoStrategisPemda{},
+		// &model.Rca{},
+		// &model.PenyebabRisiko{},
+		// &model.IKU{},
+		// &model.SimpulanKondisiKelemahanLingkungan{},
+		&model.HasilAnalisisRisiko{},
 	// &model.PenilaianKegiatanPengendalian{},
 	// &model.PenetapanKonteksRisikoStrategisRenstraOPD{},
 	// &model.DaftarRisikoPrioritas{},
