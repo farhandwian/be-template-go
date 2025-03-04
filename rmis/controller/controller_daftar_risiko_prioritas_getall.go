@@ -26,6 +26,7 @@ func (c Controller) DaftarRisikoPrioritasGetAllHandler(u usecase.DaftarRisikoPri
 			{Name: "size", Type: "number", Description: "size", Required: false},
 			{Name: "sortBy", Type: "string", Description: "sort by", Required: false},
 			{Name: "sortOrder", Type: "string", Description: "sort order", Required: false},
+			{Name: "status", Type: "string", Description: "status filter", Required: false},
 		},
 	}
 
@@ -35,7 +36,11 @@ func (c Controller) DaftarRisikoPrioritasGetAllHandler(u usecase.DaftarRisikoPri
 		keyword := controller.GetQueryString(r, "keyword", "")
 		sortBy := controller.GetQueryString(r, "sortBy", "")
 		sortOrder := controller.GetQueryString(r, "sortOrder", "")
-		req := usecase.DaftarRisikoPrioritasGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword, SortBy: sortBy, SortOrder: sortOrder}
+		status := controller.GetQueryString(r, "status", "")
+
+		req := usecase.DaftarRisikoPrioritasGetAllUseCaseReq{
+			Page: page, Size: size, Keyword: keyword, SortBy: sortBy, SortOrder: sortOrder, Status: status,
+		}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 

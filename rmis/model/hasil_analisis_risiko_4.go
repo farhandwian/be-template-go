@@ -56,9 +56,15 @@ type HasilAnalisisRisiko struct {
 
 	IdentifikasiRisikoStrategisPemdaID *string `json:"-" gorm:"type:VARCHAR(255)"`
 	// IdentifikasiRisikoStrategisPemda   *IdentifikasiRisikoStrategisPemda `json:"identifikasi_risiko_strategis_pemda" gorm:"foreignKey:IdentifikasiRisikoStrategisPemdaID"`
-	SkalaDampak      *int               `json:"skala_dampak"`
-	SkalaKemungkinan *int               `json:"skala_kemungkinan"`
-	SkalaRisiko      *int               `json:"skala_risiko"`
+	SkalaDampak      *int `json:"skala_dampak"`
+	SkalaKemungkinan *int `json:"skala_kemungkinan"`
+	SkalaRisiko      *int `json:"skala_risiko"`
+
+	NamaPemda        *string            `json:"nama_pemda"`
+	Tahun            *time.Time         `json:"tahun"`
+	Periode          *string            `json:"periode"`
+	PenetapanKonteks *string            `json:"penetapan_konteks"`
+	UrusanPemerintah *string            `json:"urusan_pemerintah"`
 	Status           sharedModel.Status `json:"status"`
 	CreatedAt        time.Time          `json:"created_at"`
 	UpdatedAt        time.Time          `json:"updated_at"`

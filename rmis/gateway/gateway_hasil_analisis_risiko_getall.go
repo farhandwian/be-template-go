@@ -17,6 +17,7 @@ type HasilAnalisisRisikoGetAllReq struct {
 	Size      int
 	SortBy    string
 	SortOrder string
+	Status    string
 }
 
 type HasilAnalisisRisikoGetAllRes struct {
@@ -38,6 +39,10 @@ func ImplHasilAnalisisRisikoGetAll(db *gorm.DB) HasilAnalisisRisikoGetAll {
 				Or("kode LIKE ?", keyword)
 		}
 
+		if req.Status != "" {
+			query = query.Where("status =?", req.Status)
+		}
+
 		var count int64
 
 		if err := query.
@@ -47,11 +52,16 @@ func ImplHasilAnalisisRisikoGetAll(db *gorm.DB) HasilAnalisisRisikoGetAll {
 			return nil, core.NewInternalServerError(err)
 		}
 		// Validate sortby
-		allowedSortBy := map[string]bool{
-			"risiko_prioritas": true,
+		allowedSortBy := map[string]bool{}
+
+		allowerdForeignSortBy := map[string]string{
+			"nama_pemda":        "penetapan_konteks_risiko_strategis_pemdas.nama_pemda",
+			"tahun":             "penetapan_konteks_risiko_strategis_pemdas.tahun",
+			"tujuan_strategis":  "penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan",
+			"urusan_pemerintah": "penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintah",
 		}
 
-		sortBy, sortOrder, err := helper.ValidateSortParams(allowedSortBy, req.SortBy, req.SortOrder, "risiko_prioritas")
+		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "nama_pemda")
 		if err != nil {
 			return nil, err
 		}
@@ -64,6 +74,15 @@ func ImplHasilAnalisisRisikoGetAll(db *gorm.DB) HasilAnalisisRisikoGetAll {
 		var objs []model.HasilAnalisisRisiko
 
 		if err := query.
+			Select(`hasil_analisis_risikos.*, 
+			    penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
+                penetapan_konteks_risiko_strategis_pemdas.tahun AS tahun,
+				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
+                penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintah AS urusan_pemerintah,
+				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_tujuan,
+			`).
+			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON hasil_analisis_risikos.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
+			Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON hasil_analisis_risikos.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id").
 			Offset((page - 1) * size).
 			Limit(size).
 			Order(orderClause).

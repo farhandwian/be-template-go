@@ -9,10 +9,13 @@ import (
 )
 
 type IdentifikasiRisikoStrategisPemdaGetAllUseCaseReq struct {
-	Keyword string
-	Page    int
-	Size    int
-	Status  string
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
+	Status    string
+	Periode   string
 }
 
 // Change the response type to use the DTO with KategoriRisikoName
@@ -28,7 +31,7 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAllUseCase(getAllIdentifikasiRisikoS
 
 		// Fetch the results from the gateway (which already includes the mapped KategoriRisikoName)
 		res, err := getAllIdentifikasiRisikoStrategisPemdas(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetAllReq{
-			Page: req.Page, Size: req.Size, Keyword: req.Keyword, Status: req.Status,
+			Page: req.Page, Size: req.Size, Keyword: req.Keyword, Status: req.Status, SortBy: req.SortBy, SortOrder: req.SortOrder, Periode: req.Periode,
 		})
 		if err != nil {
 			return nil, err

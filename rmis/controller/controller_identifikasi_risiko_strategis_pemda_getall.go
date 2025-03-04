@@ -24,6 +24,10 @@ func (c Controller) IdentifikasiRisikoStrategisPemdaGetAllHandler(u usecase.Iden
 			{Name: "keyword", Type: "string", Description: "name, pic or location", Required: false},
 			{Name: "page", Type: "number", Description: "page", Required: false},
 			{Name: "size", Type: "number", Description: "size", Required: false},
+			{Name: "sortBy", Type: "string", Description: "sort by", Required: false},
+			{Name: "sortOrder", Type: "string", Description: "sort order", Required: false},
+			{Name: "status", Type: "string", Description: "status filter", Required: false},
+			{Name: "periode", Type: "string", Description: "periode filter", Required: false},
 		},
 	}
 
@@ -31,7 +35,14 @@ func (c Controller) IdentifikasiRisikoStrategisPemdaGetAllHandler(u usecase.Iden
 		page := controller.GetQueryInt(r, "page", 1)
 		size := controller.GetQueryInt(r, "size", 10)
 		keyword := controller.GetQueryString(r, "keyword", "")
-		req := usecase.IdentifikasiRisikoStrategisPemdaGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword}
+		sortBy := controller.GetQueryString(r, "sortBy", "")
+		sortOrder := controller.GetQueryString(r, "sortOrder", "")
+		status := controller.GetQueryString(r, "status", "")
+		periode := controller.GetQueryString(r, "periode", "")
+
+		req := usecase.IdentifikasiRisikoStrategisPemdaGetAllUseCaseReq{
+			Page: page, Size: size, Keyword: keyword, SortBy: sortBy, SortOrder: sortOrder, Status: status, Periode: periode,
+		}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 

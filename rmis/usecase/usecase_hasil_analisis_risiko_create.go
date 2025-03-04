@@ -92,7 +92,6 @@ func ImplHasilAnalisisRisikoCreateUseCase(
 			SkalaKemungkinan:                       &req.SkalaKemungkinan,
 			Status:                                 sharedModel.StatusMenungguVerifikasi,
 		}
-		fmt.Println("TEST BANG")
 		obj.SetSkalaRisiko()
 
 		if _, err = createHasilAnalisisRisiko(ctx, gateway.HasilAnalisisRisikoSaveReq{HasilAnalisisRisiko: obj}); err != nil {

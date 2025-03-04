@@ -9,9 +9,12 @@ import (
 )
 
 type HasilAnalisisRisikoGetAllUseCaseReq struct {
-	Keyword string
-	Page    int
-	Size    int
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
+	Status    string
 }
 
 type HasilAnalisisRisikoGetAllUseCaseRes struct {
@@ -24,7 +27,9 @@ type HasilAnalisisRisikoGetAllUseCase = core.ActionHandler[HasilAnalisisRisikoGe
 func ImplHasilAnalisisRisikoGetAllUseCase(getAllHasilAnalisisRisikos gateway.HasilAnalisisRisikoGetAll) HasilAnalisisRisikoGetAllUseCase {
 	return func(ctx context.Context, req HasilAnalisisRisikoGetAllUseCaseReq) (*HasilAnalisisRisikoGetAllUseCaseRes, error) {
 
-		res, err := getAllHasilAnalisisRisikos(ctx, gateway.HasilAnalisisRisikoGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword})
+		res, err := getAllHasilAnalisisRisikos(ctx, gateway.HasilAnalisisRisikoGetAllReq{
+			Page: req.Page, Size: req.Size, Keyword: req.Keyword, SortBy: req.SortBy, SortOrder: req.SortOrder, Status: req.Status,
+		})
 		if err != nil {
 			return nil, err
 		}

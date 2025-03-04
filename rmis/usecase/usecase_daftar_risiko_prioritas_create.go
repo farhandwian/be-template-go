@@ -2,13 +2,16 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type DaftarRisikoPrioritasCreateUseCaseReq struct {
-	HasilAnalisisRisikoID string `json:"hasil_analisis_risiko_id"`
+	HasilAnalisisRisikoID                  string `json:"hasil_analisis_risiko_id"`
+	PenetapanKonteksRisikoStrategisPemdaID string `json:"penetapan_konteks_risiko_strategis_pemda_id"`
 }
 
 type DaftarRisikoPrioritasCreateUseCaseRes struct {
@@ -22,6 +25,7 @@ func ImplDaftarRisikoPrioritasCreateUseCase(
 	createDaftarRisikoPrioritas gateway.DaftarRisikoPrioritasSave,
 	HasilAnalisisRisikoByID gateway.HasilAnalisisRisikoGetByID,
 	IdentifikasiRisikoStrategisPemdaByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
+	PenetapanKonteksRisikoStrategisPemdaByID gateway.PenetapanKonteksRisikoStrategisPemdaGetByID,
 ) DaftarRisikoPrioritasCreateUseCase {
 	return func(ctx context.Context, req DaftarRisikoPrioritasCreateUseCaseReq) (*DaftarRisikoPrioritasCreateUseCaseRes, error) {
 
@@ -40,9 +44,15 @@ func ImplDaftarRisikoPrioritasCreateUseCase(
 		if err != nil {
 			return nil, err
 		}
+		_, err = PenetapanKonteksRisikoStrategisPemdaByID(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaGetByIDReq{ID: req.PenetapanKonteksRisikoStrategisPemdaID})
+		if err != nil {
+			return nil, fmt.Errorf("error getting Penetapan Konteks Risiko Strategis Pemda table: %v", err)
+		}
 
 		obj := model.DaftarRisikoPrioritas{
-			ID: &genObj.RandomId,
+			ID:                                     &genObj.RandomId,
+			PenetapanKonteksRisikoStrategisPemdaID: &req.PenetapanKonteksRisikoStrategisPemdaID,
+			Status:                                 sharedModel.StatusMenungguVerifikasi,
 			// HasilAnalisisRisikoID: &req.HasilAnalisisRisikoID,
 			// RisikoPrioritas:       hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.RisikoTeridentifikasi,
 			// KodeRisiko:            hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KodeRisiko,

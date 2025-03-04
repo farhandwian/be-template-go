@@ -14,6 +14,7 @@ type DaftarRisikoPrioritasGetAllUseCaseReq struct {
 	Size      int
 	SortBy    string
 	SortOrder string
+	Status    string
 }
 
 type DaftarRisikoPrioritasGetAllUseCaseRes struct {
@@ -32,6 +33,7 @@ func ImplDaftarRisikoPrioritasGetAllUseCase(getAllDaftarRisikoPrioritass gateway
 			Keyword:   req.Keyword,
 			SortBy:    req.SortBy,
 			SortOrder: req.SortOrder,
+			Status:    req.Status,
 		})
 		if err != nil {
 			return nil, err

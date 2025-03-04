@@ -22,14 +22,20 @@ type IdentifikasiRisikoStrategisPemda struct {
 	PemilikRisiko      *string `json:"pemilik_resiko"`
 	RcaID              *string `json:"-" gorm:"type:VARCHAR(255)"`
 	// Rca           *Rca               `json:"-" gorm:"foreignKey:RcaID"`
-	UraianSebab  *string            `json:"uraian_sebab"` // references rca.akar_penyebab
-	SumberSebab  *string            `json:"sumber_sebab"` // references rca.jenis_penyebab
-	Controllable *string            `json:"controllable"` // could be boolean if desired
-	UraianDampak *string            `json:"uraian_dampak"`
-	PihakDampak  *string            `json:"pihak_dampak"`
-	Status       sharedModel.Status `json:"status"`
-	CreatedAt    time.Time          `json:"created_at"`
-	UpdatedAt    time.Time          `json:"updated_at"`
+	UraianSebab  *string `json:"uraian_sebab"` // references rca.akar_penyebab
+	SumberSebab  *string `json:"sumber_sebab"` // references rca.jenis_penyebab
+	Controllable *string `json:"controllable"` // could be boolean if desired
+	UraianDampak *string `json:"uraian_dampak"`
+	PihakDampak  *string `json:"pihak_dampak"`
+
+	NamaPemda        *string            `json:"nama_pemda"`
+	Tahun            *time.Time         `json:"tahun"`
+	Periode          *string            `json:"periode"`
+	PenetapanKonteks *string            `json:"penetapan_konteks"`
+	UrusanPemerintah *string            `json:"urusan_pemerintah"`
+	Status           sharedModel.Status `json:"status"`
+	CreatedAt        time.Time          `json:"created_at"`
+	UpdatedAt        time.Time          `json:"updated_at"`
 }
 
 func (irspd *IdentifikasiRisikoStrategisPemda) GenerateKodeRisiko(tahun time.Time, kategori_risiko string) error {

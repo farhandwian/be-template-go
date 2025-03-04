@@ -77,10 +77,7 @@ func ImplIdentifikasiRisikoStrategisPemdaCreateUseCase(
 			Status:                                 sharedModel.StatusMenungguVerifikasi,
 		}
 
-		fmt.Println(penetapanKonteksRisikoStrategisPemdaRes.PenetapanKonteksRisikoStrategisPemda)
-		fmt.Println("================================================================", *penetapanKonteksRisikoStrategisPemdaRes.PenetapanKonteksRisikoStrategisPemda.TahunPenilaian)
 		obj.GenerateKodeRisiko(*penetapanKonteksRisikoStrategisPemdaRes.PenetapanKonteksRisikoStrategisPemda.TahunPenilaian, *kategoriRisikoRes.KategoriRisiko.Kode)
-		fmt.Println("================================================================TETSUN")
 
 		// Save the new entry
 		if _, err = createIdentifikasiRisikoStrategisPemda(ctx, gateway.IdentifikasiRisikoStrategisPemdaSaveReq{

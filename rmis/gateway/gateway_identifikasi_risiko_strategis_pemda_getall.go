@@ -55,16 +55,16 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
-		allowedSortBy := map[string]bool{
-			"kode_risiko": true,
-		}
+		allowedSortBy := map[string]bool{}
 
 		allowerdForeignSortBy := map[string]string{
-			"identifikasi_risiko_strategis_pemda": "identifikasi_risiko_strategis_pemdas.uraian_risiko",
-			"penyebab_risiko":                     "penyebab_risikos.nama",
+			"nama_pemda":        "penetapan_konteks_risiko_strategis_pemdas.nama_pemda",
+			"tahun":             "penetapan_konteks_risiko_strategis_pemdas.tahun",
+			"penetapan_konteks": "penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan",
+			"urusan_pemerintah": "penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintah",
 		}
 
-		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "kode_risiko")
+		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "nama_pemda")
 		if err != nil {
 			return nil, err
 		}
@@ -84,6 +84,13 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 		// 	Joins("LEFT JOIN penyebab_risikos ON rcas.penyebab_risiko_id = penyebab_risikos.id").
 		// 	Offset((page - 1) * size).
 		if err := query.
+			Select(`identifikasi_risiko_strategis_pemdas.*, 
+			    penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
+                penetapan_konteks_risiko_strategis_pemdas.tahun AS tahun,
+				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
+                penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintah AS urusan_pemerintah,
+				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_tujuan,
+			`).
 			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON identifikasi_risiko_strategis_pemdas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
 			Joins("LEFT JOIN kategori_risikos ON identifikasi_risiko_strategis_pemdas.kategori_risiko_id = kategori_risikos.kategori_risikos").
 			Joins("LEFT JOIN rcas ON identifikasi_risiko_strategis_pemdas.rca_id = rcas.id").
