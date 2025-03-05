@@ -26,6 +26,8 @@ func (c Controller) RancanganPemantauanGetAllHandler(u usecase.RancanganPemantau
 			{Name: "size", Type: "number", Description: "size", Required: false},
 			{Name: "sortBy", Type: "string", Description: "sort by", Required: false},
 			{Name: "sortOrder", Type: "string", Description: "sort order", Required: false},
+			{Name: "status", Type: "string", Description: "status filter", Required: false},
+			{Name: "penangung-jawabe", Type: "string", Description: "penangung jawabe", Required: false},
 		},
 	}
 
@@ -35,8 +37,12 @@ func (c Controller) RancanganPemantauanGetAllHandler(u usecase.RancanganPemantau
 		keyword := controller.GetQueryString(r, "keyword", "")
 		sortBy := controller.GetQueryString(r, "sortBy", "")
 		sortOrder := controller.GetQueryString(r, "sortOrder", "")
+		status := controller.GetQueryString(r, "status", "")
+		penangungJawabe := controller.GetQueryString(r, "penangung-jawabe", "")
 
-		req := usecase.RancanganPemantauanGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword, SortBy: sortBy, SortOrder: sortOrder}
+		req := usecase.RancanganPemantauanGetAllUseCaseReq{
+			Page: page, Size: size, Keyword: keyword, SortBy: sortBy, SortOrder: sortOrder, Status: status, PenanggungJawab: penangungJawabe,
+		}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 

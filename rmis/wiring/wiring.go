@@ -280,11 +280,11 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	pengkomunikasianPengendalianUpdateUseCase := usecase.ImplPengkomunikasianPengendalianUpdateUseCase(pengkomunikasianPengendalianGetOneGateway, pengkomunikasianPengendalianCreateGateway, penilaianRisikoGetOneGateway)
 
 	// Usecase Rancangan Pemantauan
-	rancanganPemantauanCreateUseCase := usecase.ImplRancanganPemantauanCreateUseCase(generateIdGateway, rancanganPemantauanCreateGateway)
+	rancanganPemantauanCreateUseCase := usecase.ImplRancanganPemantauanCreateUseCase(generateIdGateway, rancanganPemantauanCreateGateway, penilaianRisikoGetOneGateway)
 	rancanganPemantauanGetAllUseCase := usecase.ImplRancanganPemantauanGetAllUseCase(rancanganPemantauanGetAllGateway)
 	rancanganPemantauanGetOneUseCase := usecase.ImplRancanganPemantauanGetByIDUseCase(rancanganPemantauanGetOneGateway)
 	rancanganPemantauanDeleteUseCase := usecase.ImplRancanganPemantauanDeleteUseCase(rancanganPemantauanDeleteGateway)
-	rancanganPemantauanUpdateUseCase := usecase.ImplRancanganPemantauanUpdateUseCase(rancanganPemantauanGetOneGateway, rancanganPemantauanCreateGateway)
+	rancanganPemantauanUpdateUseCase := usecase.ImplRancanganPemantauanUpdateUseCase(rancanganPemantauanGetOneGateway, rancanganPemantauanCreateGateway, penilaianRisikoGetOneGateway)
 
 	// Usecase Pencatatan Kejadian Risiko
 	pencatatanKejadianRisikoCreateUseCase := usecase.ImplPencatatanKejadianRisikoCreateUseCase(generateIdGateway, pencatatanKejadianRisikoCreateGateway)

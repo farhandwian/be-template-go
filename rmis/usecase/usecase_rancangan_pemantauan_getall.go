@@ -9,16 +9,18 @@ import (
 )
 
 type RancanganPemantauanGetAllUseCaseReq struct {
-	Keyword   string
-	Page      int
-	Size      int
-	SortBy    string
-	SortOrder string
+	Keyword         string
+	Page            int
+	Size            int
+	SortBy          string
+	SortOrder       string
+	Status          string
+	PenanggungJawab string
 }
 
 type RancanganPemantauanGetAllUseCaseRes struct {
-	RancanganPemantauan []model.RancanganPemantauan `json:"rancangan_pemantauan"`
-	Metadata            *usecase.Metadata           `json:"metadata"`
+	RancanganPemantauan []model.RancanganPemantauanResponse `json:"rancangan_pemantauan"`
+	Metadata            *usecase.Metadata                   `json:"metadata"`
 }
 
 type RancanganPemantauanGetAllUseCase = core.ActionHandler[RancanganPemantauanGetAllUseCaseReq, RancanganPemantauanGetAllUseCaseRes]
@@ -27,11 +29,13 @@ func ImplRancanganPemantauanGetAllUseCase(getAllRancanganPemantauans gateway.Ran
 	return func(ctx context.Context, req RancanganPemantauanGetAllUseCaseReq) (*RancanganPemantauanGetAllUseCaseRes, error) {
 
 		res, err := getAllRancanganPemantauans(ctx, gateway.RancanganPemantauanGetAllReq{
-			Page:      req.Page,
-			Size:      req.Size,
-			Keyword:   req.Keyword,
-			SortBy:    req.SortBy,
-			SortOrder: req.SortOrder,
+			Page:            req.Page,
+			Size:            req.Size,
+			Keyword:         req.Keyword,
+			SortBy:          req.SortBy,
+			SortOrder:       req.SortOrder,
+			Status:          req.Status,
+			PenanggungJawab: req.PenanggungJawab,
 		})
 		if err != nil {
 			return nil, err

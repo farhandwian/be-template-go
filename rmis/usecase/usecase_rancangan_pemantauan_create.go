@@ -5,14 +5,16 @@ import (
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type RancanganPemantauanCreateUseCaseReq struct {
-	MetodePemantauan     model.MetodePemantauan `json:"metode_pemantuan"`
-	PenanggungJawab      string                 `json:"penanggung_jawab"`
-	RencanaPenyelesaian  string                 `json:"rencana_penyelesaian"`
-	RealisasiPelaksanaan string                 `json:"realisasi_pelaksanaan"`
-	Keterangan           string                 `json:"keterangan"`
+	PenilaianRisikoID        string                 `json:"penilaian_risiko_id"`
+	MetodePemantauan         model.MetodePemantauan `json:"metode_pemantuan"`
+	PenanggungJawab          string                 `json:"penanggung_jawab"`
+	RencanaWaktuPemantauan   string                 `json:"rencana_waktu_pemantauan"`
+	RealisasiWaktuPemantauan string                 `json:"realisasi_waktu_pemantauan"`
+	Keterangan               string                 `json:"keterangan"`
 }
 
 type RancanganPemantauanCreateUseCaseRes struct {
@@ -24,6 +26,7 @@ type RancanganPemantauanCreateUseCase = core.ActionHandler[RancanganPemantauanCr
 func ImplRancanganPemantauanCreateUseCase(
 	generateId gateway.GenerateId,
 	createRancanganPemantauan gateway.RancanganPemantauanSave,
+	PenilaianRisikoByID gateway.PenilaianRisikoGetByID,
 ) RancanganPemantauanCreateUseCase {
 	return func(ctx context.Context, req RancanganPemantauanCreateUseCaseReq) (*RancanganPemantauanCreateUseCaseRes, error) {
 
@@ -33,13 +36,20 @@ func ImplRancanganPemantauanCreateUseCase(
 			return nil, err
 		}
 
+		_, err = PenilaianRisikoByID(ctx, gateway.PenilaianRisikoGetByIDReq{ID: req.PenilaianRisikoID})
+		if err != nil {
+			return nil, err
+		}
+
 		obj := model.RancanganPemantauan{
-			ID:                   &genObj.RandomId,
-			MetodePemantauan:     &req.MetodePemantauan,
-			PenanggungJawab:      &req.PenanggungJawab,
-			RencanaPenyelesaian:  &req.RencanaPenyelesaian,
-			RealisasiPelaksanaan: &req.RealisasiPelaksanaan,
-			Keterangan:           &req.Keterangan,
+			ID:                       &genObj.RandomId,
+			PenilaianRisikoID:        &req.PenilaianRisikoID,
+			MetodePemantauan:         &req.MetodePemantauan,
+			PenanggungJawab:          &req.PenanggungJawab,
+			RencanaWaktuPemantauan:   &req.RencanaWaktuPemantauan,
+			RealisasiWaktuPemantauan: &req.RealisasiWaktuPemantauan,
+			Keterangan:               &req.Keterangan,
+			Status:                   sharedModel.StatusMenungguVerifikasi,
 		}
 
 		// Save the RancanganPemantauan entry

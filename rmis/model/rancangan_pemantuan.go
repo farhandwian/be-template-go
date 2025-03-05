@@ -1,19 +1,42 @@
 package model
 
+import (
+	sharedModel "shared/model"
+	"time"
+)
+
 // form 9
 
 type RancanganPemantauan struct {
-	ID                   *string           `json:"id"`
-	NamaPemda            *string           `json:"nama_pemda"`
-	TahunPenilaian       *string           `json:"tahun_penilaian"`
-	TujuanStrategis      *string           `json:"tujuan_strategis"`
-	UrusanPemerintahan   *string           `json:"urusan_pemerintahan"`
-	KegiatanPengendalian *string           `json:"kegiatan_pengendalian"`
-	MetodePemantauan     *MetodePemantauan `json:"metode_pemantuan"`
-	PenanggungJawab      *string           `json:"penanggung_jawab"`
-	RencanaPenyelesaian  *string           `json:"rencana_penyelesaian"`
-	RealisasiPelaksanaan *string           `json:"realisasi_pelaksanaan"`
-	Keterangan           *string           `json:"keterangan"`
+	ID                       *string           `json:"id"`
+	PenilaianRisikoID        *string           `json:"penilaian_risiko_id"`
+	MetodePemantauan         *MetodePemantauan `json:"metode_pemantuan"`
+	PenanggungJawab          *string           `json:"penanggung_jawab"`
+	RencanaWaktuPemantauan   *string           `json:"rencana_waktu_pemantauan"`
+	RealisasiWaktuPemantauan *string           `json:"realisasi_waktu_pemantauan"`
+	Keterangan               *string           `json:"keterangan"`
+
+	Status    sharedModel.Status `json:"status"`
+	CreatedAt time.Time          `json:"created_at"`
+	UpdatedAt time.Time          `json:"updated_at"`
+}
+
+type RancanganPemantauanResponse struct {
+	ID                       *string           `json:"id"`
+	PenilaianRisikoID        *string           `json:"penilaian_risiko_id"`
+	MetodePemantauan         *MetodePemantauan `json:"metode_pemantuan"`
+	PenanggungJawab          *string           `json:"penanggung_jawab"`
+	RencanaWaktuPemantauan   *string           `json:"rencana_waktu_pemantauan"`
+	RealisasiWaktuPemantauan *string           `json:"realisasi_waktu_pemantauan"`
+	Keterangan               *string           `json:"keterangan"`
+
+	RencanaTindakPengendalian *string `json:"rencana_tindak_pengendalian"`
+	NamaPemda                 *string `json:"nama_pemda"`
+	TahunPenilaian            *string `json:"tahun_penilaian"`
+
+	Status    sharedModel.Status `json:"status"`
+	CreatedAt time.Time          `json:"created_at"`
+	UpdatedAt time.Time          `json:"updated_at"`
 }
 
 type MetodePemantauan string
