@@ -42,11 +42,6 @@ func ImplPenilaianRisikoUpdateUseCase(
 			return nil, err
 		}
 		penilaianRisiko := res.PenilaianRisiko
-
-		penilaianRisiko.RisikoPrioritas = daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.RisikoPrioritas
-		penilaianRisiko.KodeRisiko = daftarRisikoPrioritasByIDRes.DaftarRisikoPrioritas.KodeRisiko
-		// penilaianRisiko.UraianPengendalian = hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.UraianControl
-		penilaianRisiko.DaftarRisikoPrioritasID = &req.DaftarRisikoPrioritasID
 		penilaianRisiko.CelahPengendalian = &req.CelahPengendalian
 		penilaianRisiko.RencanaTindakPengendalian = &req.RencanaTindakPengendalian
 		penilaianRisiko.PemilikPenanggungJawab = &req.PemilikPenanggungJawab

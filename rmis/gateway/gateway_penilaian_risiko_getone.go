@@ -25,7 +25,11 @@ func ImplPenilaianRisikoGetByID(db *gorm.DB) PenilaianRisikoGetByID {
 		query := middleware.GetDBFromContext(ctx, db)
 
 		var PenilaianRisiko model.PenilaianRisiko
-		if err := query.First(&PenilaianRisiko, "id = ?", req.ID).Error; err != nil {
+		if err := query.
+			Joins("LEFT JOIN daftar_risiko_prioritas ON penilaian_risikos.daftar_risiko_prioritas_id = daftar_risiko_prioritas.id").
+			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON daftar_risiko_prioritas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
+			Where("penilaian_risikos.id =?", req.ID).
+			First(&PenilaianRisiko).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				return nil, fmt.Errorf("PenilaianRisiko id %v is not found", req.ID)
 			}

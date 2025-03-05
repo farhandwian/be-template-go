@@ -75,7 +75,6 @@ func ImplPenilaianKegiatanPengendalianGetAll(db *gorm.DB) PenilaianKegiatanPenge
 		}
 
 		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "nama_pemda")
-		fmt.Println(sortBy)
 		if err != nil {
 			return nil, err
 		}

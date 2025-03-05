@@ -9,16 +9,18 @@ import (
 )
 
 type PenilaianRisikoGetAllUseCaseReq struct {
-	Keyword   string
-	Page      int
-	Size      int
-	SortBy    string
-	SortOrder string
+	Keyword         string
+	Page            int
+	Size            int
+	SortBy          string
+	SortOrder       string
+	Status          string
+	PenanggungJawab string
 }
 
 type PenilaianRisikoGetAllUseCaseRes struct {
-	PenilaianRisiko []model.PenilaianRisiko `json:"hasil_analisis_risiko"`
-	Metadata        *usecase.Metadata       `json:"metadata"`
+	PenilaianRisiko []model.PenilaianRisikoResponse `json:"hasil_analisis_risiko"`
+	Metadata        *usecase.Metadata               `json:"metadata"`
 }
 
 type PenilaianRisikoGetAllUseCase = core.ActionHandler[PenilaianRisikoGetAllUseCaseReq, PenilaianRisikoGetAllUseCaseRes]
@@ -27,11 +29,13 @@ func ImplPenilaianRisikoGetAllUseCase(getAllPenilaianRisikos gateway.PenilaianRi
 	return func(ctx context.Context, req PenilaianRisikoGetAllUseCaseReq) (*PenilaianRisikoGetAllUseCaseRes, error) {
 
 		res, err := getAllPenilaianRisikos(ctx, gateway.PenilaianRisikoGetAllReq{
-			Page:      req.Page,
-			Size:      req.Size,
-			Keyword:   req.Keyword,
-			SortBy:    req.SortBy,
-			SortOrder: req.SortOrder,
+			Page:            req.Page,
+			Size:            req.Size,
+			Keyword:         req.Keyword,
+			SortBy:          req.SortBy,
+			SortOrder:       req.SortOrder,
+			Status:          req.Status,
+			PenanggungJawab: req.PenanggungJawab,
 		})
 		if err != nil {
 			return nil, err
