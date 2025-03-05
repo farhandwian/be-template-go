@@ -19,8 +19,8 @@ type PenilaianKegiatanPengendalianGetAllUseCaseReq struct {
 }
 
 type PenilaianKegiatanPengendalianGetAllUseCaseRes struct {
-	PenilaianKegiatanPengendalian []model.PenilaianKegiatanPengendalian `json:"penilaian_kegiatan_pengendalians"`
-	Metadata                      *usecase.Metadata                     `json:"metadata"`
+	PenilaianKegiatanPengendalian []model.PenilaianKegiatanPengendalianResponse `json:"penilaian_kegiatan_pengendalians"`
+	Metadata                      *usecase.Metadata                             `json:"metadata"`
 }
 
 type PenilaianKegiatanPengendalianGetAllUseCase = core.ActionHandler[PenilaianKegiatanPengendalianGetAllUseCaseReq, PenilaianKegiatanPengendalianGetAllUseCaseRes]

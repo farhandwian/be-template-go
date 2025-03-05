@@ -22,8 +22,8 @@ type PenilaianKegiatanPengendalianGetAllReq struct {
 }
 
 type PenilaianKegiatanPengendalianGetAllRes struct {
-	PenilaianKegiatanPengendalian []model.PenilaianKegiatanPengendalian `json:"penilai_kegiatan_pengendalians"`
-	Count                         int64                                 `json:"count"`
+	PenilaianKegiatanPengendalian []model.PenilaianKegiatanPengendalianResponse `json:"penilai_kegiatan_pengendalians"`
+	Count                         int64                                         `json:"count"`
 }
 
 type PenilaianKegiatanPengendalianGetAll = core.ActionHandler[PenilaianKegiatanPengendalianGetAllReq, PenilaianKegiatanPengendalianGetAllRes]
@@ -85,9 +85,12 @@ func ImplPenilaianKegiatanPengendalianGetAll(db *gorm.DB) PenilaianKegiatanPenge
 
 		page, size := ValidatePageSize(req.Page, req.Size)
 
-		var objs []model.PenilaianKegiatanPengendalian
+		var objs []model.PenilaianKegiatanPengendalianResponse
 
 		if err := query.
+			Select(`penilaian_kegiatan_pengendalians.*,
+			spips.nama AS spip_nama
+			`).
 			Offset((page - 1) * size).
 			Limit(size).
 			Order(orderClause).
