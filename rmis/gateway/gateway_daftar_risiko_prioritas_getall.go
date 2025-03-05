@@ -58,7 +58,7 @@ func ImplDaftarRisikoPrioritasGetAll(db *gorm.DB) DaftarRisikoPrioritasGetAll {
 			"nama_pemda":        "penetapan_konteks_risiko_strategis_pemdas.nama_pemda",
 			"tahun":             "penetapan_konteks_risiko_strategis_pemdas.tahun",
 			"tujuan_strategis":  "penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan",
-			"urusan_pemerintah": "penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintah",
+			"urusan_pemerintah": "penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan",
 		}
 
 		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "nama_pemda")
@@ -76,13 +76,16 @@ func ImplDaftarRisikoPrioritasGetAll(db *gorm.DB) DaftarRisikoPrioritasGetAll {
 		if err := query.
 			Select(`daftar_risiko_prioritas.*, 
 				penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
-				penetapan_konteks_risiko_strategis_pemdas.tahun AS tahun,
+				penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
+				penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
 				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
-				penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintah AS urusan_pemerintah,
-				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_tujuan,
+				penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintahan,
+				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks,
+				hasil_analisis_risikos.skala_risiko AS skala_risiko
 			`).
 			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON daftar_risiko_prioritas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
-			// Joins("LEFT JOIN ").
+			Joins("LEFT JOIN indeks_peringkat_prioritas ON daftar_risiko_prioritas.indeks_peringkat_prioritas_id = indeks_peringkat_prioritas.id").
+			Joins("LEFT JOIN hasil_analisis_risikos ON daftar_risiko_prioritas.hasil_analisis_risiko_id = hasil_analisis_risikos.id").
 			Offset((page - 1) * size).
 			Limit(size).
 			Order(orderClause).

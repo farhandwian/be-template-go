@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"rmis/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -45,21 +44,21 @@ func InitMariaDatabase() *gorm.DB {
 	// Disable foreign key checks temporarily
 	db.Exec("SET foreign_key_checks = 0;")
 	db.AutoMigrate(
-		// &model.RekapitulasiHasilKuesioner{},
-		// &model.OPD{},
-		// &model.Spip{},
-		// &model.KategoriRisiko{},
-		// &model.PenyebabRisiko{},
-		// &model.KriterieaKemungkinan{},
-		// &model.KriteriaDampak{},
-		// &iamModel.User{},
-		// &model.IdentifikasiRisikoStrategisPemda{},
-		// &model.PenetapanKonteksRisikoStrategisPemda{},
-		// &model.Rca{},
-		// &model.PenyebabRisiko{},
-		// &model.IKU{},
-		// &model.SimpulanKondisiKelemahanLingkungan{},
-		&model.HasilAnalisisRisiko{},
+	// &model.RekapitulasiHasilKuesioner{},
+	// &model.OPD{},
+	// &model.Spip{},
+	// &model.KategoriRisiko{},
+	// &model.PenyebabRisiko{},
+	// &model.KriterieaKemungkinan{},
+	// &model.KriteriaDampak{},
+	// &iamModel.User{},
+	// &model.IdentifikasiRisikoStrategisPemda{},
+	// &model.PenetapanKonteksRisikoStrategisPemda{},
+	// &model.Rca{},
+	// &model.PenyebabRisiko{},
+	// &model.IKU{},
+	// &model.SimpulanKondisiKelemahanLingkungan{},
+	// &model.HasilAnalisisRisiko{},
 	// &model.PenilaianKegiatanPengendalian{},
 	// &model.PenetapanKonteksRisikoStrategisRenstraOPD{},
 	// &model.DaftarRisikoPrioritas{},

@@ -66,8 +66,6 @@ func ImplIdentifikasiRisikoStrategisPemdaCreateUseCase(
 		obj := model.IdentifikasiRisikoStrategisPemda{
 			ID:                                     &genObj.RandomId,
 			PenetapanKonteksRisikoStrategisPemdaID: &req.PenetapanKonteksRisikoStrategisPemdaID,
-			TujuanStrategis:                        &req.TujuanStrategis,
-			IndikatorKinerja:                       &req.IndikatorKinerja,
 			KategoriRisikoID:                       &req.KategoriRisikoID,
 			UraianRisiko:                           &req.UraianRisiko,
 			PemilikRisiko:                          &req.PemilikRisiko,

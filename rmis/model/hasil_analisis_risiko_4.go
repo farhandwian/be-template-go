@@ -60,14 +60,14 @@ type HasilAnalisisRisiko struct {
 	SkalaKemungkinan *int `json:"skala_kemungkinan"`
 	SkalaRisiko      *int `json:"skala_risiko"`
 
-	NamaPemda        *string            `json:"nama_pemda"`
-	Tahun            *time.Time         `json:"tahun"`
-	Periode          *string            `json:"periode"`
-	PenetapanKonteks *string            `json:"penetapan_konteks"`
-	UrusanPemerintah *string            `json:"urusan_pemerintah"`
-	Status           sharedModel.Status `json:"status"`
-	CreatedAt        time.Time          `json:"created_at"`
-	UpdatedAt        time.Time          `json:"updated_at"`
+	NamaPemda          *string            `json:"nama_pemda"`
+	Tahun              *time.Time         `json:"tahun"`
+	Periode            *string            `json:"periode"`
+	PenetapanKonteks   *string            `json:"penetapan_konteks"`
+	UrusanPemerintahan *string            `json:"urusan_pemerintahan"`
+	Status             sharedModel.Status `json:"status"`
+	CreatedAt          time.Time          `json:"created_at"`
+	UpdatedAt          time.Time          `json:"updated_at"`
 }
 
 var RiskMatrix = [][]int{

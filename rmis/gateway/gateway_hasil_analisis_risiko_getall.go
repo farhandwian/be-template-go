@@ -32,6 +32,10 @@ func ImplHasilAnalisisRisikoGetAll(db *gorm.DB) HasilAnalisisRisikoGetAll {
 
 		query := middleware.GetDBFromContext(ctx, db)
 
+		query = query.
+			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON hasil_analisis_risikos.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
+			Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON hasil_analisis_risikos.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id")
+
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.
@@ -40,7 +44,7 @@ func ImplHasilAnalisisRisikoGetAll(db *gorm.DB) HasilAnalisisRisikoGetAll {
 		}
 
 		if req.Status != "" {
-			query = query.Where("status =?", req.Status)
+			query = query.Where("hasil_analisis_risikos.status =?", req.Status)
 		}
 
 		var count int64
@@ -75,14 +79,13 @@ func ImplHasilAnalisisRisikoGetAll(db *gorm.DB) HasilAnalisisRisikoGetAll {
 
 		if err := query.
 			Select(`hasil_analisis_risikos.*, 
-			    penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
-                penetapan_konteks_risiko_strategis_pemdas.tahun AS tahun,
+				penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
+				penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
+				penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
 				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
-                penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintah AS urusan_pemerintah,
-				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_tujuan,
+				penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintahan,
+				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks
 			`).
-			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON hasil_analisis_risikos.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
-			Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON hasil_analisis_risikos.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id").
 			Offset((page - 1) * size).
 			Limit(size).
 			Order(orderClause).

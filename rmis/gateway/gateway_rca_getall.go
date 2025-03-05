@@ -31,6 +31,10 @@ func ImplRcaGetAll(db *gorm.DB) RcaGetAll {
 	return func(ctx context.Context, req RcaGetAllReq) (*RcaGetAllRes, error) {
 		query := middleware.GetDBFromContext(ctx, db)
 
+		query = query.
+			Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON rcas.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id").
+			Joins("LEFT JOIN penyebab_risikos ON rcas.penyebab_risiko_id = penyebab_risikos.id")
+
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.Where("nama LIKE ?", keyword)
@@ -42,16 +46,14 @@ func ImplRcaGetAll(db *gorm.DB) RcaGetAll {
 			return nil, core.NewInternalServerError(err)
 		}
 
-		allowedSortBy := map[string]bool{
-			"pemilik_risiko": true,
-		}
+		allowedSortBy := map[string]bool{}
 
 		allowerdForeignSortBy := map[string]string{
 			"identifikasi_risiko_strategis_pemda": "identifikasi_risiko_strategis_pemdas.uraian_risiko",
 			"penyebab_risiko":                     "penyebab_risikos.nama",
 		}
 
-		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "pemilik_risiko")
+		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "penyebab_risiko")
 		if err != nil {
 			return nil, err
 		}
@@ -65,8 +67,6 @@ func ImplRcaGetAll(db *gorm.DB) RcaGetAll {
 
 		// Select with proper JOINs and aliases
 		if err := query.
-			Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON rcas.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id").
-			Joins("LEFT JOIN penyebab_risikos ON rcas.penyebab_risiko_id = penyebab_risikos.id").
 			Select(`
 			rcas.*, 
 			identifikasi_risiko_strategis_pemdas.uraian_risiko AS identifikasi_risiko_uraian_risiko,

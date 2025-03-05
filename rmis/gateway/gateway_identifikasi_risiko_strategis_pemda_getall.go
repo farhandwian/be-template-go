@@ -33,6 +33,11 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 
 		query := middleware.GetDBFromContext(ctx, db)
 
+		query = query.
+			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON identifikasi_risiko_strategis_pemdas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
+			Joins("LEFT JOIN kategori_risikos ON identifikasi_risiko_strategis_pemdas.kategori_risiko_id = kategori_risikos.id").
+			Joins("LEFT JOIN rcas ON identifikasi_risiko_strategis_pemdas.rca_id = rcas.id")
+
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.
@@ -41,11 +46,11 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 		}
 
 		if req.Status != "" {
-			query = query.Where("status = ?", req.Status)
+			query = query.Where("identifikasi_risiko_strategis_pemdas.status = ?", req.Status)
 		}
 
 		if req.Periode != "" {
-			query = query.Where("periode = ?", req.Periode)
+			query = query.Where("penetapan_konteks_risiko_strategis_pemdas.periode = ?", req.Periode)
 		}
 
 		var count int64
@@ -55,16 +60,19 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
-		allowedSortBy := map[string]bool{}
+		allowedSortBy := map[string]bool{
+			"status": true,
+		}
 
 		allowerdForeignSortBy := map[string]string{
 			"nama_pemda":        "penetapan_konteks_risiko_strategis_pemdas.nama_pemda",
-			"tahun":             "penetapan_konteks_risiko_strategis_pemdas.tahun",
+			"tahun":             "penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian",
 			"penetapan_konteks": "penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan",
-			"urusan_pemerintah": "penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintah",
+			"urusan_pemerintah": "penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan",
 		}
 
-		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "nama_pemda")
+		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "status")
+		fmt.Println(sortBy, sortOrder, err)
 		if err != nil {
 			return nil, err
 		}
@@ -75,29 +83,20 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 		page, size := ValidatePageSize(req.Page, req.Size)
 
 		var objs []model.IdentifikasiRisikoStrategisPemda
-		// Select(`
-		// rcas.*,
-		// identifikasi_risiko_strategis_pemdas.uraian_risiko AS identifikasi_risiko_uraian_risiko,
-		// penyebab_risikos.nama AS penyebab_risiko_nama
-		// `).
-		// 	Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON rcas.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id").
-		// 	Joins("LEFT JOIN penyebab_risikos ON rcas.penyebab_risiko_id = penyebab_risikos.id").
-		// 	Offset((page - 1) * size).
+
 		if err := query.
 			Select(`identifikasi_risiko_strategis_pemdas.*, 
 			    penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
-                penetapan_konteks_risiko_strategis_pemdas.tahun AS tahun,
+                penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
+				penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
 				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
-                penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintah AS urusan_pemerintah,
-				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_tujuan,
+                penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintah,
+				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks
 			`).
-			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON identifikasi_risiko_strategis_pemdas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
-			Joins("LEFT JOIN kategori_risikos ON identifikasi_risiko_strategis_pemdas.kategori_risiko_id = kategori_risikos.kategori_risikos").
-			Joins("LEFT JOIN rcas ON identifikasi_risiko_strategis_pemdas.rca_id = rcas.id").
 			Offset((page - 1) * size).
 			Order(orderClause).
 			Limit(size).
-			Find(&objs).
+			Scan(&objs).
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}

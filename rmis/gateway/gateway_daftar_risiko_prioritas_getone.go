@@ -28,10 +28,11 @@ func ImplDaftarRisikoPrioritasGetByID(db *gorm.DB) DaftarRisikoPrioritasGetByID 
 		if err := query.
 			Select(`daftar_risiko_prioritas.*, 
 				penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
-				penetapan_konteks_risiko_strategis_pemdas.tahun AS tahun,
+				penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
+				penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
 				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
-				penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintah AS urusan_pemerintah,
-				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_tujuan,
+				penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintah,
+				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks
 			`).
 			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON daftar_risiko_prioritas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
 			Where("daftar_risiko_prioritas.id =?", req.ID).

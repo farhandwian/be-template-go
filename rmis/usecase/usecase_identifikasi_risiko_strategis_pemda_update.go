@@ -39,8 +39,6 @@ func ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(
 			return nil, err
 		}
 		identifikasiRisikoStrategisPemda := res.IdentifikasiRisikoStrategisPemda
-		identifikasiRisikoStrategisPemda.TujuanStrategis = &req.TujuanStrategis
-		identifikasiRisikoStrategisPemda.IndikatorKinerja = &req.IndikatorKinerja
 		identifikasiRisikoStrategisPemda.UraianRisiko = &req.UraianRisiko
 		identifikasiRisikoStrategisPemda.PemilikRisiko = &req.PemilikRisiko
 		identifikasiRisikoStrategisPemda.Controllable = &req.Controllable
