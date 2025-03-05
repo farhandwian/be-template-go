@@ -89,7 +89,7 @@ func ImplHasilAnalisisRisikoGetAll(db *gorm.DB) HasilAnalisisRisikoGetAll {
 			Offset((page - 1) * size).
 			Limit(size).
 			Order(orderClause).
-			Find(&objs).
+			Scan(&objs).
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}

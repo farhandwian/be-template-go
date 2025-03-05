@@ -51,6 +51,7 @@ func ImplDaftarRisikoPrioritasCreateUseCase(
 
 		obj := model.DaftarRisikoPrioritas{
 			ID:                                     &genObj.RandomId,
+			HasilAnalisisRisikoID:                  &req.HasilAnalisisRisikoID,
 			PenetapanKonteksRisikoStrategisPemdaID: &req.PenetapanKonteksRisikoStrategisPemdaID,
 			Status:                                 sharedModel.StatusMenungguVerifikasi,
 			// HasilAnalisisRisikoID: &req.HasilAnalisisRisikoID,

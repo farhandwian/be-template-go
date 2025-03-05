@@ -25,7 +25,11 @@ func ImplPenilaianKegiatanPengendalianGetByID(db *gorm.DB) PenilaianKegiatanPeng
 		query := middleware.GetDBFromContext(ctx, db)
 
 		var PenilaianKegiatanPengendalian model.PenilaianKegiatanPengendalian
-		if err := query.First(&PenilaianKegiatanPengendalian, "id = ?", req.ID).Error; err != nil {
+
+		if err := query.
+			Joins("LEFT JOIN spips ON penilaian_kegiatan_pengendalians.spip_id = spips.id").
+			Where("penilaian_kegiatan_pengendalians.id =?", req.ID).
+			First(&PenilaianKegiatanPengendalian).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				return nil, fmt.Errorf("PenilaianKegiatanPengendalian id %v is not found", req.ID)
 			}

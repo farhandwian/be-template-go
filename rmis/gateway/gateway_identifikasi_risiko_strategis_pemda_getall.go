@@ -78,26 +78,40 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 		}
 
 		// Apply sorting
-		orderClause := fmt.Sprintf("%s %s", sortBy, sortOrder)
+		// orderClause := fmt.Sprintf("%s %s", sortBy, sortOrder)
 
 		page, size := ValidatePageSize(req.Page, req.Size)
 
 		var objs []model.IdentifikasiRisikoStrategisPemda
 
-		if err := query.
-			Select(`identifikasi_risiko_strategis_pemdas.*, 
-			    penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
-                penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
-				penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
-				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
-                penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintah,
-				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks
-			`).
-			Offset((page - 1) * size).
-			Order(orderClause).
-			Limit(size).
-			Scan(&objs).
-			Error; err != nil {
+		// if err := query.
+		// 	Select(`identifikasi_risiko_strategis_pemdas.*,
+		// 	    penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
+		//         penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
+		// 		penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
+		// 		penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
+		//         penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintah,
+		// 		penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks
+		// 	`).
+		// 	Offset((page - 1) * size).
+		// 	Order(orderClause).
+		// 	Limit(size).
+		// 	Scan(&objs).
+		// 	Error; err != nil {
+		// 	return nil, core.NewInternalServerError(err)
+		// }
+		if err := db.Raw(`
+    SELECT identifikasi_risiko_strategis_pemdas.*, 
+        penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
+        penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
+        penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
+        penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks,
+        penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintah
+    FROM identifikasi_risiko_strategis_pemdas
+    LEFT JOIN penetapan_konteks_risiko_strategis_pemdas 
+        ON identifikasi_risiko_strategis_pemdas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id
+    LIMIT ? OFFSET ?
+`, size, (page-1)*size).Scan(&objs).Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
 

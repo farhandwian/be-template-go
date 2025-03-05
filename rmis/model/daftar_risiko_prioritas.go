@@ -21,12 +21,12 @@ type DaftarRisikoPrioritas struct {
 	DampakRisiko    *string `json:"dampak_risiko"`
 
 	// Fields from JOIN
-	NamaPemda          *string    `json:"nama_pemda" gorm:"-"`
+	NamaPemda          *string    `json:"nama_pemda"`
 	Tahun              *time.Time `json:"tahun"`
 	Periode            *string    `json:"periode"`
 	PenetapanKonteks   *string    `json:"penetapan_konteks"`
 	UrusanPemerintahan *string    `json:"urusan_pemerintahan"`
-	SkalaRisiko        *int       `json:"skala_risiko" gorm:"-"` // This was missing!
+	SkalaRisiko        *int       `json:"skala_risiko"`
 
 	Status    sharedModel.Status `json:"status"`
 	CreatedAt time.Time          `json:"created_at"`

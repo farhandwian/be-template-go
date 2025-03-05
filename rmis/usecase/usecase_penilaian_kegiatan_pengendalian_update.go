@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"rmis/gateway"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type PenilaianKegiatanPengendalianUpdateUseCaseReq struct {
@@ -41,13 +42,12 @@ func ImplPenilaianKegiatanPengendalianUpdateUseCase(
 		penilaian.RencanaTindakPerbaikan = &req.RencanaTindakPerbaikan
 		penilaian.PenanggungJawab = &req.PenanggungJawab
 		penilaian.TargetWaktuPenyelesaian = &req.TargetWaktuPenyelesaian
-
-		SpipRes, err := SpipById(ctx, gateway.SpipGetByIDReq{ID: req.SpipID})
+		penilaian.Status = sharedModel.StatusMenungguVerifikasi
+		_, err = SpipById(ctx, gateway.SpipGetByIDReq{ID: req.SpipID})
 		if err != nil {
 			return nil, fmt.Errorf("error getting SPIP Table: %v", err)
 		}
-		penilaian.SPIPId = &req.SpipID
-		penilaian.SPIPName = SpipRes.SPIP.Nama
+		penilaian.SpipId = &req.SpipID
 		if _, err := updatePenilaianKegiatanPengendalian(ctx, gateway.PenilaianKegiatanPengendalianSaveReq{PenilaianKegiatanPengendalian: penilaian}); err != nil {
 			return nil, err
 		}

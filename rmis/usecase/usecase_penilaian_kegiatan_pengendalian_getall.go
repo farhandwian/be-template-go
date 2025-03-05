@@ -9,9 +9,13 @@ import (
 )
 
 type PenilaianKegiatanPengendalianGetAllUseCaseReq struct {
-	Keyword string
-	Page    int
-	Size    int
+	Keyword           string
+	Page              int
+	Size              int
+	SortBy            string
+	SortOrder         string
+	Status            string
+	KategoriPenilaian string
 }
 
 type PenilaianKegiatanPengendalianGetAllUseCaseRes struct {
@@ -24,7 +28,9 @@ type PenilaianKegiatanPengendalianGetAllUseCase = core.ActionHandler[PenilaianKe
 func ImplPenilaianKegiatanPengendalianGetAllUseCase(getAllPenilaianKegiatanPengendalians gateway.PenilaianKegiatanPengendalianGetAll) PenilaianKegiatanPengendalianGetAllUseCase {
 	return func(ctx context.Context, req PenilaianKegiatanPengendalianGetAllUseCaseReq) (*PenilaianKegiatanPengendalianGetAllUseCaseRes, error) {
 
-		res, err := getAllPenilaianKegiatanPengendalians(ctx, gateway.PenilaianKegiatanPengendalianGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword})
+		res, err := getAllPenilaianKegiatanPengendalians(ctx, gateway.PenilaianKegiatanPengendalianGetAllReq{
+			Page: req.Page, Size: req.Size, Keyword: req.Keyword, Status: req.Status, SortBy: req.SortBy, SortOrder: req.SortOrder, KategoriPenilaian: req.KategoriPenilaian,
+		})
 		if err != nil {
 			return nil, err
 		}

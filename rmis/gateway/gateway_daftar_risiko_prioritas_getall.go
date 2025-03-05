@@ -12,12 +12,13 @@ import (
 )
 
 type DaftarRisikoPrioritasGetAllReq struct {
-	Keyword   string
-	Page      int
-	Size      int
-	SortBy    string
-	SortOrder string
-	Status    string
+	Keyword           string
+	Page              int
+	Size              int
+	SortBy            string
+	SortOrder         string
+	Status            string
+	KategoriPenilaian string
 }
 
 type DaftarRisikoPrioritasGetAllRes struct {
@@ -74,22 +75,23 @@ func ImplDaftarRisikoPrioritasGetAll(db *gorm.DB) DaftarRisikoPrioritasGetAll {
 		var objs []model.DaftarRisikoPrioritas
 
 		if err := query.
+			Table("daftar_risiko_prioritas"). // ✅ **Fix: Explicitly set the main table**
 			Select(`daftar_risiko_prioritas.*, 
-				penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
-				penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
-				penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
-				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
-				penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintahan,
-				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks,
-				hasil_analisis_risikos.skala_risiko AS skala_risiko
-			`).
+			penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
+			penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
+			penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
+			penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
+			penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintahan,
+			penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks,
+			hasil_analisis_risikos.skala_risiko AS skala_risiko
+		`).
 			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON daftar_risiko_prioritas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
 			Joins("LEFT JOIN indeks_peringkat_prioritas ON daftar_risiko_prioritas.indeks_peringkat_prioritas_id = indeks_peringkat_prioritas.id").
 			Joins("LEFT JOIN hasil_analisis_risikos ON daftar_risiko_prioritas.hasil_analisis_risiko_id = hasil_analisis_risikos.id").
 			Offset((page - 1) * size).
 			Limit(size).
 			Order(orderClause).
-			Find(&objs).
+			Scan(&objs). // ✅ Use Find() instead of Scan()
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
