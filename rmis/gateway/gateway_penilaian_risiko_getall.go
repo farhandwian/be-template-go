@@ -36,11 +36,16 @@ func ImplPenilaianRisikoGetAll(db *gorm.DB) PenilaianRisikoGetAll {
 		query = query.
 			Joins("LEFT JOIN daftar_risiko_prioritas ON penilaian_risikos.daftar_risiko_prioritas_id = daftar_risiko_prioritas.id").
 			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON daftar_risiko_prioritas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id")
+			// Joins("LEFT JOIN ").
+			// Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON ")
 
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.
-				Where("risiko_prioritas LIKE ?", keyword)
+				Where("penetapan_konteks_risiko_strategis_pemdas.nama_pemda LIKE ?", keyword).
+				Or("penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian LIKE ?", keyword).
+				Or("penilaian_risikos.pemilik_penanggung_jawab LIKE ?", keyword).
+				Or("penilaian_risikos.target_waktu_penyelesaian LIKE ?", keyword)
 		}
 
 		var count int64
@@ -57,13 +62,14 @@ func ImplPenilaianRisikoGetAll(db *gorm.DB) PenilaianRisikoGetAll {
 
 		// Validate sortby
 		allowedSortBy := map[string]bool{
-			"penanggung_jawab":          true,
+			"pemilik_penanggung_jawab":  true,
 			"target_waktu_penyelesaian": true,
 			"status":                    true,
 		}
 
 		allowerdForeignSortBy := map[string]string{
-			"nama_pemda": "penetapan_konteks_risiko_strategis_pemdas.nama_pemda",
+			"nama_pemda":      "penetapan_konteks_risiko_strategis_pemdas.nama_pemda",
+			"tahun_penilaian": "penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian",
 		}
 
 		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "nama_pemda")

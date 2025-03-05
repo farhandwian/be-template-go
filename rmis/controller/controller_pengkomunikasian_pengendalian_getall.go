@@ -26,6 +26,8 @@ func (c Controller) PengkomunikasianPengendalianGetAllHandler(u usecase.Pengkomu
 			{Name: "size", Type: "number", Description: "size", Required: false},
 			{Name: "sortBy", Type: "string", Description: "sort by", Required: false},
 			{Name: "sortOrder", Type: "string", Description: "sort order", Required: false},
+			{Name: "status", Type: "string", Description: "status filter", Required: false},
+			{Name: "media", Type: "string", Description: "media filter", Required: false},
 		},
 	}
 
@@ -35,7 +37,12 @@ func (c Controller) PengkomunikasianPengendalianGetAllHandler(u usecase.Pengkomu
 		keyword := controller.GetQueryString(r, "keyword", "")
 		sortBy := controller.GetQueryString(r, "sortBy", "")
 		sortOrder := controller.GetQueryString(r, "sortOrder", "")
-		req := usecase.PengkomunikasianPengendalianGetAllUseCaseReq{Page: page, Size: size, Keyword: keyword, SortBy: sortBy, SortOrder: sortOrder}
+		media := controller.GetQueryString(r, "media", "")
+		status := controller.GetQueryString(r, "status", "")
+
+		req := usecase.PengkomunikasianPengendalianGetAllUseCaseReq{
+			Page: page, Size: size, Keyword: keyword, SortBy: sortBy, SortOrder: sortOrder, Status: status, Media: media,
+		}
 		controller.HandleUsecase(r.Context(), w, u, req)
 	}
 

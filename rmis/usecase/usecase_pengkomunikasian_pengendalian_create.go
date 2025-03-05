@@ -2,20 +2,20 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type PengkomunikasianPengendalianCreateUseCaseReq struct {
-	PenilaiKegiatanPengendalianID string `json:"penilai_kegiatan_pengendalian_id"`
-	MediaSaranaPengkomunikasian   string `json:"media_sarana_pengkomunikasian"`
-	PenyediaInformasi             string `json:"penyedia_informasi"`
-	PenerimaInformasi             string `json:"penerima_informasi"`
-	RencanaPelaksanaan            string `json:"rencana_pelaksanaan"`
-	RealisasiPelaksanaan          string `json:"realiasi_pelaksanaan"`
-	Keterangan                    string `json:"keterangan"`
+	PenilaianRisikoID    string `json:"penilaian_risiko_id"`
+	MediaKomunikasi      string `json:"media_komunikasi"`
+	PenyediaInformasi    string `json:"penyedia_informasi"`
+	PenerimaInformasi    string `json:"penerima_informasi"`
+	RencanaPelaksanaan   string `json:"rencana_pelaksanaan"`
+	RealisasiPelaksanaan string `json:"realiasi_pelaksanaan"`
+	Keterangan           string `json:"keterangan"`
 }
 
 type PengkomunikasianPengendalianCreateUseCaseRes struct {
@@ -27,7 +27,7 @@ type PengkomunikasianPengendalianCreateUseCase = core.ActionHandler[Pengkomunika
 func ImplPengkomunikasianPengendalianCreateUseCase(
 	generateId gateway.GenerateId,
 	createPengkomunikasianPengendalian gateway.PengkomunikasianPengendalianSave,
-	PenilaiKegiatanPengendalianByID gateway.PenilaianKegiatanPengendalianGetByID,
+	PenilaianRisikoByID gateway.PenilaianRisikoGetByID,
 ) PengkomunikasianPengendalianCreateUseCase {
 	return func(ctx context.Context, req PengkomunikasianPengendalianCreateUseCaseReq) (*PengkomunikasianPengendalianCreateUseCaseRes, error) {
 
@@ -36,22 +36,20 @@ func ImplPengkomunikasianPengendalianCreateUseCase(
 			return nil, err
 		}
 
-		penilaiKegiatanPengendalianByIDRes, err := PenilaiKegiatanPengendalianByID(ctx, gateway.PenilaianKegiatanPengendalianGetByIDReq{ID: req.PenilaiKegiatanPengendalianID})
+		_, err = PenilaianRisikoByID(ctx, gateway.PenilaianRisikoGetByIDReq{ID: req.PenilaianRisikoID})
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("Test %v", req.RealisasiPelaksanaan)
-
 		obj := model.PengkomunikasianPengendalian{
-			ID:                            &genObj.RandomId,
-			PenilaiKegiatanPengendalianID: &req.PenilaiKegiatanPengendalianID,
-			KegiatanPengendalian:          penilaiKegiatanPengendalianByIDRes.PenilaianKegiatanPengendalian.RencanaTindakPerbaikan,
-			MediaSaranaPengkomunikasian:   &req.MediaSaranaPengkomunikasian,
-			PenyediaInformasi:             &req.PenyediaInformasi,
-			PenerimaInformasi:             &req.PenerimaInformasi,
-			RencanaPelaksanaan:            &req.RencanaPelaksanaan,
-			RealisasiPelaksanaan:          &req.RealisasiPelaksanaan,
-			Keterangan:                    &req.Keterangan,
+			ID:                   &genObj.RandomId,
+			PenilaianRisikoID:    &req.PenilaianRisikoID,
+			MediaKomunikasi:      &req.MediaKomunikasi,
+			PenyediaInformasi:    &req.PenyediaInformasi,
+			PenerimaInformasi:    &req.PenerimaInformasi,
+			RencanaPelaksanaan:   &req.RencanaPelaksanaan,
+			RealisasiPelaksanaan: &req.RealisasiPelaksanaan,
+			Keterangan:           &req.Keterangan,
+			Status:               sharedModel.StatusMenungguVerifikasi,
 		}
 
 		if _, err = createPengkomunikasianPengendalian(ctx, gateway.PengkomunikasianPengendalianSaveReq{PengkomunikasianPengendalian: obj}); err != nil {

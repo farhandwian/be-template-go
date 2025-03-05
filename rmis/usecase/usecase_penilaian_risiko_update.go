@@ -4,6 +4,7 @@ import (
 	"context"
 	"rmis/gateway"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type PenilaianRisikoUpdateUseCaseReq struct {
@@ -46,6 +47,7 @@ func ImplPenilaianRisikoUpdateUseCase(
 		penilaianRisiko.RencanaTindakPengendalian = &req.RencanaTindakPengendalian
 		penilaianRisiko.PemilikPenanggungJawab = &req.PemilikPenanggungJawab
 		penilaianRisiko.TargetWaktuPenyelesaian = &req.TargetWaktuPenyelesaian
+		penilaianRisiko.Status = sharedModel.StatusMenungguVerifikasi
 
 		if _, err := updatePenilaianRisiko(ctx, gateway.PenilaianRisikoSaveReq{PenilaianRisiko: penilaianRisiko}); err != nil {
 			return nil, err

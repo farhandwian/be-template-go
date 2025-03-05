@@ -14,11 +14,13 @@ type PengkomunikasianPengendalianGetAllUseCaseReq struct {
 	Size      int
 	SortBy    string
 	SortOrder string
+	Status    string
+	Media     string
 }
 
 type PengkomunikasianPengendalianGetAllUseCaseRes struct {
-	PengkomunikasianPengendalian []model.PengkomunikasianPengendalian `json:"pengkomunikasian_pengendalian"`
-	Metadata                     *usecase.Metadata                    `json:"metadata"`
+	PengkomunikasianPengendalian []model.PengkomunikasianPengendalianResponse `json:"pengkomunikasian_pengendalian"`
+	Metadata                     *usecase.Metadata                            `json:"metadata"`
 }
 
 type PengkomunikasianPengendalianGetAllUseCase = core.ActionHandler[PengkomunikasianPengendalianGetAllUseCaseReq, PengkomunikasianPengendalianGetAllUseCaseRes]
@@ -32,6 +34,8 @@ func ImplPengkomunikasianPengendalianGetAllUseCase(getAllPengkomunikasianPengend
 			Keyword:   req.Keyword,
 			SortBy:    req.SortBy,
 			SortOrder: req.SortOrder,
+			Status:    req.Status,
+			Media:     req.Media,
 		})
 		if err != nil {
 			return nil, err
