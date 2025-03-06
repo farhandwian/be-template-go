@@ -17,11 +17,12 @@ type PencatatanKejadianRisikoGetAllReq struct {
 	Size      int
 	SortBy    string
 	SortOrder string
+	Status    string
 }
 
 type PencatatanKejadianRisikoGetAllRes struct {
-	PencatatanKejadianRisiko []model.PencatatanKejadianRisiko `json:"pencatatan_kejadian_risiko"`
-	Count                    int64                            `json:"count"`
+	PencatatanKejadianRisiko []model.PencatatanKejadianRisikoResponse `json:"pencatatan_kejadian_risiko"`
+	Count                    int64                                    `json:"count"`
 }
 
 type PencatatanKejadianRisikoGetAll = core.ActionHandler[PencatatanKejadianRisikoGetAllReq, PencatatanKejadianRisikoGetAllRes]
@@ -31,12 +32,22 @@ func ImplPencatatanKejadianRisikoGetAll(db *gorm.DB) PencatatanKejadianRisikoGet
 
 		query := middleware.GetDBFromContext(ctx, db)
 
+		query = query.
+			Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON pencatatan_kejadian_risikos.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id").
+			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON pencatatan_kejadian_risikos.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id")
+
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.
-				Where("risiko_teridentifikasi LIKE ?", keyword)
+				Where("penetapan_konteks_risiko_strategis_pemdas.nama_pemda LIKE ?", keyword).
+				Or("penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian LIKE ?", keyword).
+				Or("penetapan_konteks_risiko_strategis_pemdas.tujuan_strategis LIKE ?", keyword).
+				Or("penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan LIKE ?", keyword)
 		}
 
+		if req.Status != "" {
+			query = query.Where("status =?", req.Status)
+		}
 		var count int64
 
 		if err := query.
@@ -48,10 +59,17 @@ func ImplPencatatanKejadianRisikoGetAll(db *gorm.DB) PencatatanKejadianRisikoGet
 
 		// Validate sortby
 		allowedSortBy := map[string]bool{
-			"risiko_teridentifikasi": true,
+			"status": true,
 		}
 
-		sortBy, sortOrder, err := helper.ValidateSortParams(allowedSortBy, req.SortBy, req.SortOrder, "risiko_teridentifikasi")
+		allowerdForeignSortBy := map[string]string{
+			"nama_pemda":          "penetapan_konteks_risiko_strategis_pemdas.nama_pemda",
+			"tahun_penilaian":     "penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian",
+			"tujuan_strategis":    "penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan",
+			"urusan_pemerintahan": "penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan",
+		}
+
+		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "nama_pemda")
 		if err != nil {
 			return nil, err
 		}
@@ -61,9 +79,16 @@ func ImplPencatatanKejadianRisikoGetAll(db *gorm.DB) PencatatanKejadianRisikoGet
 
 		page, size := ValidatePageSize(req.Page, req.Size)
 
-		var objs []model.PencatatanKejadianRisiko
+		var objs []model.PencatatanKejadianRisikoResponse
 
 		if err := query.
+			Select(`pencatatan_kejadian_risikos.*, 
+                    penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
+					penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun_penilaian,
+					penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan_strategis,
+					penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintahan,
+					identifikasi_risiko_strategis_pemdas.kode_risiko AS kode_risiko
+					`).
 			Offset((page - 1) * size).
 			Limit(size).
 			Order(orderClause).

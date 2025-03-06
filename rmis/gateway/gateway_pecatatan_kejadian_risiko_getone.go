@@ -25,7 +25,11 @@ func ImplPencatatanKejadianRisikoGetByID(db *gorm.DB) PencatatanKejadianRisikoGe
 		query := middleware.GetDBFromContext(ctx, db)
 
 		var PencatatanKejadianRisiko model.PencatatanKejadianRisiko
-		if err := query.First(&PencatatanKejadianRisiko, "id = ?", req.ID).Error; err != nil {
+		if err := query.
+			Joins("LEFT JOIN identifikasi_risiko_strategis_pemdas ON pencatatan_kejadian_risikos.identifikasi_risiko_strategis_pemda_id = identifikasi_risiko_strategis_pemdas.id").
+			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON pencatatan_kejadian_risikos.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
+			Where("pencatatan_kejadian_risikos.id =?", req.ID).
+			First(&PencatatanKejadianRisiko).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				return nil, fmt.Errorf("PencatatanKejadianRisiko id %v is not found", req.ID)
 			}

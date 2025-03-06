@@ -17,8 +17,8 @@ type PencatatanKejadianRisikoGetAllUseCaseReq struct {
 }
 
 type PencatatanKejadianRisikoGetAllUseCaseRes struct {
-	PencatatanKejadianRisikos []model.PencatatanKejadianRisiko `json:"pencatatan_kejadian_risiko"`
-	Metadata                  *usecase.Metadata                `json:"metadata"`
+	PencatatanKejadianRisikos []model.PencatatanKejadianRisikoResponse `json:"pencatatan_kejadian_risiko"`
+	Metadata                  *usecase.Metadata                        `json:"metadata"`
 }
 
 type PencatatanKejadianRisikoGetAllUseCase = core.ActionHandler[PencatatanKejadianRisikoGetAllUseCaseReq, PencatatanKejadianRisikoGetAllUseCaseRes]

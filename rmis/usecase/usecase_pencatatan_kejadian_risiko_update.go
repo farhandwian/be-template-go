@@ -4,12 +4,14 @@ import (
 	"context"
 	"rmis/gateway"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type PencatatanKejadianRisikoUpdateUseCaseReq struct {
-	ID                      string `json:"-"`
-	RisikoTeridentifikasi   string `json:"risiko_teridentifikasi"`
-	KodeRisiko              string `json:"kode_risiko"`
+	ID                                     string `json:"-"`
+	PenetapanKonteksRisikoStrategisPemdaID string `json:"penetapan_konteks_risiko_strategis_pemda_id"`
+	IdentifikasiRisikoStrategisPemdaID     string `json:"identifikasi_risiko_strategis_pemda_id"`
+
 	TanggalTerjadiRisiko    string `json:"tanggal_terjadi_risiko"`
 	SebabRisiko             string `json:"sebab_risiko"`
 	DampakRisiko            string `json:"dampak_risiko"`
@@ -27,6 +29,8 @@ type PencatatanKejadianRisikoUpdateUseCase = core.ActionHandler[PencatatanKejadi
 func ImplPencatatanKejadianRisikoUpdateUseCase(
 	getPencatatanKejadianRisikoById gateway.PencatatanKejadianRisikoGetByID,
 	updatePencatatanKejadianRisiko gateway.PencatatanKejadianRisikoSave,
+	PenetapanKonteksRisikoStrategisPemdaByID gateway.PenetapanKonteksRisikoStrategisPemdaGetByID,
+	IdentifikasiRisikoStrategisPemdaByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
 ) PencatatanKejadianRisikoUpdateUseCase {
 	return func(ctx context.Context, req PencatatanKejadianRisikoUpdateUseCaseReq) (*PencatatanKejadianRisikoUpdateUseCaseRes, error) {
 
@@ -35,9 +39,19 @@ func ImplPencatatanKejadianRisikoUpdateUseCase(
 			return nil, err
 		}
 
+		_, err = PenetapanKonteksRisikoStrategisPemdaByID(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaGetByIDReq{ID: req.PenetapanKonteksRisikoStrategisPemdaID})
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: req.IdentifikasiRisikoStrategisPemdaID})
+		if err != nil {
+			return nil, err
+		}
+
 		pencatatanKejadianRisiko := res.PencatatanKejadianRisiko
-		pencatatanKejadianRisiko.RisikoTeridentifikasi = &req.RisikoTeridentifikasi
-		pencatatanKejadianRisiko.KodeRisiko = &req.KodeRisiko
+		pencatatanKejadianRisiko.PenetapanKonteksRisikoStrategisPemdaID = &req.PenetapanKonteksRisikoStrategisPemdaID
+		pencatatanKejadianRisiko.IdentifikasiRisikoStrategisPemdaID = &req.IdentifikasiRisikoStrategisPemdaID
 		pencatatanKejadianRisiko.TanggalTerjadiRisiko = &req.TanggalTerjadiRisiko
 		pencatatanKejadianRisiko.SebabRisiko = &req.SebabRisiko
 		pencatatanKejadianRisiko.DampakRisiko = &req.DampakRisiko
@@ -46,6 +60,7 @@ func ImplPencatatanKejadianRisikoUpdateUseCase(
 		pencatatanKejadianRisiko.RencanaPelaksanaanRTP = &req.RencanaPelaksanaanRTP
 		pencatatanKejadianRisiko.RealisasiPelaksanaanRTP = &req.RealisasiPelaksanaanRTP
 		pencatatanKejadianRisiko.KeteranganRTP = &req.KeteranganRTP
+		pencatatanKejadianRisiko.Status = sharedModel.StatusMenungguVerifikasi
 
 		if _, err := updatePencatatanKejadianRisiko(ctx, gateway.PencatatanKejadianRisikoSaveReq{PencatatanKejadianRisiko: pencatatanKejadianRisiko}); err != nil {
 			return nil, err
