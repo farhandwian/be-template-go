@@ -33,7 +33,7 @@ func ImplPenetapanKonteksRisikoRenstraOPDGetByIDUseCase(getPenetapanKonteksRisik
 			return nil, err
 		}
 
-		opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *res.PenetapanKonteksRisikoStrategisRenstraOPD.OPDID})
+		opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *res.PenetapanKonteksRisikoStrategisRenstraOPD.OpdID})
 		if err != nil {
 			return nil, err
 		}

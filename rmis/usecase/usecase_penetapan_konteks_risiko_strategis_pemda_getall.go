@@ -14,6 +14,7 @@ type PenetapanKonteksRisikoGetAllUseCaseReq struct {
 	Size      int
 	SortBy    string
 	SortOrder string
+	Status    string
 }
 
 type PenetapanKonteksRisikoGetAllUseCaseRes struct {

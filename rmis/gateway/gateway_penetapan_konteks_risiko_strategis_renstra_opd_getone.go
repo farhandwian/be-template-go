@@ -25,7 +25,10 @@ func ImplPenetapanKonteksRisikoStrategisRenstraOPDGetByID(db *gorm.DB) Penetapan
 		query := middleware.GetDBFromContext(ctx, db)
 
 		var PenetapanKonteksRisikoStrategisRenstraOPD model.PenetapanKonteksRisikoStrategisRenstraOPD
-		if err := query.First(&PenetapanKonteksRisikoStrategisRenstraOPD, "id = ?", req.ID).Error; err != nil {
+		if err := query.
+			Joins("LEFT JOIN opds ON penetapan_konteks_risiko_strategis_renstra_opds.opd_id = opds.id").
+			Where("penetapan_konteks_risiko_strategis_renstra_opds.id =?", req.ID).
+			First(&PenetapanKonteksRisikoStrategisRenstraOPD).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				return nil, fmt.Errorf("PenetapanKonteksRisikoStrategisRenstraOPD id %v is not found", req.ID)
 			}

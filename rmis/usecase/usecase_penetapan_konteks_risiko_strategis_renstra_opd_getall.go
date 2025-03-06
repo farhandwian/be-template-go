@@ -9,9 +9,12 @@ import (
 )
 
 type PenetapanKonteksRisikoRenstraOPDGetAllUseCaseReq struct {
-	Keyword string
-	Page    int
-	Size    int
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
+	Status    string
 }
 
 type PenetapanKonteksRisikoRenstraOPDGetAllUseCaseRes struct {
@@ -24,7 +27,9 @@ type PenetapanKonteksRisikoRenstraOPDGetAllUseCase = core.ActionHandler[Penetapa
 func ImplPenetapanKonteksRisikoRenstraOPDGetAllUseCase(getAllPenetapanKonteksRisikoRenstraOPDs gateway.PenetapanKonteksRisikoStrategisRenstraOPDGetAll, getAllIKUs gateway.IKUGetAll, getOneOPD gateway.OPDGetByID) PenetapanKonteksRisikoRenstraOPDGetAllUseCase {
 	return func(ctx context.Context, req PenetapanKonteksRisikoRenstraOPDGetAllUseCaseReq) (*PenetapanKonteksRisikoRenstraOPDGetAllUseCaseRes, error) {
 
-		penetapanKonteksRisikos, err := getAllPenetapanKonteksRisikoRenstraOPDs(ctx, gateway.PenetapanKonteksRisikoStrategisRenstraOPDGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword})
+		penetapanKonteksRisikos, err := getAllPenetapanKonteksRisikoRenstraOPDs(ctx, gateway.PenetapanKonteksRisikoStrategisRenstraOPDGetAllReq{
+			Page: req.Page, Size: req.Size, Keyword: req.Keyword, SortBy: req.SortBy, SortOrder: req.SortOrder, Status: req.Status,
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -42,7 +47,7 @@ func ImplPenetapanKonteksRisikoRenstraOPDGetAllUseCase(getAllPenetapanKonteksRis
 				return nil, err
 			}
 
-			opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *penetapanKonteksRisiko.OPDID})
+			opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *penetapanKonteksRisiko.OpdID})
 			if err != nil {
 				return nil, err
 			}

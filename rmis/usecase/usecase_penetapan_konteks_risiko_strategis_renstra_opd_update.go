@@ -2,8 +2,10 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"rmis/gateway"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type PenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCaseReq struct {
@@ -16,8 +18,9 @@ type PenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCaseReq struct {
 	TujuanStrategis    string `json:"tujuan_strategis"`
 	SasaranStrategis   string `json:"sasaran_strategis"`
 	InformasiLain      string `json:"informasi_lain"`
-	IKUStrategis       string `json:"iku_strategis"`
-	NamaYBS            string `json:"nama_ybs"`
+	PenetapanTujuan    string `json:"penetapan_tujuan"`
+	PenetapanSasaran   string `json:"penetapan_sasaran"`
+	PenetapanIku       string `json:"penetapan_iku"`
 }
 
 type PenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCaseRes struct{}
@@ -27,6 +30,7 @@ type PenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase = core.ActionHandler
 func ImplPenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase(
 	getPenetapanKonteksRisikoStrategisRenstraOPDById gateway.PenetapanKonteksRisikoStrategisRenstraOPDGetByID,
 	updatePenetapanKonteksRisikoStrategisRenstraOPD gateway.PenetepanKonteksRisikoStrategisRenstraOPDSave,
+	OpdByID gateway.OPDGetByID,
 ) PenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase {
 	return func(ctx context.Context, req PenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCaseReq) (*PenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCaseRes, error) {
 
@@ -35,18 +39,31 @@ func ImplPenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase(
 			return nil, err
 		}
 
-		res.PenetapanKonteksRisikoStrategisRenstraOPD.NamaPemda = &req.NamaPemda
-		res.PenetapanKonteksRisikoStrategisRenstraOPD.Periode = &req.Periode
-		res.PenetapanKonteksRisikoStrategisRenstraOPD.TahunPenilaian = &req.TahunPenilaian
-		res.PenetapanKonteksRisikoStrategisRenstraOPD.UrusanPemerintahan = &req.UrusanPemerintahan
-		res.PenetapanKonteksRisikoStrategisRenstraOPD.OPDID = &req.OPDID
-		res.PenetapanKonteksRisikoStrategisRenstraOPD.TujuanStrategis = &req.TujuanStrategis
-		res.PenetapanKonteksRisikoStrategisRenstraOPD.SasaranStrategis = &req.SasaranStrategis
-		res.PenetapanKonteksRisikoStrategisRenstraOPD.InformasiLain = &req.InformasiLain
-		res.PenetapanKonteksRisikoStrategisRenstraOPD.IKUStrategis = &req.IKUStrategis
-		res.PenetapanKonteksRisikoStrategisRenstraOPD.NamaYBS = &req.NamaYBS
+		_, err = OpdByID(ctx, gateway.OPDGetByIDReq{ID: req.OPDID})
+		if err != nil {
+			return nil, err
+		}
 
-		if _, err := updatePenetapanKonteksRisikoStrategisRenstraOPD(ctx, gateway.PenetapanKonteksRisikoStrategisRenstraOPDSaveReq{PenetepanKonteksRisikoStrategisRenstraOPD: res.PenetapanKonteksRisikoStrategisRenstraOPD}); err != nil {
+		tahunPenilaian, err := extractYear(req.TahunPenilaian)
+		if err != nil {
+			return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
+		}
+		penetapanKonteksRisikoStrategisRenstraOPD := res.PenetapanKonteksRisikoStrategisRenstraOPD
+
+		penetapanKonteksRisikoStrategisRenstraOPD.NamaPemda = &req.NamaPemda
+		penetapanKonteksRisikoStrategisRenstraOPD.Periode = &req.Periode
+		penetapanKonteksRisikoStrategisRenstraOPD.TahunPenilaian = &tahunPenilaian
+		penetapanKonteksRisikoStrategisRenstraOPD.UrusanPemerintahan = &req.UrusanPemerintahan
+		penetapanKonteksRisikoStrategisRenstraOPD.OpdID = &req.OPDID
+		penetapanKonteksRisikoStrategisRenstraOPD.TujuanStrategis = &req.TujuanStrategis
+		penetapanKonteksRisikoStrategisRenstraOPD.SasaranStrategis = &req.SasaranStrategis
+		penetapanKonteksRisikoStrategisRenstraOPD.InformasiLain = &req.InformasiLain
+		penetapanKonteksRisikoStrategisRenstraOPD.PenetapanTujuan = &req.PenetapanTujuan
+		penetapanKonteksRisikoStrategisRenstraOPD.PenetapanSasaran = &req.PenetapanSasaran
+		penetapanKonteksRisikoStrategisRenstraOPD.PenetapanIku = &req.PenetapanIku
+		penetapanKonteksRisikoStrategisRenstraOPD.Status = sharedModel.StatusMenungguVerifikasi
+
+		if _, err := updatePenetapanKonteksRisikoStrategisRenstraOPD(ctx, gateway.PenetapanKonteksRisikoStrategisRenstraOPDSaveReq{PenetepanKonteksRisikoStrategisRenstraOPD: penetapanKonteksRisikoStrategisRenstraOPD}); err != nil {
 			return nil, err
 		}
 

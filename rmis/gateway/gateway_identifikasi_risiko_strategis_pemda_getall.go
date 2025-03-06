@@ -22,8 +22,8 @@ type IdentifikasiRisikoStrategisPemdaGetAllReq struct {
 }
 
 type IdentifikasiRisikoStrategisPemdaGetAllRes struct {
-	IdentifikasiRisikoStrategisPemda []model.IdentifikasiRisikoStrategisPemda `json:"identifikasi_risiko_strategis_pemda"`
-	Count                            int64                                    `json:"count"`
+	IdentifikasiRisikoStrategisPemda []model.IdentifikasiRisikoStrategisPemdaResponse `json:"identifikasi_risiko_strategis_pemda"`
+	Count                            int64                                            `json:"count"`
 }
 
 type IdentifikasiRisikoStrategisPemdaGetAll = core.ActionHandler[IdentifikasiRisikoStrategisPemdaGetAllReq, IdentifikasiRisikoStrategisPemdaGetAllRes]
@@ -41,8 +41,10 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.
-				Where("nama LIKE ?", keyword).
-				Or("kode LIKE ?", keyword)
+				Where("penetapan_konteks_risiko_strategis_pemdas.nama_pemda LIKE ?", keyword).
+				Or("penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian LIKE ?", keyword).
+				Or("penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan LIKE ?", keyword).
+				Or("penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan LIKE ?", keyword)
 		}
 
 		if req.Status != "" {
@@ -72,48 +74,47 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 		}
 
 		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "status")
-		fmt.Println(sortBy, sortOrder, err)
 		if err != nil {
 			return nil, err
 		}
 
 		// Apply sorting
-		// orderClause := fmt.Sprintf("%s %s", sortBy, sortOrder)
+		orderClause := fmt.Sprintf("%s %s", sortBy, sortOrder)
 
 		page, size := ValidatePageSize(req.Page, req.Size)
 
-		var objs []model.IdentifikasiRisikoStrategisPemda
+		var objs []model.IdentifikasiRisikoStrategisPemdaResponse
 
-		// if err := query.
-		// 	Select(`identifikasi_risiko_strategis_pemdas.*,
-		// 	    penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
-		//         penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
-		// 		penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
-		// 		penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
-		//         penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintah,
-		// 		penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks
-		// 	`).
-		// 	Offset((page - 1) * size).
-		// 	Order(orderClause).
-		// 	Limit(size).
-		// 	Scan(&objs).
-		// 	Error; err != nil {
-		// 	return nil, core.NewInternalServerError(err)
-		// }
-		if err := db.Raw(`
-    SELECT identifikasi_risiko_strategis_pemdas.*, 
-        penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
-        penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
-        penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
-        penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks,
-        penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintah
-    FROM identifikasi_risiko_strategis_pemdas
-    LEFT JOIN penetapan_konteks_risiko_strategis_pemdas 
-        ON identifikasi_risiko_strategis_pemdas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id
-    LIMIT ? OFFSET ?
-`, size, (page-1)*size).Scan(&objs).Error; err != nil {
+		if err := query.
+			Select(`identifikasi_risiko_strategis_pemdas.*,
+			    penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
+		        penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
+				penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
+				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
+		        penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintah,
+				penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks
+			`).
+			Offset((page - 1) * size).
+			Order(orderClause).
+			Limit(size).
+			Scan(&objs).
+			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
+		// 		if err := db.Raw(`
+		//     SELECT identifikasi_risiko_strategis_pemdas.*,
+		//         penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
+		//         penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
+		//         penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
+		//         penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks,
+		//         penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintah
+		//     FROM identifikasi_risiko_strategis_pemdas
+		//     LEFT JOIN penetapan_konteks_risiko_strategis_pemdas
+		//         ON identifikasi_risiko_strategis_pemdas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id
+		//     LIMIT ? OFFSET ?
+		// `, size, (page-1)*size).Scan(&objs).Error; err != nil {
+		// 			return nil, core.NewInternalServerError(err)
+		// 		}
 
 		return &IdentifikasiRisikoStrategisPemdaGetAllRes{
 			IdentifikasiRisikoStrategisPemda: objs,

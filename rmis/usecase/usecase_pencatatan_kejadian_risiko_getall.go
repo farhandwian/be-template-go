@@ -14,6 +14,7 @@ type PencatatanKejadianRisikoGetAllUseCaseReq struct {
 	Size      int
 	SortBy    string
 	SortOrder string
+	Status    string
 }
 
 type PencatatanKejadianRisikoGetAllUseCaseRes struct {
@@ -26,7 +27,9 @@ type PencatatanKejadianRisikoGetAllUseCase = core.ActionHandler[PencatatanKejadi
 func ImplPencatatanKejadianRisikoGetAllUseCase(getAllPencatatanKejadianRisikos gateway.PencatatanKejadianRisikoGetAll) PencatatanKejadianRisikoGetAllUseCase {
 	return func(ctx context.Context, req PencatatanKejadianRisikoGetAllUseCaseReq) (*PencatatanKejadianRisikoGetAllUseCaseRes, error) {
 
-		res, err := getAllPencatatanKejadianRisikos(ctx, gateway.PencatatanKejadianRisikoGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword, SortBy: req.SortBy, SortOrder: req.SortOrder})
+		res, err := getAllPencatatanKejadianRisikos(ctx, gateway.PencatatanKejadianRisikoGetAllReq{
+			Page: req.Page, Size: req.Size, Keyword: req.Keyword, SortBy: req.SortBy, SortOrder: req.SortOrder, Status: req.Status,
+		})
 		if err != nil {
 			return nil, err
 		}

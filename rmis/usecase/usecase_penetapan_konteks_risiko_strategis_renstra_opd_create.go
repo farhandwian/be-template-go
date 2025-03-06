@@ -2,9 +2,11 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type PenetapanKonteksRisikoStrategisRenstraOPDCreateUseCaseReq struct {
@@ -16,8 +18,9 @@ type PenetapanKonteksRisikoStrategisRenstraOPDCreateUseCaseReq struct {
 	TujuanStrategis    string `json:"tujuan_strategis"`
 	SasaranStrategis   string `json:"sasaran_strategis"`
 	InformasiLain      string `json:"informasi_lain"`
-	IKUStrategis       string `json:"iku_strategis"`
-	NamaYBS            string `json:"nama_ybs"`
+	PenetapanTujuan    string `json:"penetapan_tujuan"`
+	PenetapanSasaran   string `json:"penetapan_sasaran"`
+	PenetapanIku       string `json:"penetapan_iku"`
 }
 
 type PenetapanKonteksRisikoStrategisRenstraOPDCreateUseCaseRes struct {
@@ -29,6 +32,7 @@ type PenetapanKonteksRisikoStrategisRenstraOPDCreateUseCase = core.ActionHandler
 func ImplPenetapanKonteksRisikoStrategisRenstraOPDCreateUseCase(
 	generateId gateway.GenerateId,
 	createPenetapanKonteksRisikoStrategisRenstraOPD gateway.PenetepanKonteksRisikoStrategisRenstraOPDSave,
+	OpdByID gateway.OPDGetByID,
 ) PenetapanKonteksRisikoStrategisRenstraOPDCreateUseCase {
 	return func(ctx context.Context, req PenetapanKonteksRisikoStrategisRenstraOPDCreateUseCaseReq) (*PenetapanKonteksRisikoStrategisRenstraOPDCreateUseCaseRes, error) {
 
@@ -37,18 +41,29 @@ func ImplPenetapanKonteksRisikoStrategisRenstraOPDCreateUseCase(
 			return nil, err
 		}
 
+		_, err = OpdByID(ctx, gateway.OPDGetByIDReq{ID: req.OPDID})
+		if err != nil {
+			return nil, err
+		}
+
+		tahunPenilaian, err := extractYear(req.TahunPenilaian)
+		if err != nil {
+			return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
+		}
 		obj := model.PenetapanKonteksRisikoStrategisRenstraOPD{
 			ID:                 &genObj.RandomId,
 			NamaPemda:          &req.NamaPemda,
-			TahunPenilaian:     &req.TahunPenilaian,
+			TahunPenilaian:     &tahunPenilaian,
 			Periode:            &req.Periode,
 			UrusanPemerintahan: &req.UrusanPemerintahan,
-			OPDID:              &req.OPDID,
+			OpdID:              &req.OPDID,
 			TujuanStrategis:    &req.TujuanStrategis,
 			SasaranStrategis:   &req.SasaranStrategis,
 			InformasiLain:      &req.InformasiLain,
-			IKUStrategis:       &req.IKUStrategis,
-			NamaYBS:            &req.NamaYBS,
+			PenetapanTujuan:    &req.PenetapanTujuan,
+			PenetapanSasaran:   &req.PenetapanSasaran,
+			PenetapanIku:       &req.PenetapanIku,
+			Status:             sharedModel.StatusMenungguVerifikasi,
 		}
 
 		if _, err = createPenetapanKonteksRisikoStrategisRenstraOPD(ctx, gateway.PenetapanKonteksRisikoStrategisRenstraOPDSaveReq{PenetepanKonteksRisikoStrategisRenstraOPD: obj}); err != nil {
