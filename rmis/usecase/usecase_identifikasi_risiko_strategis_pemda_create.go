@@ -10,17 +10,16 @@ import (
 )
 
 type IdentifikasiRisikoStrategisPemdaCreateUseCaseReq struct {
-	PenetapanKonteksRisikoStrategisPemdaID string             `json:"penetapan_konteks_risiko_strategis_pemda_id"`
-	TujuanStrategis                        string             `json:"tujuan_strategis"`
-	IndikatorKinerja                       string             `json:"indikator_kinerja"`
-	UraianRisiko                           string             `json:"uraian_resiko"`
-	PemilikRisiko                          string             `json:"pemilik_resiko"`
-	Controllable                           string             `json:"controllable"`
-	UraianDampak                           string             `json:"uraian_dampak"`
-	PihakDampak                            string             `json:"pihak_dampak"`
-	KategoriRisikoID                       string             `json:"kategori_risiko_id"`
-	RcaID                                  *string            `json:"rca_id"`
-	Status                                 sharedModel.Status `json:"status"`
+	PenetapanKonteksRisikoStrategisPemdaID string  `json:"penetapan_konteks_risiko_strategis_pemda_id"`
+	TujuanStrategis                        string  `json:"tujuan_strategis"`
+	IndikatorKinerja                       string  `json:"indikator_kinerja"`
+	UraianRisiko                           string  `json:"uraian_resiko"`
+	PemilikRisiko                          string  `json:"pemilik_resiko"`
+	Controllable                           string  `json:"controllable"`
+	UraianDampak                           string  `json:"uraian_dampak"`
+	PihakDampak                            string  `json:"pihak_dampak"`
+	KategoriRisikoID                       string  `json:"kategori_risiko_id"`
+	RcaID                                  *string `json:"rca_id"`
 }
 
 type IdentifikasiRisikoStrategisPemdaCreateUseCaseRes struct {

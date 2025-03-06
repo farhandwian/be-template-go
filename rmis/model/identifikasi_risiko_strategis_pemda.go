@@ -58,7 +58,6 @@ type IdentifikasiRisikoStrategisPemdaResponse struct {
 }
 
 func (irspd *IdentifikasiRisikoStrategisPemda) GenerateKodeRisiko(tahun time.Time, kategori_risiko string) error {
-	fmt.Println("TEST BANG: GenerateKodeRisiko")
 
 	if irspd.NomorUraian == nil {
 		defaultNum := 1

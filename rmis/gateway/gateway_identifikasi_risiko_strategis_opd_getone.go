@@ -25,7 +25,11 @@ func ImplIdentifikasiRisikoStrategisOPDGetByID(db *gorm.DB) IdentifikasiRisikoSt
 		query := middleware.GetDBFromContext(ctx, db)
 
 		var IdentifikasiRisikoStrategisOPD model.IdentifikasiRisikoStrategisOPD
-		if err := query.First(&IdentifikasiRisikoStrategisOPD, "id = ?", req.ID).Error; err != nil {
+		if err := query.
+			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_renstra_opds ON identifikasi_risiko_strategis_opds.penetapan_konteks_risiko_strategis_renstra_id = penetapan_konteks_risiko_strategis_renstra_opds.id").
+			Joins("LEFT JOIN kategori_risikos ON identifikasi_risiko_strategis_opds.kategori_risiko_id = kategori_risikos.id").
+			Where("identifikasi_risiko_strategis_opds.id =?", req.ID).
+			First(&IdentifikasiRisikoStrategisOPD).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				return nil, fmt.Errorf("IdentifikasiRisikoStrategisOPD id %v is not found", req.ID)
 			}

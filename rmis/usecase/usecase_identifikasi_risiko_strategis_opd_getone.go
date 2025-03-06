@@ -13,7 +13,6 @@ type IdentifikasiRisikoStrategisOPDGetByIDUseCaseReq struct {
 
 type IdentifikasiRisikoStrategisOPDGetByIDUseCaseRes struct {
 	IdentifikasiRisikoStrategisOPD model.IdentifikasiRisikoStrategisOPD `json:"identifikasi_risiko_strategis_opd"`
-	OPD                            model.OPD                            `json:"opd"`
 }
 
 type IdentifikasiRisikoStrategisOPDGetByIDUseCase = core.ActionHandler[IdentifikasiRisikoStrategisOPDGetByIDUseCaseReq, IdentifikasiRisikoStrategisOPDGetByIDUseCaseRes]
@@ -24,10 +23,6 @@ func ImplIdentifikasiRisikoStrategisOPDGetByIDUseCase(getIdentifikasiRisikoStrat
 		if err != nil {
 			return nil, err
 		}
-		opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *res.IdentifikasiRisikoStrategisOPD.OPDID})
-		if err != nil {
-			return nil, err
-		}
-		return &IdentifikasiRisikoStrategisOPDGetByIDUseCaseRes{IdentifikasiRisikoStrategisOPD: res.IdentifikasiRisikoStrategisOPD, OPD: opd.OPD}, nil
+		return &IdentifikasiRisikoStrategisOPDGetByIDUseCaseRes{IdentifikasiRisikoStrategisOPD: res.IdentifikasiRisikoStrategisOPD}, nil
 	}
 }
