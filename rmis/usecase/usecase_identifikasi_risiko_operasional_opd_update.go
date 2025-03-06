@@ -8,21 +8,20 @@ import (
 )
 
 type IdentifikasiRisikoOperasionalOPDUpdateUseCaseReq struct {
-	ID                 string `json:"id"`
-	NamaPemda          string `json:"nama_pemda"`
-	OPDID              string `json:"opd_id"`
-	TahunPenilaian     string `json:"tahun_penilaian"`
-	Periode            string `json:"periode"`
-	UrusanPemerintahan string `json:"urusan_pemerintahan"`
-	IndikatorKeluaran  string `json:"indikator_keluaran"`
-	TahapRisiko        string `json:"tahap_risiko"`
-	KategoriRisikoID   string `json:"kategori_resiko_id"`
-	NomorUraianRisiko  int    `json:"nomor_uraian_risiko"`
-	UraianRisiko       string `json:"uraian_resiko"`
-	PemilikRisiko      string `json:"pemilik_resiko"`
-	Controllable       string `json:"controllable"`
-	UraianDampak       string `json:"uraian_dampak"`
-	PihakDampak        string `json:"pihak_dampak"`
+	ID                                     string `json:"id"`
+	PenetapanKonteksRisikoOperasionalOpdID string `json:"penetapan_konteks_risiko_operasional_opd_id"`
+	KategoriRisikoID                       string `json:"kategori_risiko_id"`
+	RcaID                                  string `json:"rca_id"`
+	UraianSebab                            string `json:"uraian_sebab"`
+	SumberSebab                            string `json:"sumber_sebab"`
+	Controllable                           string `json:"controllable"`
+	UraianDampak                           string `json:"uraian_dampak"`
+	PihakDampak                            string `json:"pihak_dampak"`
+	Kegiatan                               string `json:"kegiatan"`
+	Indikatorkeluaran                      string `json:"indikator_keluaran"`
+	PemilikRisiko                          string `json:"pemilik_resiko"`
+	UraianRisiko                           string `json:"uraian_resiko"`
+	TahapRisiko                            string `json:"tahap_risiko"`
 }
 
 type IdentifikasiRisikoOperasionalOPDUpdateUseCaseRes struct{}
@@ -35,6 +34,7 @@ func ImplIdentifikasiRisikoOperasionalOPDUpdateUseCase(
 	kodeRisikoByID gateway.KategoriRisikoGetByID,
 	RcaByID gateway.RcaGetByID,
 	getOneOPD gateway.OPDGetByID,
+	penetapanKonteksRisikoOperasionalOpdID gateway.PenetapanKonteksRisikoOperasionalGetByID,
 ) IdentifikasiRisikoOperasionalOPDUpdateUseCase {
 	return func(ctx context.Context, req IdentifikasiRisikoOperasionalOPDUpdateUseCaseReq) (*IdentifikasiRisikoOperasionalOPDUpdateUseCaseRes, error) {
 
@@ -43,45 +43,45 @@ func ImplIdentifikasiRisikoOperasionalOPDUpdateUseCase(
 			return nil, err
 		}
 
-		if req.TahunPenilaian != "" {
-			year, err := extractYear(req.TahunPenilaian)
-			if err != nil {
-				return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
-			}
-			res.IdentifikasiRisikoOperasionalOPD.TahunPenilaian = &year
-		}
-		res.IdentifikasiRisikoOperasionalOPD.NamaPemda = &req.NamaPemda
-		res.IdentifikasiRisikoOperasionalOPD.OPDID = &req.OPDID
-		res.IdentifikasiRisikoOperasionalOPD.Periode = &req.Periode
-		res.IdentifikasiRisikoOperasionalOPD.UrusanPemerintahan = &req.UrusanPemerintahan
-		res.IdentifikasiRisikoOperasionalOPD.IndikatorKeluaran = &req.IndikatorKeluaran
-		res.IdentifikasiRisikoOperasionalOPD.TahapRisiko = &req.TahapRisiko
-		res.IdentifikasiRisikoOperasionalOPD.KategoriRisikoID = &req.KategoriRisikoID
-		res.IdentifikasiRisikoOperasionalOPD.NomorUraianRisiko = &req.NomorUraianRisiko
-		res.IdentifikasiRisikoOperasionalOPD.UraianRisiko = &req.UraianRisiko
-		res.IdentifikasiRisikoOperasionalOPD.PemilikRisiko = &req.PemilikRisiko
-		res.IdentifikasiRisikoOperasionalOPD.Controllable = &req.Controllable
-		res.IdentifikasiRisikoOperasionalOPD.UraianDampak = &req.UraianDampak
-		res.IdentifikasiRisikoOperasionalOPD.PihakDampak = &req.PihakDampak
+		identifikasiOperasionalOpd := res.IdentifikasiRisikoOperasionalOPD
+		identifikasiOperasionalOpd.TahapRisiko = &req.TahapRisiko
+		identifikasiOperasionalOpd.KategoriRisikoID = &req.KategoriRisikoID
+		identifikasiOperasionalOpd.UraianRisiko = &req.UraianRisiko
+		identifikasiOperasionalOpd.PemilikRisiko = &req.PemilikRisiko
+		identifikasiOperasionalOpd.Controllable = &req.Controllable
+		identifikasiOperasionalOpd.UraianDampak = &req.UraianDampak
+		identifikasiOperasionalOpd.PihakDampak = &req.PihakDampak
+		identifikasiOperasionalOpd.Indikatorkeluaran = &req.Indikatorkeluaran
+		identifikasiOperasionalOpd.UraianSebab = &req.UraianSebab
+		identifikasiOperasionalOpd.SumberSebab = &req.SumberSebab
+		identifikasiOperasionalOpd.Kegiatan = &req.Kegiatan
+		identifikasiOperasionalOpd.KategoriRisikoID = &req.KategoriRisikoID
+		identifikasiOperasionalOpd.RcaID = &req.RcaID
+		identifikasiOperasionalOpd.PenetapanKonteksRisikoOperasionalOpdID = &req.PenetapanKonteksRisikoOperasionalOpdID
 
-		if res.IdentifikasiRisikoOperasionalOPD.KategoriRisikoID == nil || *res.IdentifikasiRisikoOperasionalOPD.KategoriRisikoID == "" {
+		if identifikasiOperasionalOpd.KategoriRisikoID == nil || *identifikasiOperasionalOpd.KategoriRisikoID == "" {
 			return nil, fmt.Errorf("KategoriRisikoID is missing in the database record")
 		}
 
 		kategoriRisikoRes, err := kodeRisikoByID(ctx, gateway.KategoriRisikoGetByIDReq{
-			ID: *res.IdentifikasiRisikoOperasionalOPD.KategoriRisikoID,
+			ID: *identifikasiOperasionalOpd.KategoriRisikoID,
 		})
+
+		penetapanKonteksRisikoOperasionalOpdID, err := penetapanKonteksRisikoOperasionalOpdID(ctx, gateway.PenetapanKonteksRisikoOperasionalGetByIDReq{ID: req.PenetapanKonteksRisikoOperasionalOpdID})
+		if err != nil {
+			return nil, err
+		}
 		if err != nil {
 			return nil, fmt.Errorf("failed to get KategoriRisiko: %v", err)
 		}
 
-		opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: req.OPDID})
+		opdRes, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *penetapanKonteksRisikoOperasionalOpdID.PenetapanKonteksRisikoOperasional.OpdID})
 		if err != nil {
 			return nil, fmt.Errorf("failed to get OPDName: %v", err)
 		}
 
-		if res.IdentifikasiRisikoOperasionalOPD.KodeRisiko == nil || *res.IdentifikasiRisikoOperasionalOPD.KodeRisiko == "" {
-			res.IdentifikasiRisikoOperasionalOPD.GenerateKodeRisiko(*kategoriRisikoRes.KategoriRisiko.Kode, *opd.OPD.Kode)
+		if identifikasiOperasionalOpd.KodeRisiko == nil || *identifikasiOperasionalOpd.KodeRisiko == "" {
+			identifikasiOperasionalOpd.GenerateKodeRisiko(*penetapanKonteksRisikoOperasionalOpdID.PenetapanKonteksRisikoOperasional.TahunPenilaian, *kategoriRisikoRes.KategoriRisiko.Kode, *opdRes.OPD.Kode)
 		}
 
 		// rcaRes, err := RcaByID(ctx, gateway.RcaGetByIDReq{ID: req.RcaID})

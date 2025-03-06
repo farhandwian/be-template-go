@@ -2,33 +2,35 @@ package model
 
 import (
 	"fmt"
+	sharedModel "shared/model"
 	"time"
 )
 
 // Form 3C
 
 type IdentifikasiRisikoOperasionalOPD struct {
-	ID                 *string    `json:"id"`
-	NamaPemda          *string    `json:"nama_pemda"`
-	OPDID              *string    `json:"opd_id"` // references opd
-	TahunPenilaian     *time.Time `json:"tahun_penilaian"`
-	Periode            *string    `json:"periode"`
-	UrusanPemerintahan *string    `json:"urusan_pemerintahan"`
-	// ProgramKegiatanSubkegiatanID *string    `json:"program_kegiatan_subkegiatan"` // reference to penetapan_konteks_risiko_operasional.id form 2c
-	IndikatorKeluaran *string `json:"indikator_keluaran"`
-	TahapRisiko       *string `json:"tahap_risiko"`
-	KategoriRisikoID  *string `json:"kategori_risiko_id"` // references kategori_resiko.id
-	NomorUraianRisiko *int    `json:"nomor_uraian_risiko"`
-	UraianRisiko      *string `json:"uraian_risiko"`
-	KodeRisiko        *string `json:"kode_risiko"`
-	PemilikRisiko     *string `json:"pemilik_risiko"`
-	// UraianSebab                *string    `json:"uraian_sebab"` // references rca.akar_penyebab
-	// SumberSebab                *string    `json:"sumber_sebab"` // references rca.jenis_penyebab
-	Controllable *string   `json:"controllable"` // buat enum
-	UraianDampak *string   `json:"uraian_dampak"`
-	PihakDampak  *string   `json:"pihak_dampak"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	ID                                     *string `json:"id"`
+	PenetapanKonteksRisikoOperasionalOpdID *string `json:"-" gorm:"type:VARCHAR(255)"`
+	KategoriRisikoID                       *string `json:"-" gorm:"type:VARCHAR(255)"` // references kategori_resiko.id
+	RcaID                                  *string `json:"-" gorm:"type:VARCHAR(255)"`
+
+	TahapRisiko   *string `json:"tahap_risiko"`
+	UraianRisiko  *string `json:"uraian_resiko"`
+	NomorUraian   *int    `json:"nomor_uraian"`
+	KodeRisiko    *string `json:"kode_resiko"`
+	PemilikRisiko *string `json:"pemilik_resiko"`
+
+	UraianSebab       *string `json:"uraian_sebab"` // references rca.akar_penyebab
+	SumberSebab       *string `json:"sumber_sebab"` // references rca.jenis_penyebab
+	Controllable      *string `json:"controllable"` // could be boolean if desired
+	UraianDampak      *string `json:"uraian_dampak"`
+	PihakDampak       *string `json:"pihak_dampak"`
+	Kegiatan          *string `json:"kegiatan"`
+	Indikatorkeluaran *string `json:"indikator_keluaran"`
+
+	Status    sharedModel.Status `json:"status"`
+	CreatedAt time.Time          `json:"created_at"`
+	UpdatedAt time.Time          `json:"updated_at"`
 }
 
 type IdentifikasiRisikoOperasionalOPDGetRes struct {
@@ -36,26 +38,12 @@ type IdentifikasiRisikoOperasionalOPDGetRes struct {
 	OPD                              OPD                              `json:"opd"`
 }
 
-func (iroopd *IdentifikasiRisikoOperasionalOPD) GenerateKodeRisiko(kodeKategoriRisiko string, kodeOpd string) error {
-	if iroopd.TahunPenilaian == nil {
-		return fmt.Errorf("TahunPenilaian is nil")
-	}
+func (iroopd *IdentifikasiRisikoOperasionalOPD) GenerateKodeRisiko(tahun time.Time, kodeKategoriRisiko string, kodeOpd string) error {
 
-	if iroopd.OPDID == nil {
-		return fmt.Errorf("NamaOPD is nil")
-	}
-
-	if iroopd.NomorUraianRisiko == nil {
-		return fmt.Errorf("NomorUraianRisiko is nil")
-	}
-
-	if iroopd.KategoriRisikoID == nil {
-		return fmt.Errorf("KategoriRisikoID is nil")
-	}
-
-	yearSuffix := fmt.Sprintf("%02d", iroopd.TahunPenilaian.Year()%100)
-	iterStr := fmt.Sprintf("%03d", *iroopd.NomorUraianRisiko)
-
+	yearSuffix := fmt.Sprintf("%02d", tahun.Year()%100)
+	// iterStr := fmt.Sprintf("%03d", *irsopd.NomorUraian)
+	nomor := 4
+	iterStr := fmt.Sprintf("%03d", nomor)
 	kodeRisiko := fmt.Sprintf("ROO.%s.%s.%s.%s", yearSuffix, kodeOpd, kodeKategoriRisiko, iterStr)
 	iroopd.KodeRisiko = &kodeRisiko
 	return nil

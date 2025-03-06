@@ -101,21 +101,6 @@ func ImplIdentifikasiRisikoStrategisPemdaGetAll(db *gorm.DB) IdentifikasiRisikoS
 			Error; err != nil {
 			return nil, core.NewInternalServerError(err)
 		}
-		// 		if err := db.Raw(`
-		//     SELECT identifikasi_risiko_strategis_pemdas.*,
-		//         penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
-		//         penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
-		//         penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
-		//         penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks,
-		//         penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintah
-		//     FROM identifikasi_risiko_strategis_pemdas
-		//     LEFT JOIN penetapan_konteks_risiko_strategis_pemdas
-		//         ON identifikasi_risiko_strategis_pemdas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id
-		//     LIMIT ? OFFSET ?
-		// `, size, (page-1)*size).Scan(&objs).Error; err != nil {
-		// 			return nil, core.NewInternalServerError(err)
-		// 		}
-
 		return &IdentifikasiRisikoStrategisPemdaGetAllRes{
 			IdentifikasiRisikoStrategisPemda: objs,
 			Count:                            count,
