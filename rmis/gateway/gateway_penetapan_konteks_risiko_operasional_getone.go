@@ -25,7 +25,10 @@ func ImplPenetapanKonteksRisikoOperasionalGetByID(db *gorm.DB) PenetapanKonteksR
 		query := middleware.GetDBFromContext(ctx, db)
 
 		var PenetapanKonteksRisikoOperasional model.PenetapanKonteksRisikoOperasional
-		if err := query.First(&PenetapanKonteksRisikoOperasional, "id = ?", req.ID).Error; err != nil {
+		if err := query.
+			Joins("LEFT JOIN opds ON penetapan_konteks_risiko_operasionals.opd_id = opds.id").
+			Where("penetapan_konteks_risiko_operasionals.id =?", req.ID).
+			First(&PenetapanKonteksRisikoOperasional).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				return nil, fmt.Errorf("PenetapanKonteksRisikoOperasional id %v is not found", req.ID)
 			}

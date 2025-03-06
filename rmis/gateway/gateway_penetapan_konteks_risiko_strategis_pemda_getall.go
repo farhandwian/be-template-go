@@ -17,6 +17,7 @@ type PenetapanKonteksRisikoStrategisPemdaGetAllReq struct {
 	Size      int
 	SortBy    string
 	SortOrder string
+	Status    string
 }
 
 type PenetapanKonteksRisikoStrategisPemdaGetAllRes struct {
@@ -39,6 +40,10 @@ func ImplPenetapanKonteksRisikoStrategisPemdaGetAll(db *gorm.DB) PenetapanKontek
 		}
 
 		var count int64
+
+		if req.Status != "" {
+			query = query.Where("status =?", req.Status)
+		}
 
 		if err := query.
 			Model(&model.PenetapanKonteksRisikoStrategisPemda{}).

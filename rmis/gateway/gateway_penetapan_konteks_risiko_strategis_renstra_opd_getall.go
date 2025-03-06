@@ -44,6 +44,10 @@ func ImplPenetapanKonteksRisikoStrategisRenstraOPDGetAll(db *gorm.DB) PenetapanK
 				Or("opds.nama LIKE ?", keyword)
 		}
 
+		if req.Status != "" {
+			query = query.Where("penetapan_konteks_risiko_strategis_renstra_opds.status =?", req.Status)
+		}
+
 		var count int64
 
 		if err := query.
@@ -59,7 +63,9 @@ func ImplPenetapanKonteksRisikoStrategisRenstraOPDGetAll(db *gorm.DB) PenetapanK
 			"status":      true,
 		}
 
-		allowerdForeignSortBy := map[string]string{}
+		allowerdForeignSortBy := map[string]string{
+			"opd": "opds.nama",
+		}
 
 		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "nama_pemda")
 		if err != nil {

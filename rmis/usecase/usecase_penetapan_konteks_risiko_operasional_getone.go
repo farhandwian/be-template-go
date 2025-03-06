@@ -30,7 +30,7 @@ func ImplPenetapanKonteksRisikoOperasionalGetByIDUseCase(getPenetapanKonteksRisi
 			ExternalID: *res.PenetapanKonteksRisikoOperasional.ID,
 		})
 
-		opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *res.PenetapanKonteksRisikoOperasional.OPDID})
+		opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *res.PenetapanKonteksRisikoOperasional.OpdID})
 		if err != nil {
 			return nil, err
 		}

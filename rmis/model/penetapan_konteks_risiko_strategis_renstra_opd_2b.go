@@ -44,10 +44,9 @@ type PenetapanKonteksRisikoStrategisRenstraOPDResponse struct {
 	PenetapanSasaran   *string `json:"penetapan_sasaran"`
 	PenetapanIku       *string `json:"penetapan_iku"`
 
-	Status sharedModel.Status `json:"status"`
-
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Status    sharedModel.Status `json:"status"`
+	CreatedAt time.Time          `json:"created_at"`
+	UpdatedAt time.Time          `json:"updated_at"`
 }
 type PenetapanKonteksRisikoStrategisRenstraOPDGet struct {
 	PenetapanKonteksRisikoStrategisRenstraOPD PenetapanKonteksRisikoStrategisRenstraOPDResponse `json:"penetapan_konteks_risiko_strategis_renstra_opd"`

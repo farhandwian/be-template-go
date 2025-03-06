@@ -9,15 +9,18 @@ import (
 )
 
 type PenetapanKonteksRisikoOperasionalGetAllUseCaseReq struct {
-	Keyword string
-	Page    int
-	Size    int
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
+	Status    string
 }
 
 type PenetapanKonteksRisikoOperasional struct {
-	PenetapanKonteksRisikoOperasional model.PenetapanKonteksRisikoOperasional `json:"penetapan_konteks_risiko_operasional"`
-	IKUs                              []model.IKU                             `json:"ikus"`
-	OPD                               model.OPD                               `json:"opd"`
+	PenetapanKonteksRisikoOperasional model.PenetapanKonteksRisikoOperasionalResponse `json:"penetapan_konteks_risiko_operasional"`
+	IKUs                              []model.IKU                                     `json:"ikus"`
+	OPD                               model.OPD                                       `json:"opd"`
 }
 
 type PenetapanKonteksRisikoOperasionalGetAllUseCaseRes struct {
@@ -30,7 +33,9 @@ type PenetapanKonteksRisikoOperasionalGetAllUseCase = core.ActionHandler[Penetap
 func ImplPenetapanKonteksRisikoOperasionalGetAllUseCase(getAllPenetapanKonteksRisikoOperasionals gateway.PenetapanKonteksRisikoOperasionalGetAll, getAllIKUs gateway.IKUGetAll, getOneOPD gateway.OPDGetByID) PenetapanKonteksRisikoOperasionalGetAllUseCase {
 	return func(ctx context.Context, req PenetapanKonteksRisikoOperasionalGetAllUseCaseReq) (*PenetapanKonteksRisikoOperasionalGetAllUseCaseRes, error) {
 
-		penetapanKonteksRisikos, err := getAllPenetapanKonteksRisikoOperasionals(ctx, gateway.PenetapanKonteksRisikoOperasionalGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword})
+		penetapanKonteksRisikos, err := getAllPenetapanKonteksRisikoOperasionals(ctx, gateway.PenetapanKonteksRisikoOperasionalGetAllReq{
+			Page: req.Page, Size: req.Size, Keyword: req.Keyword, SortBy: req.SortBy, SortOrder: req.SortOrder, Status: req.Status,
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -48,7 +53,7 @@ func ImplPenetapanKonteksRisikoOperasionalGetAllUseCase(getAllPenetapanKonteksRi
 				return nil, err
 			}
 
-			opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *penetapanKonteksRisiko.OPDID})
+			opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *penetapanKonteksRisiko.OpdID})
 			if err != nil {
 				return nil, err
 			}

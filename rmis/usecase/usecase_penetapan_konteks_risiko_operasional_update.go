@@ -2,23 +2,26 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"rmis/gateway"
+	"rmis/model"
 	"shared/core"
 	"shared/helper"
+	sharedModel "shared/model"
 )
 
 type PenetapanKonteksRisikoOperasionalUpdateUseCaseReq struct {
-	ID                           string `json:"id"`
-	NamaPemda                    string `json:"nama_pemda"`
-	TahunPenilaian               string `json:"tahun_penilaian"`
-	Periode                      string `json:"periode"`
-	UrusanPemerintahan           string `json:"urusan_pemerintahan"`
-	OPDID                        string `json:"opd_id"` // references opd
-	TujuanStrategis              string `json:"tujuan_strategis"`
-	ProgramInspektorat           string `json:"program_inspektorat"`
-	InformasiLain                string `json:"informasi_lain"`
-	KegiatanDanIndikatorKeluaran string `json:"kegiatan_dan_indikator_keluaran"` // Kegiatan,dan indikator keluaran yang akan dilakukan penilaian risiko
-	NamaYBS                      string `json:"nama_ybs"`
+	ID                        string                          `json:"id"`
+	NamaPemda                 string                          `json:"nama_pemda"`
+	TahunPenilaian            string                          `json:"tahun_penilaian"`
+	Periode                   string                          `json:"periode"`
+	SumberData                string                          `json:"sumber_data"`
+	UrusanPemerintahan        string                          `json:"urusan_pemerintahan"`
+	OpdID                     string                          `json:"opd_id"`
+	TujuanStrategis           string                          `json:"tujuan_strategis"`
+	KegiatanUtama             string                          `json:"kegiatan_utama"`
+	InformasiLain             string                          `json:"informasi_lain"`
+	KeluaranAtauHasilKegiatan model.KeluaranAtauHasilKegiatan `json:"keluaran_atau_hasil_kegiatan"`
 }
 
 type PenetapanKonteksRisikoOperasionalUpdateUseCaseRes struct{}
@@ -28,6 +31,7 @@ type PenetapanKonteksRisikoOperasionalUpdateUseCase = core.ActionHandler[Penetap
 func ImplPenetapanKonteksRisikoOperasionalUpdateUseCase(
 	getPenetapanKonteksRisikoOperasionalById gateway.PenetapanKonteksRisikoOperasionalGetByID,
 	updatePenetapanKonteksRisikoOperasional gateway.PenetepanKonteksRisikoOperasionalSave,
+	OpdByID gateway.OPDGetByID,
 ) PenetapanKonteksRisikoOperasionalUpdateUseCase {
 	return func(ctx context.Context, req PenetapanKonteksRisikoOperasionalUpdateUseCaseReq) (*PenetapanKonteksRisikoOperasionalUpdateUseCaseRes, error) {
 
@@ -36,18 +40,28 @@ func ImplPenetapanKonteksRisikoOperasionalUpdateUseCase(
 			return nil, err
 		}
 
-		programInspektorat := helper.ToDataTypeJSONPtr(req.ProgramInspektorat)
+		_, err = OpdByID(ctx, gateway.OPDGetByIDReq{ID: req.OpdID})
+		if err != nil {
+			return nil, err
+		}
+
+		keluaranAtauHasilKegiatan := helper.ToDataTypeJSONPtr(req.KeluaranAtauHasilKegiatan)
+
+		tahunPenilaian, err := extractYear(req.TahunPenilaian)
+		if err != nil {
+			return nil, fmt.Errorf("invalid TahunPenilaian format: %v", err)
+		}
 
 		res.PenetapanKonteksRisikoOperasional.NamaPemda = &req.NamaPemda
 		res.PenetapanKonteksRisikoOperasional.Periode = &req.Periode
-		res.PenetapanKonteksRisikoOperasional.TahunPenilaian = &req.TahunPenilaian
+		res.PenetapanKonteksRisikoOperasional.TahunPenilaian = &tahunPenilaian
 		res.PenetapanKonteksRisikoOperasional.UrusanPemerintahan = &req.UrusanPemerintahan
-		res.PenetapanKonteksRisikoOperasional.OPDID = &req.OPDID
+		res.PenetapanKonteksRisikoOperasional.OpdID = &req.OpdID
 		res.PenetapanKonteksRisikoOperasional.TujuanStrategis = &req.TujuanStrategis
-		res.PenetapanKonteksRisikoOperasional.ProgramInspektorat = programInspektorat
+		res.PenetapanKonteksRisikoOperasional.KeluaranAtauHasilKegiatan = keluaranAtauHasilKegiatan
 		res.PenetapanKonteksRisikoOperasional.InformasiLain = &req.InformasiLain
-		res.PenetapanKonteksRisikoOperasional.KegiatanDanIndikatorKeluaran = &req.KegiatanDanIndikatorKeluaran
-		res.PenetapanKonteksRisikoOperasional.NamaYBS = &req.NamaYBS
+		res.PenetapanKonteksRisikoOperasional.SumberData = &req.SumberData
+		res.PenetapanKonteksRisikoOperasional.Status = sharedModel.StatusMenungguVerifikasi
 
 		if _, err := updatePenetapanKonteksRisikoOperasional(ctx, gateway.PenetapanKonteksRisikoOperasionalSaveReq{PenetepanKonteksRisikoOperasional: res.PenetapanKonteksRisikoOperasional}); err != nil {
 			return nil, err
