@@ -5,6 +5,7 @@ import (
 	"rmis/gateway"
 	"rmis/model"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type IdentifikasiRisikoOperasionalOPDCreateUseCaseReq struct {
@@ -62,18 +63,21 @@ func ImplIdentifikasiRisikoOperasionalOPDCreateUseCase(
 		}
 
 		obj := model.IdentifikasiRisikoOperasionalOPD{
-			ID:                &genObj.RandomId,
-			KategoriRisikoID:  &req.KategoriRisikoID,
-			UraianRisiko:      &req.UraianRisiko,
-			TahapRisiko:       &req.TahapRisiko,
-			PemilikRisiko:     &req.PemilikRisiko,
-			Controllable:      &req.Controllable,
-			UraianDampak:      &req.UraianDampak,
-			PihakDampak:       &req.PihakDampak,
-			UraianSebab:       &req.UraianSebab,
-			SumberSebab:       &req.SumberSebab,
-			Kegiatan:          &req.Kegiatan,
-			Indikatorkeluaran: &req.Indikatorkeluaran,
+			ID:                                     &genObj.RandomId,
+			PenetapanKonteksRisikoOperasionalOpdID: &req.PenetapanKonteksRisikoOperasionalOpdID,
+			KategoriRisikoID:                       &req.KategoriRisikoID,
+			UraianRisiko:                           &req.UraianRisiko,
+			TahapRisiko:                            &req.TahapRisiko,
+			PemilikRisiko:                          &req.PemilikRisiko,
+			Controllable:                           &req.Controllable,
+			UraianDampak:                           &req.UraianDampak,
+			PihakDampak:                            &req.PihakDampak,
+			UraianSebab:                            &req.UraianSebab,
+			SumberSebab:                            &req.SumberSebab,
+			Kegiatan:                               &req.Kegiatan,
+			Indikatorkeluaran:                      &req.Indikatorkeluaran,
+
+			Status: sharedModel.StatusMenungguVerifikasi,
 		}
 
 		obj.GenerateKodeRisiko(

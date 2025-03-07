@@ -20,6 +20,7 @@ type PenetapanKonteksRisikoOperasionalCreateUseCaseReq struct {
 	TujuanStrategis           string                            `json:"tujuan_strategis"`
 	KegiatanUtama             string                            `json:"kegiatan_utama"`
 	InformasiLain             string                            `json:"informasi_lain"`
+	PenetapanKegiatan         string                            `json:"penetapan_kegiatan"`
 	KeluaranAtauHasilKegiatan []model.KeluaranAtauHasilKegiatan `json:"keluaran_atau_hasil_kegiatan"`
 }
 
@@ -63,7 +64,9 @@ func ImplPenetapanKonteksRisikoOperasionalCreateUseCase(
 			TujuanStrategis:           &req.TujuanStrategis,
 			InformasiLain:             &req.InformasiLain,
 			KeluaranAtauHasilKegiatan: keluaranAtauHasilKegiatan,
-			Status:                    sharedModel.StatusMenungguVerifikasi,
+			PenetapanKegiatan:         &req.PenetapanKegiatan,
+
+			Status: sharedModel.StatusMenungguVerifikasi,
 		}
 
 		if _, err = createPenetapanKonteksRisikoOperasional(ctx, gateway.PenetapanKonteksRisikoOperasionalSaveReq{PenetepanKonteksRisikoOperasional: obj}); err != nil {

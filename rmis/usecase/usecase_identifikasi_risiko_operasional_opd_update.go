@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"rmis/gateway"
 	"shared/core"
+	sharedModel "shared/model"
 )
 
 type IdentifikasiRisikoOperasionalOPDUpdateUseCaseReq struct {
@@ -58,6 +59,7 @@ func ImplIdentifikasiRisikoOperasionalOPDUpdateUseCase(
 		identifikasiOperasionalOpd.KategoriRisikoID = &req.KategoriRisikoID
 		identifikasiOperasionalOpd.RcaID = &req.RcaID
 		identifikasiOperasionalOpd.PenetapanKonteksRisikoOperasionalOpdID = &req.PenetapanKonteksRisikoOperasionalOpdID
+		identifikasiOperasionalOpd.Status = sharedModel.StatusMenungguVerifikasi
 
 		if identifikasiOperasionalOpd.KategoriRisikoID == nil || *identifikasiOperasionalOpd.KategoriRisikoID == "" {
 			return nil, fmt.Errorf("KategoriRisikoID is missing in the database record")
@@ -66,13 +68,13 @@ func ImplIdentifikasiRisikoOperasionalOPDUpdateUseCase(
 		kategoriRisikoRes, err := kodeRisikoByID(ctx, gateway.KategoriRisikoGetByIDReq{
 			ID: *identifikasiOperasionalOpd.KategoriRisikoID,
 		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to get KategoriRisiko: %v", err)
+		}
 
 		penetapanKonteksRisikoOperasionalOpdID, err := penetapanKonteksRisikoOperasionalOpdID(ctx, gateway.PenetapanKonteksRisikoOperasionalGetByIDReq{ID: req.PenetapanKonteksRisikoOperasionalOpdID})
 		if err != nil {
 			return nil, err
-		}
-		if err != nil {
-			return nil, fmt.Errorf("failed to get KategoriRisiko: %v", err)
 		}
 
 		opdRes, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *penetapanKonteksRisikoOperasionalOpdID.PenetapanKonteksRisikoOperasional.OpdID})
@@ -89,7 +91,7 @@ func ImplIdentifikasiRisikoOperasionalOPDUpdateUseCase(
 		// 	return nil, fmt.Errorf("failed to get RcaName: %v", err)
 		// }
 
-		if _, err := updateIdentifikasiRisikoOperasionalOPD(ctx, gateway.IdentifikasiRisikoOperasionalOPDSaveReq{IdentifikasiRisikoOperasionalOPD: res.IdentifikasiRisikoOperasionalOPD}); err != nil {
+		if _, err := updateIdentifikasiRisikoOperasionalOPD(ctx, gateway.IdentifikasiRisikoOperasionalOPDSaveReq{IdentifikasiRisikoOperasionalOPD: identifikasiOperasionalOpd}); err != nil {
 			return nil, err
 		}
 

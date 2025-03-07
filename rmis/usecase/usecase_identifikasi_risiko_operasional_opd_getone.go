@@ -18,16 +18,12 @@ type IdentifikasiRisikoOperasionalOPDGetByIDUseCaseRes struct {
 
 type IdentifikasiRisikoOperasionalOPDGetByIDUseCase = core.ActionHandler[IdentifikasiRisikoOperasionalOPDGetByIDUseCaseReq, IdentifikasiRisikoOperasionalOPDGetByIDUseCaseRes]
 
-func ImplIdentifikasiRisikoOperasionalOPDGetByIDUseCase(getIdentifikasiRisikoOperasionalOPDByID gateway.IdentifikasiRisikoOperasionalOPDGetByID, getOneOPD gateway.OPDGetByID) IdentifikasiRisikoOperasionalOPDGetByIDUseCase {
+func ImplIdentifikasiRisikoOperasionalOPDGetByIDUseCase(getIdentifikasiRisikoOperasionalOPDByID gateway.IdentifikasiRisikoOperasionalOPDGetByID) IdentifikasiRisikoOperasionalOPDGetByIDUseCase {
 	return func(ctx context.Context, req IdentifikasiRisikoOperasionalOPDGetByIDUseCaseReq) (*IdentifikasiRisikoOperasionalOPDGetByIDUseCaseRes, error) {
 		res, err := getIdentifikasiRisikoOperasionalOPDByID(ctx, gateway.IdentifikasiRisikoOperasionalOPDGetByIDReq{ID: req.ID})
 		if err != nil {
 			return nil, err
 		}
-		opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *res.IdentifikasiRisikoOperasionalOPD.OPDID})
-		if err != nil {
-			return nil, err
-		}
-		return &IdentifikasiRisikoOperasionalOPDGetByIDUseCaseRes{IdentifikasiRisikoOperasionalOPD: res.IdentifikasiRisikoOperasionalOPD, OPD: opd.OPD}, nil
+		return &IdentifikasiRisikoOperasionalOPDGetByIDUseCaseRes{IdentifikasiRisikoOperasionalOPD: res.IdentifikasiRisikoOperasionalOPD}, nil
 	}
 }

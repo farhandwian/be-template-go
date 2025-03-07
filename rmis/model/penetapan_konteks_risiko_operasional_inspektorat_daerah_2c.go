@@ -23,6 +23,7 @@ type PenetapanKonteksRisikoOperasional struct {
 	KegiatanUtama             *string         `json:"kegiatan_utama"`
 	InformasiLain             *string         `json:"informasi_lain"`
 	KeluaranAtauHasilKegiatan *datatypes.JSON `json:"keluaran_atau_hasil_kegiatan"`
+	PenetapanKegiatan         *string         `json:"penetapan_kegiatan"`
 
 	Status    sharedModel.Status `json:"status"`
 	CreatedAt time.Time          `json:"created_at"`

@@ -9,22 +9,27 @@ import (
 )
 
 type IdentifikasiRisikoOperasionalOPDGetAllUseCaseReq struct {
-	Keyword string
-	Page    int
-	Size    int
+	Keyword   string
+	Page      int
+	Size      int
+	SortBy    string
+	SortOrder string
+	Status    string
 }
 
 type IdentifikasiRisikoOperasionalOPDGetAllUseCaseRes struct {
-	IdentifikasiRisikoOperasionalOPDs []model.IdentifikasiRisikoOperasionalOPDGetRes `json:"identifkasi_risiko_operasional_opds"`
-	Metadata                          *usecase.Metadata                              `json:"metadata"`
+	IdentifikasiRisikoOperasionalOPDs []model.IdentifikasiRisikoOperasionalOPDResponse `json:"identifkasi_risiko_operasional_opds"`
+	Metadata                          *usecase.Metadata                                `json:"metadata"`
 }
 
 type IdentifikasiRisikoOperasionalOPDGetAllUseCase = core.ActionHandler[IdentifikasiRisikoOperasionalOPDGetAllUseCaseReq, IdentifikasiRisikoOperasionalOPDGetAllUseCaseRes]
 
-func ImplIdentifikasiRisikoOperasionalOPDGetAllUseCase(getAllIdentifikasiRisikoOperasionalOPDs gateway.IdentifikasiRisikoOperasionalOPDGetAll, getOneOPD gateway.OPDGetByID) IdentifikasiRisikoOperasionalOPDGetAllUseCase {
+func ImplIdentifikasiRisikoOperasionalOPDGetAllUseCase(getAllIdentifikasiRisikoOperasionalOPDs gateway.IdentifikasiRisikoOperasionalOPDGetAll) IdentifikasiRisikoOperasionalOPDGetAllUseCase {
 	return func(ctx context.Context, req IdentifikasiRisikoOperasionalOPDGetAllUseCaseReq) (*IdentifikasiRisikoOperasionalOPDGetAllUseCaseRes, error) {
 
-		identifikasiRisikoOperasionalOPDs, err := getAllIdentifikasiRisikoOperasionalOPDs(ctx, gateway.IdentifikasiRisikoOperasionalOPDGetAllReq{Page: req.Page, Size: req.Size, Keyword: req.Keyword})
+		identifikasiRisikoOperasionalOPDs, err := getAllIdentifikasiRisikoOperasionalOPDs(ctx, gateway.IdentifikasiRisikoOperasionalOPDGetAllReq{
+			Page: req.Page, Size: req.Size, Keyword: req.Keyword, SortBy: req.SortBy, SortOrder: req.SortOrder, Status: req.Status,
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -32,20 +37,8 @@ func ImplIdentifikasiRisikoOperasionalOPDGetAllUseCase(getAllIdentifikasiRisikoO
 		totalItems := int(identifikasiRisikoOperasionalOPDs.Count)
 		totalPages := (totalItems + req.Size - 1) / (req.Size)
 
-		identifikasiRisikoOperasionalOPDsRes := make([]model.IdentifikasiRisikoOperasionalOPDGetRes, len(identifikasiRisikoOperasionalOPDs.IdentifikasiRisikoOperasionalOPD))
-
-		for i, identifikasiRisikoOperasionalOPD := range identifikasiRisikoOperasionalOPDs.IdentifikasiRisikoOperasionalOPD {
-			opd, err := getOneOPD(ctx, gateway.OPDGetByIDReq{ID: *identifikasiRisikoOperasionalOPD.OPDID})
-			if err != nil {
-				return nil, err
-			}
-			identifikasiRisikoOperasionalOPDsRes[i] = model.IdentifikasiRisikoOperasionalOPDGetRes{
-				IdentifikasiRisikoOperasionalOPD: identifikasiRisikoOperasionalOPD,
-				OPD:                              opd.OPD,
-			}
-		}
 		return &IdentifikasiRisikoOperasionalOPDGetAllUseCaseRes{
-			IdentifikasiRisikoOperasionalOPDs: identifikasiRisikoOperasionalOPDsRes,
+			IdentifikasiRisikoOperasionalOPDs: identifikasiRisikoOperasionalOPDs.IdentifikasiRisikoOperasionalOPD,
 			Metadata: &usecase.Metadata{
 				Pagination: usecase.Pagination{
 					Page:       req.Page,
