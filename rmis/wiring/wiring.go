@@ -231,12 +231,35 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penyebabRisikoUpdateUseCase := usecase.ImplPenyebabRisikoUpdateUseCase(penyebabRisikoGetOneGateway, penyebabRisikoCreateGateway)
 
 	// usecase Hasil Analisis Risiko
-	hasilAnalisisRisikoCreateUseCase := middleware.TransactionMiddleware(usecase.ImplHasilAnalisisRisikoCreateUseCase(generateIdGateway, hasilAnalisisRisikoCreateGateway, identifikasiRisikoStrategisPemdaGetOneGateway, indeksPeringkatPrioritasCreateGateway, penetapanKonteksRisikoStrategisPemdaGetOneGateway, kategoriRisikoGetOneGateway), mariaDB)
+	hasilAnalisisRisikoCreateUseCase := middleware.TransactionMiddleware(usecase.ImplHasilAnalisisRisikoCreateUseCase(
+		generateIdGateway,
+		hasilAnalisisRisikoCreateGateway,
+		identifikasiRisikoStrategisPemdaGetOneGateway,
+		identifikasiRisikoOperasionalOPDGetOneGateway,
+		identifikasiRisikoStrategisOPDGetOneGateway,
+		penetapanKonteksRisikoStrategisPemdaGetOneGateway,
+		penetapanKonteksRisikoOperasionalGetOneGateway,
+		penetapanKonteksRisikoStrategisRenstraOPDGetOneGateway,
+		indeksPeringkatPrioritasCreateGateway,
+		kategoriRisikoGetOneGateway,
+	), mariaDB)
 	// hasilAnalisisRisikoCreateUseCase := usecase.ImplHasilAnalisisRisikoCreateUseCase(generateIdGateway, hasilAnalisisRisikoCreateGateway, identifikasiRisikoStrategisPemdaGetOneGateway, indeksPeringkatPrioritasCreateGateway)
 	hasilAnalisisRisikoGetAllUseCase := usecase.ImplHasilAnalisisRisikoGetAllUseCase(hasilAnalisisRisikoGetAllGateway)
 	hasilAnalisisRisikoGetOneUseCase := usecase.ImplHasilAnalisisRisikoGetByIDUseCase(hasilAnalisisRisikoGetOneGateway)
 	hasilAnalisisRisikoDeleteUsecase := usecase.ImplHasilAnalisisRisikoDeleteUseCase(hasilAnalisisRisikoDeleteGateway)
-	hasilAnalisisRisikoUpdateUsecase := middleware.TransactionMiddleware(usecase.ImplHasilAnalisisRisikoUpdateUseCase(hasilAnalisisRisikoGetOneGateway, hasilAnalisisRisikoCreateGateway, indeksPeringkatPrioritasGetOneGateway, indeksPeringkatPrioritasCreateGateway, identifikasiRisikoStrategisPemdaGetOneGateway, penetapanKonteksRisikoOperasionalGetOneGateway, kategoriRisikoGetOneGateway), mariaDB)
+	hasilAnalisisRisikoUpdateUsecase := middleware.TransactionMiddleware(usecase.ImplHasilAnalisisRisikoUpdateUseCase(
+		hasilAnalisisRisikoGetOneGateway,
+		hasilAnalisisRisikoCreateGateway,
+		indeksPeringkatPrioritasGetOneGateway,
+		indeksPeringkatPrioritasCreateGateway,
+		identifikasiRisikoStrategisPemdaGetOneGateway,
+		identifikasiRisikoOperasionalOPDGetOneGateway,
+		identifikasiRisikoStrategisOPDGetOneGateway,
+		penetapanKonteksRisikoStrategisPemdaGetOneGateway,
+		penetapanKonteksRisikoOperasionalGetOneGateway,
+		penetapanKonteksRisikoStrategisRenstraOPDGetOneGateway,
+		kategoriRisikoGetOneGateway,
+	), mariaDB)
 
 	// Usecase Penilaian Kegiatan Pengendalian
 	penilaianKegiatanPengendalianCreateUseCase := usecase.ImplPenilaianKegiatanPengendalianCreateUseCase(generateIdGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)

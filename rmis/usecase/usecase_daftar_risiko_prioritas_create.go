@@ -34,12 +34,12 @@ func ImplDaftarRisikoPrioritasCreateUseCase(
 			return nil, err
 		}
 
-		hasilAnalisisRisikoByIDRes, err := HasilAnalisisRisikoByID(ctx, gateway.HasilAnalisisRisikoGetByIDReq{ID: req.HasilAnalisisRisikoID})
-		if err != nil {
-			return nil, err
-		}
-		_, err = IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{
-			ID: *hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.IdentifikasiRisikoStrategisPemdaID})
+		// hasilAnalisisRisikoByIDRes, err := HasilAnalisisRisikoByID(ctx, gateway.HasilAnalisisRisikoGetByIDReq{ID: req.HasilAnalisisRisikoID})
+		// if err != nil {
+		// 	return nil, err
+		// }
+		// // _, err = IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{
+		// // 	ID: *hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.IdentifikasiRisikoStrategisPemdaID})
 
 		if err != nil {
 			return nil, err

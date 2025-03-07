@@ -4,17 +4,21 @@ import (
 	"context"
 	"fmt"
 	"rmis/gateway"
+	"rmis/model"
 	"shared/core"
 	sharedModel "shared/model"
 )
 
 type HasilAnalisisRisikoUpdateUseCaseReq struct {
-	ID                                     string `json:"-"`
-	SkalaDampak                            int    `json:"skala_dampak"`
-	SkalaKemungkinan                       int    `json:"skala_kemungkinan"`
-	SkalaRisiko                            int    `json:"skala_risiko"`
-	IdentifikasiRisikoStrategisPemdaID     string `json:"identifikasi_risiko_strategis_pemda_id"`
-	PenetapanKonteksRisikoStrategisPemdaID string `json:"penetapan_konteks_risiko_strategis_pemda_id"`
+	ID               string `json:"-"`
+	SkalaDampak      int    `json:"skala_dampak"`
+	SkalaKemungkinan int    `json:"skala_kemungkinan"`
+
+	TipeIdentifikasi model.TipeIdentifikasi `json:"tipe_identifikasi"` // Can be "strategis_pemda", "operasional_opd", "strategis_renstra_opd"
+	IdentifikasiID   string                 `json:"identifikasi_id"`
+
+	TipePenetapanKonteks model.TipePenetapanKonteks `json:"tipe_penetapan_konteks"` // Can be "strategis_pemda", "operasional", "strategis_renstra_opd"
+	PenetapanKonteksID   string                     `json:"penetapan_konteks_id"`
 }
 
 type HasilAnalisisRisikoUpdateUseCaseRes struct{}
@@ -27,7 +31,11 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 	indeksPeringkatPrioritasByID gateway.IndeksPeringkatPrioritasGetByID,
 	IndeksPeringkatPrioritasCreate gateway.IndeksPeringkatPrioritasSave,
 	IdentifikasiRisikoStrategisPemdaByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
-	PenetapanKonteksRisikoStrategisPemdaByID gateway.PenetapanKonteksRisikoOperasionalGetByID,
+	IdentifikasiRisikoOperasionalOPDByID gateway.IdentifikasiRisikoOperasionalOPDGetByID,
+	IdentifikasiRisikoStrategisOPDByID gateway.IdentifikasiRisikoStrategisOPDGetByID,
+	PenetapanKonteksRisikoStrategisPemdaByID gateway.PenetapanKonteksRisikoStrategisPemdaGetByID,
+	PenetapanKonteksRisikoOperasionalByID gateway.PenetapanKonteksRisikoOperasionalGetByID,
+	PenetapanKonteksRisikoStrategisRenstraOPDByID gateway.PenetapanKonteksRisikoStrategisRenstraOPDGetByID,
 	KategoriRisikoByID gateway.KategoriRisikoGetByID,
 ) HasilAnalisisRisikoUpdateUseCase {
 	return func(ctx context.Context, req HasilAnalisisRisikoUpdateUseCaseReq) (*HasilAnalisisRisikoUpdateUseCaseRes, error) {
@@ -36,24 +44,71 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 		if err != nil {
 			return nil, err
 		}
-		hasilAnalisisRisiko := res.HasilAnalisisRisiko
-		identifikasiRisikoStrategisPemdaRes, err := IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: req.IdentifikasiRisikoStrategisPemdaID})
-		if err != nil {
-			return nil, fmt.Errorf("error getting Identifikasi Risiko Strategis Pemda table: %v", err)
+		var kategoriRisikoID *string
+		var nomorUraian *int
+
+		// Fetch Identifikasi Risiko Data
+		switch req.TipeIdentifikasi {
+		case model.TipeIdentifikasiStrategisPemda:
+			identifikasiRisikoRes, err := IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: req.IdentifikasiID})
+			if err != nil {
+				return nil, err
+			}
+			kategoriRisikoID = identifikasiRisikoRes.IdentifikasiRisikoStrategisPemda.KategoriRisikoID
+			nomorUraian = identifikasiRisikoRes.IdentifikasiRisikoStrategisPemda.NomorUraian
+		case model.TipeIdentifikasiOperasional:
+			identifikasiRisikoRes, err := IdentifikasiRisikoOperasionalOPDByID(ctx, gateway.IdentifikasiRisikoOperasionalOPDGetByIDReq{ID: req.IdentifikasiID})
+			if err != nil {
+				return nil, err
+			}
+			kategoriRisikoID = identifikasiRisikoRes.IdentifikasiRisikoOperasionalOPD.KategoriRisikoID
+			nomorUraian = identifikasiRisikoRes.IdentifikasiRisikoOperasionalOPD.NomorUraian
+		case model.TipeIdentifikasiStrategisOPD:
+			identifikasiRisikoRes, err := IdentifikasiRisikoStrategisOPDByID(ctx, gateway.IdentifikasiRisikoStrategisOPDGetByIDReq{ID: req.IdentifikasiID})
+			if err != nil {
+				return nil, err
+			}
+			kategoriRisikoID = identifikasiRisikoRes.IdentifikasiRisikoStrategisOPD.KategoriRisikoID
+			nomorUraian = identifikasiRisikoRes.IdentifikasiRisikoStrategisOPD.NomorUraian
+		default:
+			return nil, fmt.Errorf("invalid tipe_identifikasi: %s", req.TipeIdentifikasi)
 		}
 
-		_, err = PenetapanKonteksRisikoStrategisPemdaByID(ctx, gateway.PenetapanKonteksRisikoOperasionalGetByIDReq{ID: req.PenetapanKonteksRisikoStrategisPemdaID})
-		if err != nil {
-			return nil, fmt.Errorf("error getting Penetapan Konteks Risiko Strategis Pemda table: %v", err)
+		// Fetch Penetapan Konteks Data
+		switch req.TipePenetapanKonteks {
+		case model.TipePenetapanKonteksStrategisPemda:
+			_, err := PenetapanKonteksRisikoStrategisPemdaByID(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaGetByIDReq{ID: req.PenetapanKonteksID})
+			if err != nil {
+				return nil, err
+			}
+		case model.TipePenetapanKonteksOperasional:
+			_, err := PenetapanKonteksRisikoOperasionalByID(ctx, gateway.PenetapanKonteksRisikoOperasionalGetByIDReq{ID: req.PenetapanKonteksID})
+			if err != nil {
+				return nil, err
+			}
+		case model.TipePenetapanKonteksStrategisRenstraOPD:
+			_, err := PenetapanKonteksRisikoStrategisRenstraOPDByID(ctx, gateway.PenetapanKonteksRisikoStrategisRenstraOPDGetByIDReq{ID: req.PenetapanKonteksID})
+			if err != nil {
+				return nil, err
+			}
+		default:
+			return nil, fmt.Errorf("invalid tipe_penetapan_konteks: %s", req.TipePenetapanKonteks)
 		}
+		hasilAnalisisRisiko := res.HasilAnalisisRisiko
 
 		hasilAnalisisRisiko.SkalaDampak = &req.SkalaDampak
 		hasilAnalisisRisiko.SkalaKemungkinan = &req.SkalaKemungkinan
-		hasilAnalisisRisiko.IdentifikasiRisikoStrategisPemdaID = &req.IdentifikasiRisikoStrategisPemdaID
-		hasilAnalisisRisiko.PenetapanKonteksRisikoStrategisPemdaID = &req.PenetapanKonteksRisikoStrategisPemdaID
+		hasilAnalisisRisiko.IdentifikasiID = &req.IdentifikasiID
+		hasilAnalisisRisiko.PenetapanKonteksID = &req.PenetapanKonteksID
 		hasilAnalisisRisiko.Status = sharedModel.StatusMenungguVerifikasi
 		hasilAnalisisRisiko.SetSkalaRisiko()
+
 		if _, err := updateHasilAnalisisRisiko(ctx, gateway.HasilAnalisisRisikoSaveReq{HasilAnalisisRisiko: hasilAnalisisRisiko}); err != nil {
+			return nil, err
+		}
+
+		kategoriRisikoRes, err := KategoriRisikoByID(ctx, gateway.KategoriRisikoGetByIDReq{ID: *kategoriRisikoID})
+		if err != nil {
 			return nil, err
 		}
 
@@ -63,14 +118,12 @@ func ImplHasilAnalisisRisikoUpdateUseCase(
 		}
 		indeksPeringkatPrioritas := indeksPeringkatPrioritasByIDRes.IndeksPeringkatPrioritas
 
-		kategoriRisikoRes, err := KategoriRisikoByID(ctx, gateway.KategoriRisikoGetByIDReq{ID: *identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.KategoriRisikoID})
-		if err != nil {
-			return nil, fmt.Errorf("error getting Kategori Risiko table: %v", err)
-		}
-
 		indeksPeringkatPrioritas.SetToleransiRisiko(*kategoriRisikoRes.KategoriRisiko.Kode)
 		indeksPeringkatPrioritas.SetMitigasi(*hasilAnalisisRisiko.SkalaRisiko)
-		indeksPeringkatPrioritas.SetIntermediateRank(*hasilAnalisisRisiko.SkalaRisiko, *identifikasiRisikoStrategisPemdaRes.IdentifikasiRisikoStrategisPemda.NomorUraian)
+
+		fmt.Sprintf("TEST", nomorUraian)
+		indeksPeringkatPrioritas.SetIntermediateRank(*hasilAnalisisRisiko.SkalaRisiko, 1)
+		// indeksPeringkatPrioritas.SetIntermediateRank(*hasilAnalisisRisiko.SkalaRisiko, *nomorUraian)
 		if _, err = IndeksPeringkatPrioritasCreate(ctx, gateway.IndeksPeringkatPrioritasSaveReq{IndeksPeringkatPrioritas: indeksPeringkatPrioritas}); err != nil {
 			return nil, err
 		}

@@ -18,8 +18,8 @@ type HasilAnalisisRisikoGetAllUseCaseReq struct {
 }
 
 type HasilAnalisisRisikoGetAllUseCaseRes struct {
-	HasilAnalisisRisiko []model.HasilAnalisisRisiko `json:"hasil_analisis_risiko"`
-	Metadata            *usecase.Metadata           `json:"metadata"`
+	HasilAnalisisRisiko []model.HasilAnalisisRisikoResponse `json:"hasil_analisis_risiko"`
+	Metadata            *usecase.Metadata                   `json:"metadata"`
 }
 
 type HasilAnalisisRisikoGetAllUseCase = core.ActionHandler[HasilAnalisisRisikoGetAllUseCaseReq, HasilAnalisisRisikoGetAllUseCaseRes]

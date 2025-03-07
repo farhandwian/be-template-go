@@ -6,56 +6,49 @@ import (
 	"time"
 )
 
-type KriteriaKemungkinan string
-
-var (
-	PersentasePerTahun KriteriaKemungkinan = "Persentase (dlm 1 tahun)"
-	FrekuensiPerTahun  KriteriaKemungkinan = "Jumlah Frekuensi (dlm 1 tahun)"
-)
-
 // form 4
 
-// type HasilAnalisisRisiko struct {
-// 	ID                                     *string                               `json:"id"`
-// 	PenetapanKonteksRisikoStrategisPemdaID *string                               `json:"-"`
-// 	PenetapanKonteksRisikoStrategisPemda   *PenetapanKonteksRisikoStrategisPemda `json:"penetapan_konteks_risiko_strategis_pemda" gorm:"foreignKey:PenetapanKonteksRisikoStrategisPemdaID"`
-// 	// data diambil dari form 3a, 3b, dan 3c
-// 	// ===========
-// 	IdentifikasiRisikoStrategisPemerintahDaerahID *string    `json:"-"`
-// 	NomorUraian                                   *int       `json:"nomor_uraian"`
-// 	TahunPenilaian                                *time.Time `json:"tahun_penilaian"`
-// 	TujuanStrategis                               *string    `json:"tujuan_strategis"`
-// 	UrusanPemerintahan                            *string    `json:"urusan_pemerintahan"`
-// 	RisikoTeridentifikasi                         *string    `json:"risiko_teridentifikasi"`
-// 	KodeRisiko                                    *string    `json:"kode_risiko"`
-// 	KategoriRisiko                                *string    `json:"kategori_risiko"`
-// 	// ===========
-// 	KriteriaKemungkinanInherentRisk *KriteriaKemungkinan `json:"kriteria_kemungkinan_inherent_risk"`
-// 	SkorKemungkinanInherentRisk     *int                 `json:"skor_kemungkinan_inherent_risk"`
-// 	KriteriaDampakInherentRisk      *string              `json:"kriteria_dampak_inherent_risk"`
-// 	SkorDampakInherentRisk          *int                 `json:"skor_dampak_inherent_risk"`
-// 	SkalaRisikoInherentRisk         *int                 `json:"skala_risiko_inherent_risk"`
-// 	StatusAda                       *string              `json:"status_ada"`
-// 	UraianControl                   *string              `json:"uraian_control"`
-// 	KlarifikasiSPIP                 *string              `json:"klarifikasi_spip"`
-// 	MemadaiControl                  *string              `json:"memadai_control"` // enum memadai (can also be defined as a custom type)
-// 	KriteriaKemungkinanResidualRisk *KriteriaKemungkinan `json:"kriteria_kemungkinan_residual_risk"`
-// 	SkorKemungkinanResidualRisk     *int                 `json:"skor_kemungkinan_residual_risk"`
-// 	KriteriaDampakResidualRisk      *string              `json:"kriteria_dampak_residual_risk"`
-// 	SkorDampakResidualRisk          *int                 `json:"skor_dampak_residual_risk"`
-// 	SkalaRisikoResidualRisk         *int                 `json:"skala_risiko_residual_risk"`
-// 	Status                          sharedModel.Status   `json:"status"`
-// 	CreatedAt                       time.Time            `json:"created_at"`
-// 	UpdatedAt                       time.Time            `json:"updated_at"`
-// }
-
 type HasilAnalisisRisiko struct {
-	ID                                     *string `json:"id"`
-	PenetapanKonteksRisikoStrategisPemdaID *string `json:"-" gorm:"type:VARCHAR(255)"`
-	// PenetapanKonteksRisikoStrategisPemda   *PenetapanKonteksRisikoStrategisPemda `json:"penetapan_konteks_risiko_strategis_pemda" gorm:"foreignKey:PenetapanKonteksRisikoStrategisPemdaID"`
+	ID               *string `json:"id"`
+	TipeIdentifikasi *string `json:"tipe_identifikasi" gorm:"type:VARCHAR(50)"` // "strategis_pemda", "operasional_opd", or "strategis_renstra_opd"
+	IdentifikasiID   *string `json:"identifikasi_id" gorm:"type:VARCHAR(255)"`
 
-	IdentifikasiRisikoStrategisPemdaID *string `json:"-" gorm:"type:VARCHAR(255)"`
-	// IdentifikasiRisikoStrategisPemda   *IdentifikasiRisikoStrategisPemda `json:"identifikasi_risiko_strategis_pemda" gorm:"foreignKey:IdentifikasiRisikoStrategisPemdaID"`
+	TipePenetapanKonteks *string `json:"tipe_penetapan_konteks" gorm:"type:VARCHAR(50)"` // "strategis_pemda", "operasional", or "strategis_renstra_opd"
+	PenetapanKonteksID   *string `json:"penetapan_konteks_id" gorm:"type:VARCHAR(255)"`
+
+	SkalaDampak      *int `json:"skala_dampak"`
+	SkalaKemungkinan *int `json:"skala_kemungkinan"`
+	SkalaRisiko      *int `json:"skala_risiko"`
+
+	Status    sharedModel.Status `json:"status"`
+	CreatedAt time.Time          `json:"created_at"`
+	UpdatedAt time.Time          `json:"updated_at"`
+}
+
+type TipePenetapanKonteks string
+
+const (
+	TipePenetapanKonteksStrategisPemda      TipePenetapanKonteks = "strategis_pemda"
+	TipePenetapanKonteksOperasional         TipePenetapanKonteks = "operasional"
+	TipePenetapanKonteksStrategisRenstraOPD TipePenetapanKonteks = "strategis_renstra_opd"
+)
+
+type TipeIdentifikasi string
+
+const (
+	TipeIdentifikasiStrategisPemda TipeIdentifikasi = "strategis_pemda"
+	TipeIdentifikasiOperasional    TipeIdentifikasi = "operasional_opd"
+	TipeIdentifikasiStrategisOPD   TipeIdentifikasi = "strategis_opd"
+)
+
+type HasilAnalisisRisikoResponse struct {
+	ID               *string `json:"id"`
+	TipeIdentifikasi *string `json:"tipe_identifikasi" gorm:"type:VARCHAR(50)"` // "strategis_pemda", "operasional_opd", or "strategis_renstra_opd"
+	IdentifikasiID   *string `json:"identifikasi_id" gorm:"type:VARCHAR(255)"`
+
+	TipePenetapanKonteks *string `json:"tipe_penetapan_konteks" gorm:"type:VARCHAR(50)"` // "strategis_pemda", "operasional", or "strategis_renstra_opd"
+	PenetapanKonteksID   *string `json:"penetapan_konteks_id" gorm:"type:VARCHAR(255)"`
+
 	SkalaDampak      *int `json:"skala_dampak"`
 	SkalaKemungkinan *int `json:"skala_kemungkinan"`
 	SkalaRisiko      *int `json:"skala_risiko"`
