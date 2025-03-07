@@ -22,8 +22,8 @@ type DaftarRisikoPrioritasGetAllReq struct {
 }
 
 type DaftarRisikoPrioritasGetAllRes struct {
-	DaftarRisikoPrioritas []model.DaftarRisikoPrioritas `json:"daftar_risiko_prioritas"`
-	Count                 int64                         `json:"count"`
+	DaftarRisikoPrioritas []model.DaftarRisikoPrioritasResponse `json:"daftar_risiko_prioritas"`
+	Count                 int64                                 `json:"count"`
 }
 
 type DaftarRisikoPrioritasGetAll = core.ActionHandler[DaftarRisikoPrioritasGetAllReq, DaftarRisikoPrioritasGetAllRes]
@@ -33,6 +33,20 @@ func ImplDaftarRisikoPrioritasGetAll(db *gorm.DB) DaftarRisikoPrioritasGetAll {
 
 		query := middleware.GetDBFromContext(ctx, db)
 
+		query = query.Joins(`
+				LEFT JOIN (
+					SELECT id, nama_pemda, tahun_penilaian, periode, penetapan_tujuan, urusan_pemerintahan 
+					FROM penetapan_konteks_risiko_strategis_pemdas 
+					UNION ALL 
+					SELECT id, nama_pemda, tahun_penilaian, periode, tujuan_strategis AS penetapan_tujuan, urusan_pemerintahan 
+					FROM penetapan_konteks_risiko_operasionals 
+					UNION ALL 
+					SELECT id, nama_pemda, tahun_penilaian, periode, penetapan_tujuan, urusan_pemerintahan 
+					FROM penetapan_konteks_risiko_strategis_renstra_opds
+				) AS penetapan_konteks ON (
+					daftar_risiko_prioritas.penetapan_konteks_id = penetapan_konteks.id
+				)
+			`)
 		if req.Keyword != "" {
 			keyword := fmt.Sprintf("%%%s%%", req.Keyword)
 			query = query.
@@ -56,10 +70,10 @@ func ImplDaftarRisikoPrioritasGetAll(db *gorm.DB) DaftarRisikoPrioritasGetAll {
 		allowedSortBy := map[string]bool{}
 
 		allowerdForeignSortBy := map[string]string{
-			"nama_pemda":        "penetapan_konteks_risiko_strategis_pemdas.nama_pemda",
-			"tahun":             "penetapan_konteks_risiko_strategis_pemdas.tahun",
-			"tujuan_strategis":  "penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan",
-			"urusan_pemerintah": "penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan",
+			"nama_pemda":        "penetapan_konteks.nama_pemda",
+			"tahun":             "penetapan_konteks.tahun",
+			"tujuan_strategis":  "penetapan_konteks.penetapan_tujuan",
+			"urusan_pemerintah": "penetapan_konteks.urusan_pemerintahan",
 		}
 
 		sortBy, sortOrder, err := helper.ValidateSortParamsWithForeignKey(allowedSortBy, allowerdForeignSortBy, req.SortBy, req.SortOrder, "nama_pemda")
@@ -72,22 +86,17 @@ func ImplDaftarRisikoPrioritasGetAll(db *gorm.DB) DaftarRisikoPrioritasGetAll {
 
 		page, size := ValidatePageSize(req.Page, req.Size)
 
-		var objs []model.DaftarRisikoPrioritas
+		var objs []model.DaftarRisikoPrioritasResponse
 
 		if err := query.
-			Table("daftar_risiko_prioritas"). // ✅ **Fix: Explicitly set the main table**
-			Select(`daftar_risiko_prioritas.*, 
-			penetapan_konteks_risiko_strategis_pemdas.nama_pemda AS nama_pemda,
-			penetapan_konteks_risiko_strategis_pemdas.tahun_penilaian AS tahun,
-			penetapan_konteks_risiko_strategis_pemdas.periode AS periode,
-			penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS tujuan,
-			penetapan_konteks_risiko_strategis_pemdas.urusan_pemerintahan AS urusan_pemerintahan,
-			penetapan_konteks_risiko_strategis_pemdas.penetapan_tujuan AS penetapan_konteks,
-			hasil_analisis_risikos.skala_risiko AS skala_risiko
-		`).
-			Joins("LEFT JOIN penetapan_konteks_risiko_strategis_pemdas ON daftar_risiko_prioritas.penetapan_konteks_risiko_strategis_pemda_id = penetapan_konteks_risiko_strategis_pemdas.id").
-			Joins("LEFT JOIN indeks_peringkat_prioritas ON daftar_risiko_prioritas.indeks_peringkat_prioritas_id = indeks_peringkat_prioritas.id").
-			Joins("LEFT JOIN hasil_analisis_risikos ON daftar_risiko_prioritas.hasil_analisis_risiko_id = hasil_analisis_risikos.id").
+			Select(`
+				daftar_risiko_prioritas.*, 
+				penetapan_konteks.nama_pemda AS nama_pemda,
+				penetapan_konteks.tahun_penilaian AS tahun,
+				penetapan_konteks.periode AS periode,
+				penetapan_konteks.penetapan_tujuan AS tujuan,
+				penetapan_konteks.urusan_pemerintahan AS urusan_pemerintahan
+			`).
 			Offset((page - 1) * size).
 			Limit(size).
 			Order(orderClause).

@@ -86,7 +86,7 @@ func ImplHasilAnalisisRisikoGetAll(db *gorm.DB) HasilAnalisisRisikoGetAll {
 		allowedSortBy := map[string]bool{}
 		allowedForeignSortBy := map[string]string{
 			"nama_pemda":        "penetapan_konteks.nama_pemda",
-			"tahun":             "penetapan_konteks.tahun",
+			"tahun":             "penetapan_konteks.tahun_penilaian",
 			"periode":           "penetapan_konteks.periode",
 			"tujuan_strategis":  "penetapan_konteks.tujuan",
 			"urusan_pemerintah": "penetapan_konteks.urusan_pemerintahan",

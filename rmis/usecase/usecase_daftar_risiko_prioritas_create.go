@@ -10,8 +10,11 @@ import (
 )
 
 type DaftarRisikoPrioritasCreateUseCaseReq struct {
-	HasilAnalisisRisikoID                  string `json:"hasil_analisis_risiko_id"`
-	PenetapanKonteksRisikoStrategisPemdaID string `json:"penetapan_konteks_risiko_strategis_pemda_id"`
+	TipeIdentifikasi string `json:"tipe_identifikasi" ` // "strategis_pemda", "operasional_opd", or "strategis_renstra_opd"
+	IdentifikasiID   string `json:"identifikasi_id" `
+
+	TipePenetapanKonteks string `json:"tipe_penetapan_konteks" ` // "strategis_pemda", "operasional", or "strategis_renstra_opd"
+	PenetapanKonteksID   string `json:"penetapan_konteks_id" gorm:"type:VARCHAR(255)"`
 }
 
 type DaftarRisikoPrioritasCreateUseCaseRes struct {
@@ -23,9 +26,12 @@ type DaftarRisikoPrioritasCreateUseCase = core.ActionHandler[DaftarRisikoPriorit
 func ImplDaftarRisikoPrioritasCreateUseCase(
 	generateId gateway.GenerateId,
 	createDaftarRisikoPrioritas gateway.DaftarRisikoPrioritasSave,
-	HasilAnalisisRisikoByID gateway.HasilAnalisisRisikoGetByID,
 	IdentifikasiRisikoStrategisPemdaByID gateway.IdentifikasiRisikoStrategisPemdaGetByID,
+	IdentifikasiRisikoOperasionalOPDByID gateway.IdentifikasiRisikoOperasionalOPDGetByID,
+	IdentifikasiRisikoStrategisOPDByID gateway.IdentifikasiRisikoStrategisOPDGetByID,
 	PenetapanKonteksRisikoStrategisPemdaByID gateway.PenetapanKonteksRisikoStrategisPemdaGetByID,
+	PenetapanKonteksRisikoOperasionalByID gateway.PenetapanKonteksRisikoOperasionalGetByID,
+	PenetapanKonteksRisikoStrategisRenstraOPDByID gateway.PenetapanKonteksRisikoStrategisRenstraOPDGetByID,
 ) DaftarRisikoPrioritasCreateUseCase {
 	return func(ctx context.Context, req DaftarRisikoPrioritasCreateUseCaseReq) (*DaftarRisikoPrioritasCreateUseCaseRes, error) {
 
@@ -34,33 +40,42 @@ func ImplDaftarRisikoPrioritasCreateUseCase(
 			return nil, err
 		}
 
-		// hasilAnalisisRisikoByIDRes, err := HasilAnalisisRisikoByID(ctx, gateway.HasilAnalisisRisikoGetByIDReq{ID: req.HasilAnalisisRisikoID})
-		// if err != nil {
-		// 	return nil, err
-		// }
-		// // _, err = IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{
-		// // 	ID: *hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.IdentifikasiRisikoStrategisPemdaID})
+		switch req.TipeIdentifikasi {
+		case string(model.TipeIdentifikasiStrategisPemda):
+			_, err = IdentifikasiRisikoStrategisPemdaByID(ctx, gateway.IdentifikasiRisikoStrategisPemdaGetByIDReq{ID: req.IdentifikasiID})
+		case string(model.TipeIdentifikasiOperasional):
+			_, err = IdentifikasiRisikoOperasionalOPDByID(ctx, gateway.IdentifikasiRisikoOperasionalOPDGetByIDReq{ID: req.IdentifikasiID})
+		case string(model.TipeIdentifikasiStrategisOPD):
+			_, err = IdentifikasiRisikoStrategisOPDByID(ctx, gateway.IdentifikasiRisikoStrategisOPDGetByIDReq{ID: req.IdentifikasiID})
+		default:
+			return nil, fmt.Errorf("invalid TipeIdentifikasi: %v", req.TipeIdentifikasi)
+		}
+		if err != nil {
+			return nil, err
+		}
+
+		switch req.TipePenetapanKonteks {
+		case string(model.TipeIdentifikasiStrategisPemda):
+			_, err = PenetapanKonteksRisikoStrategisPemdaByID(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaGetByIDReq{ID: req.PenetapanKonteksID})
+		case string(model.TipePenetapanKonteksOperasional):
+			_, err = PenetapanKonteksRisikoOperasionalByID(ctx, gateway.PenetapanKonteksRisikoOperasionalGetByIDReq{ID: req.PenetapanKonteksID})
+		case string(model.TipePenetapanKonteksStrategisRenstraOPD):
+			_, err = PenetapanKonteksRisikoStrategisRenstraOPDByID(ctx, gateway.PenetapanKonteksRisikoStrategisRenstraOPDGetByIDReq{ID: req.PenetapanKonteksID})
+		default:
+			return nil, fmt.Errorf("invalid TipePenetapanKonteks: %v", req.TipePenetapanKonteks)
+		}
 
 		if err != nil {
 			return nil, err
 		}
-		_, err = PenetapanKonteksRisikoStrategisPemdaByID(ctx, gateway.PenetapanKonteksRisikoStrategisPemdaGetByIDReq{ID: req.PenetapanKonteksRisikoStrategisPemdaID})
-		if err != nil {
-			return nil, fmt.Errorf("error getting Penetapan Konteks Risiko Strategis Pemda table: %v", err)
-		}
-
 		obj := model.DaftarRisikoPrioritas{
-			ID:                                     &genObj.RandomId,
-			HasilAnalisisRisikoID:                  &req.HasilAnalisisRisikoID,
-			PenetapanKonteksRisikoStrategisPemdaID: &req.PenetapanKonteksRisikoStrategisPemdaID,
-			Status:                                 sharedModel.StatusMenungguVerifikasi,
-			// HasilAnalisisRisikoID: &req.HasilAnalisisRisikoID,
-			// RisikoPrioritas:       hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.RisikoTeridentifikasi,
-			// KodeRisiko:            hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KodeRisiko,
-			// KategoriRisiko:        hasilAnalisisRisikoByIDRes.HasilAnalisisRisiko.KategoriRisiko,
-			// PemilikRisiko:         identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.PemilikRisiko,
-			// PenyebabRisiko:        identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianSebab,
-			// DampakRisiko:          identifikasiRisikoStrategisPemdaByIDRes.IdentifikasiRisikoStrategisPemda.UraianDampak,
+			ID:                   &genObj.RandomId,
+			TipeIdentifikasi:     &req.TipeIdentifikasi,
+			TipePenetapanKonteks: &req.TipePenetapanKonteks,
+			IdentifikasiID:       &req.IdentifikasiID,
+			PenetapanKonteksID:   &req.PenetapanKonteksID,
+
+			Status: sharedModel.StatusMenungguVerifikasi,
 		}
 
 		if _, err = createDaftarRisikoPrioritas(ctx, gateway.DaftarRisikoPrioritasSaveReq{DaftarRisikoPrioritas: obj}); err != nil {

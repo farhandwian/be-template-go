@@ -18,8 +18,8 @@ type DaftarRisikoPrioritasGetAllUseCaseReq struct {
 }
 
 type DaftarRisikoPrioritasGetAllUseCaseRes struct {
-	DaftarRisikoPrioritas []model.DaftarRisikoPrioritas `json:"hasil_analisis_risiko"`
-	Metadata              *usecase.Metadata             `json:"metadata"`
+	DaftarRisikoPrioritas []model.DaftarRisikoPrioritasResponse `json:"hasil_analisis_risiko"`
+	Metadata              *usecase.Metadata                     `json:"metadata"`
 }
 
 type DaftarRisikoPrioritasGetAllUseCase = core.ActionHandler[DaftarRisikoPrioritasGetAllUseCaseReq, DaftarRisikoPrioritasGetAllUseCaseRes]
