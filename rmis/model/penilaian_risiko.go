@@ -22,12 +22,13 @@ type PenilaianRisiko struct {
 }
 
 type PenilaianRisikoResponse struct {
-	ID                        *string            `json:"id"`
-	NamaPemda                 *string            `json:"nama_pemda"`
-	TahunPenilaian            *time.Time         `json:"tahun_penilaian"`
-	DaftarRisikoPrioritasID   *string            `json:"-"`
-	RisikoPrioritas           *string            `json:"risiko_prioritas"`
-	KodeRisiko                *string            `json:"kode_resiko"`
+	ID                      *string    `json:"id"`
+	DaftarRisikoPrioritasID *string    `json:"-"`
+	NamaPemda               *string    `json:"nama_pemda"`
+	TahunPenilaian          *time.Time `json:"tahun_penilaian"`
+	KodeRisiko              *string    `json:"kode_resiko"`
+	RisikoPrioritas         *string    `json:"risiko_prioritas"`
+
 	UraianPengendalian        *string            `json:"uraian_pengendalian"`
 	CelahPengendalian         *string            `json:"celah_pengendalian"`
 	RencanaTindakPengendalian *string            `json:"rencana_tindak_pengendalian"`

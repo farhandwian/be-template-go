@@ -179,6 +179,7 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penetapanKonteksRisikoStrategisPemdaDeleteUseCase := usecase.ImplPenetapanKonteksRisikoDeleteUseCase(penetapanKonteksRisikoStrategisPemdaDeleteGateway)
 	penetapanKonteksRisikoStrategisPemdaCreateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisPemdaCreateUseCase(generateIdGateway, penetapanKonteksRisikoStrategisPemdaCreateGateway)
 	penetapanKonteksRisikoStrategisPemdaUpdateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisPemdaUpdateUseCase(penetapanKonteksRisikoStrategisPemdaGetOneGateway, penetapanKonteksRisikoStrategisPemdaCreateGateway)
+	penetapanKonteksRisikoStrategisPemdaApprovalUseCase := usecase.ImplPenetapanKonteksRisikoStrategisPemdaApprovalUseCase(penetapanKonteksRisikoStrategisPemdaGetOneGateway, penetapanKonteksRisikoStrategisPemdaCreateGateway)
 
 	// Usecase Root Cause Analysis (RCA)
 	rcaGetAllUseCase := usecase.ImplRcaGetAllUseCase(rcaGetAllGateway)
@@ -193,6 +194,7 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	identifikasiRisikoStrategisPemdaDeleteUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaDeleteUseCase(identifikasiRisikoStrategisPemdaDeleteGateway)
 	identifikasiRisikoStrategisPemdaCreateUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaCreateUseCase(generateIdGateway, identifikasiRisikoStrategisPemdaCreateGateway, kategoriRisikoGetOneGateway, penetapanKonteksRisikoStrategisPemdaGetOneGateway)
 	identifikasiRisikoStrategisPemdaUpdateUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaUpdateUseCase(identifikasiRisikoStrategisPemdaGetOneGateway, identifikasiRisikoStrategisPemdaCreateGateway, kategoriRisikoGetOneGateway, rcaGetOneGateway, penetapanKonteksRisikoStrategisPemdaGetOneGateway)
+	identifikasiRisikoStrategisPemdaApprovalUseCase := usecase.ImplIdentifikasiRisikoStrategisPemdaApprovalUseCase(identifikasiRisikoStrategisPemdaGetOneGateway, identifikasiRisikoStrategisPemdaCreateGateway)
 
 	// Usecase Identifikasi Risiko Strategis OPD
 	identifikasiRisikoStrategisOPDGetAllUseCase := usecase.ImplIdentifikasiRisikoStrategisOPDGetAllUseCase(identifikasiRisikoStrategisOPDGetAllGateway)
@@ -260,6 +262,7 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		penetapanKonteksRisikoStrategisRenstraOPDGetOneGateway,
 		kategoriRisikoGetOneGateway,
 	), mariaDB)
+	hasilAnalisisRisikoApprovalUseCase := usecase.ImplHasilAnalisisRisikoApprovalUseCase(hasilAnalisisRisikoGetOneGateway, hasilAnalisisRisikoCreateGateway)
 
 	// Usecase Penilaian Kegiatan Pengendalian
 	penilaianKegiatanPengendalianCreateUseCase := usecase.ImplPenilaianKegiatanPengendalianCreateUseCase(generateIdGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)
@@ -267,6 +270,7 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penilaianKegiatanPengendalianGetOneUseCase := usecase.ImplPenilaianKegiatanPengendalianGetByIDUseCase(penilaianKegiatanPengendalianGetOneGateway)
 	penilaianKegiatanPengendalianDeleteUseCase := usecase.ImplPenilaianKegiatanPengendalianDeleteUseCase(penilaianKegiatanPengendalianDeleteGateway)
 	penilaianKegiatanPengendalianUpdateUseCase := usecase.ImplPenilaianKegiatanPengendalianUpdateUseCase(penilaianKegiatanPengendalianGetOneGateway, penilaianKegiatanPengendalianCreateGateway, spipGetOneGateway)
+	penilaianKegiatanPengendalianApprovalUseCase := usecase.ImplPenilaianKegiatanPengendalianApprovalUseCase(penilaianKegiatanPengendalianGetOneGateway, penilaianKegiatanPengendalianCreateGateway)
 
 	// Usecase Penetapan Konteks Risiko Strategis Renstra OPD
 	penetapanKonteksRisikoStrategisRenstraOPDGetAllUseCase := usecase.ImplPenetapanKonteksRisikoRenstraOPDGetAllUseCase(penetapanKonteksRisikoStrategisRenstraOPDGetAllGateway, ikuGetAllGateway, opdGetOneGateway)
@@ -274,6 +278,7 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 	penetapanKonteksRisikoStrategisRenstraOPDDeleteUseCase := usecase.ImplPenetapanKonteksRisikoRenstraOPDDeleteUseCase(penetapanKonteksRisikoStrategisRenstraOPDDeleteGateway)
 	penetapanKonteksRisikoStrategisRenstraOPDCreateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisRenstraOPDCreateUseCase(generateIdGateway, penetapanKonteksRisikoStrategisRenstraOPDCreateGateway, opdGetOneGateway)
 	penetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase := usecase.ImplPenetapanKonteksRisikoStrategisRenstraOPDUpdateUseCase(penetapanKonteksRisikoStrategisRenstraOPDGetOneGateway, penetapanKonteksRisikoStrategisRenstraOPDCreateGateway, opdGetOneGateway)
+
 	// Usecase Daftar Risiko Prioritas
 	daftarRisikoPrioritasCreateUseCase := usecase.ImplDaftarRisikoPrioritasCreateUseCase(
 		generateIdGateway,
@@ -298,6 +303,7 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		penetapanKonteksRisikoOperasionalGetOneGateway,
 		penetapanKonteksRisikoStrategisRenstraOPDGetOneGateway,
 	)
+	daftarRisikoPrioritasApprovalUseCase := usecase.ImplDaftarRisikoPrioritasApprovalUseCase(daftarRisikoPrioritasGetOneGateway, daftarRisikoPrioritasCreateGateway)
 
 	// Usecase Penetapan Konteks Risiko Strategis Renstra OPD
 	penetapanKonteksRisikoOperasionalGetAllUseCase := usecase.ImplPenetapanKonteksRisikoOperasionalGetAllUseCase(penetapanKonteksRisikoOperasionalGetAllGateway, ikuGetAllGateway, opdGetOneGateway)
@@ -455,5 +461,10 @@ func SetupDependency(mariaDB *gorm.DB, mux *http.ServeMux, jwtToken helper.JWTTo
 		Add(c.IndeksPeringkatPrioritasGetByIDHandler(indeksPeringkatPrioritasGetOneUseCase)).
 		Add(c.PenetapanKonteksRisikoOperasionalApprovalHandler(penetapanKonteksRisikoOperasionalApprovalUsecase)).
 		Add(c.IdentifikasiRisikoStrategisOPDApprovalHandler(identifikasiRisikoStrategisOPDApprovalUsecase)).
-		Add(c.IdentifikasiRisikoOperasionalOPDApprovalHandler(identifikasiRisikoOperasionalOPDApprovalUseCase))
+		Add(c.IdentifikasiRisikoOperasionalOPDApprovalHandler(identifikasiRisikoOperasionalOPDApprovalUseCase)).
+		Add(c.DaftarRisikoPrioritasApprovalHandler(daftarRisikoPrioritasApprovalUseCase)).
+		Add(c.HasilAnalisisRisikoApprovalHandler(hasilAnalisisRisikoApprovalUseCase)).
+		Add(c.PenetapanKonteksRisikoStrategisPemdaApprovalHandler(penetapanKonteksRisikoStrategisPemdaApprovalUseCase)).
+		Add(c.PenilaianKegiatanPengendalianApprovalHandler(penilaianKegiatanPengendalianApprovalUseCase)).
+		Add(c.IdentifikasiRisikoStrategisPemdaApprovalHandler(identifikasiRisikoStrategisPemdaApprovalUseCase))
 }
